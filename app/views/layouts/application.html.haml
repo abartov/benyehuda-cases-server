@@ -6,29 +6,28 @@
     != render(:partial => "layouts/html_head")
     != yield :head
   %body
-    .container
-      #header.span-24.last
-        .span-15
-          %h1= _("Ben Yehuda Project")
-        .span-9.last
-          %p.prepend-5
-            - if logged_in?
-              =_("Hello")
-              != link_to h(current_user.name), edit_user_path(current_user)
-              [
-              != link_to _("logout"), user_session_path, :method => :delete
-              ]
-            - else
-              != link_to _("login"), login_path
-              != link_to _("register"), signup_path
-      #tabs.span-24.last
+    .page
+      / header
+      #header
+        .frame
+          = render(:partial => 'layouts/logo_bar')
+      / main
+      #main
+        / nav
         - render_tabs
         - site_notices
+        / area
+        .area
+          != render :partial => 'layouts/flashes'
+          != yield
+  
+    .container
       #content.span-24.last
         #main
           != render :partial => 'layouts/flashes'
           != yield
-      #footer.span-24.last
-        %h4=_("Footer")
-        - if current_user.try(:is_admin?)
-          != link_to "restart", restart_path, :method => :post, :confirm => "Really RESTART the server??!"
+    / footer
+    #footer.span-24.last
+      %h4=_("Footer")
+      - if current_user.try(:is_admin?)
+        != link_to "restart", restart_path, :method => :post, :confirm => "Really RESTART the server??!"

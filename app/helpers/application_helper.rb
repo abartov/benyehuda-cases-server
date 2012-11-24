@@ -13,15 +13,17 @@ module ApplicationHelper
 
   def render_tabs
     return unless logged_in?
-    haml_tag(:ul, :class => "tabs") do
+    haml_tag(:ul, :id => "nav") do #  :class => "tabs") do
       TabsHelper::TABS.each do |tab|
         next if tab[:if] && !current_user.send(tab[:if])
 
         opts = {}
-        opts[:class] = "selected" if @current_tab == tab[:name]
+        opts[:class] = "active" if @current_tab == tab[:name]
 
         haml_tag :li do
-          haml_concat link_to(s_(tab[:title]), tab[:path], opts)
+          haml_tag(:a, :href => tab[:path]) do
+            haml_tag :span, s_(tab[:title]) 
+          end
         end
       end
     end
