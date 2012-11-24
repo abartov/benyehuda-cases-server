@@ -17,14 +17,12 @@
               %td.style3!= mail_to v.email
               %td.style2!= waiting_for_task(v)
               %td.first.style1
-                %li
-                  %a.ico{ :href => tasks_path(:assignee_id => v.id, :per_page => 10), :method => :get, :onclick => "jQuery('#assign_now').html(#{_("Loading, please wait...").to_json}).dialog('open');", :remote => true }
-                    %span
-                      =_("Assign a Task...")
-                  / !=link_to_assign_a_task(v)
-                %li
-                  %a.delete{ :href => users_path(v)+"/cancel_task_request"}
-                    ביטול
+                %ul.links
+                  %li
+                    !=link_to_assign_a_task(v)
+                  %li
+                    %a.delete{ :href => users_path(v)+"/cancel_task_request"}
+                      ביטול
           %tr.last-line
             %td.first.style1
               /
