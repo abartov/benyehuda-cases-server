@@ -4,10 +4,36 @@
   != button_to _("Become Volunteer"), new_volunteer_request_path, :method => :get
 
 - when_admin do
-  != link_to _("New Task"), new_admin_task_path
-  - pending_volunteer_requests
-  != render(:partial => "waiting_volunteers")
-
+  / bar
+  .bar
+    %strong.title
+      - pending_volunteer_requests
+    / add-nav
+    %ul.add-nav
+      %li
+        %a{ :href => tasks_path }
+        != (_("Unassigned tasks (%{count})") % {:count => Task.unassigned.count}) 
+      %li
+        %a.link1{ :href => new_admin_task_path }
+          %span
+            %em
+              = _("New Task")
+  / block
+  .block
+    .head
+      .l
+        .c
+          %h2= _("Volunteers waiting for tasks")
+    .container
+      .t
+        %span.l
+          %span.c
+      .m
+        != render(:partial => 'waiting_volunteers')
+      .b
+        %span.l
+          %span.c
+  
 - when_volunteer do
   #task_request
     - if current_user.task_requested_at.nil?

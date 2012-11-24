@@ -1,23 +1,56 @@
-- if !@waiting_volunteers.blank? && !@waiting_volunteers_rednered_once
+﻿- if !@waiting_volunteers.blank? && !@waiting_volunteers_rednered_once
   - @waiting_volunteers_rednered_once = true
-  %h4= _("Volunteers waiting for tasks")
-  %table.list
-    %tr.title
-      %th= _("Name")
-      %th= _("Email")
-      %th= _("Waits for")
-      %th &nbsp;
-      %th &nbsp;
-    - @waiting_volunteers.each do |v|
-      %tr{:class => cycle("odd", "even")}
-        %td!= link_to(v.name, profiles_path(v))
-        %td!= mail_to v.email
-        %td!= waiting_for_task(v)
-        %td!= link_to_assign_a_task(v)
-        %td!= link_to "cancel request", {:controller => "users", :id => v.id, :action => "cancel_task_request" }
+  .l
+    .holder
+      /
+        data-table
+      %table.data-table
+        %tbody
+          %tr
+            %th.first.style4= _("Name")
+            %th.style3= _("Email")
+            %th.style2= _("Waits for")
+            %th.first.style1 &nbsp;
+          - @waiting_volunteers.each do |v|
+            %tr{:class => cycle("odd", "even")}
+              %td.style4!= link_to(v.name, profiles_path(v))
+              %td.style3!= mail_to v.email
+              %td.style2!= waiting_for_task(v)
+              %td.first.style1
+                %li
+                  %a.ico{ :href => tasks_path(:assignee_id => v.id, :per_page => 10), :method => :get, :onclick => "jQuery('#assign_now').html(#{_("Loading, please wait...").to_json}).dialog('open');", :remote => true }
+                    %span
+                      =_("Assign a Task...")
+                  / !=link_to_assign_a_task(v)
+                %li
+                  %a.delete{ :href => users_path(v)+"/cancel_task_request"}
+                    ביטול
+          %tr.last-line
+            %td.first.style1
+              /
+                links
+              %ul.links
+                %li
+                  %a.ico{ :href => "#" }
+                    %span
+                      xxxxxxxx
+                %li
+                  %a.delete{ :href => "#" }
+                    %span
+                      xxxxx
+            %td.style2
+              xxxxx
+            %td.style3
+              %a{ :href => "https://mail.google.com/mail/?view=cm&amp;fs=1&amp;tf=1&amp;to=hilalevy74@gmail.com", :target => "_blank" }
+                hilalevy74@gmail.com
+            %td.last.style4
+              %div
+                %a{ :href => "#" }
+                  xxxxxxxx
+  
   :javascript
     jQuery(function(){
       jQuery('#assign_now').dialog({draggable:false, modal: true, resizable:false, autoOpen: false, width: 800,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
     });
   #assign_now{:title => _("Assign a Task")}
-    laksdjf;lkaj dsfljhaslkjfhas
+    
