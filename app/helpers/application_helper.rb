@@ -14,7 +14,7 @@ module ApplicationHelper
   def render_tabs
     return unless logged_in?
     haml_tag(:ul, :id => "nav") do #  :class => "tabs") do
-      TabsHelper::TABS.each do |tab|
+      TabsHelper::TABS.reverse.each do |tab|
         next if tab[:if] && !current_user.send(tab[:if])
 
         opts = {}

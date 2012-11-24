@@ -20,14 +20,8 @@
         .area
           != render :partial => 'layouts/flashes'
           != yield
-  
-    .container
-      #content.span-24.last
-        #main
-          != render :partial => 'layouts/flashes'
-          != yield
     / footer
-    #footer.span-24.last
+    #footer
       %h4=_("Footer")
       - if current_user.try(:is_admin?)
         != link_to "restart", restart_path, :method => :post, :confirm => "Really RESTART the server??!"
