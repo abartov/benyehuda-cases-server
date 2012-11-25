@@ -1,4 +1,5 @@
-- set_tab :dashboard
+.heading
+  - set_tab :dashboard
 
 - if current_user.might_become_volunteer?
   != button_to _("Become Volunteer"), new_volunteer_request_path, :method => :get

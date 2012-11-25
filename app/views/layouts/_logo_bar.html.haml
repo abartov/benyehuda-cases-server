@@ -1,0 +1,22 @@
+.holder
+  %strong.logo
+    %a{ :href => "#" }
+      Project112012
+  /
+    menu
+  %ul.menu
+    - if logged_in?
+      %li
+        =_("Hello")
+        != link_to h(current_user.name), edit_user_path(current_user)
+      %li
+        [
+        != link_to _("logout"), user_session_path, :method => :delete
+        ]
+    - else
+      %li
+        != link_to _("login"), login_path
+      %li
+        != link_to _("register"), signup_path
+  %strong.slogan
+    מערכת ניהול משימות
