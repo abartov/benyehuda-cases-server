@@ -1,22 +1,32 @@
-%h4
-  = title
-  = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size})"
+.heading
+  %h1
+    = title
+    = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size})"
 
-- if tasks.blank?
-  = _("No Tasks found")
-- else
-  %table.list
-    %tr
-      %th &nbsp;
-      %th= link_to _("Last Updated"), dashboard_path(:order_by => {:property => "updated_at", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th= link_to _("Name"), dashboard_path(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th= link_to _("Kind"), dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th= link_to _("Editor"), dashboard_path(:order_by => {:includes => "editor", :property => "users.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th= link_to _("Assignee"), dashboard_path(:order_by => {:includes => "assignee", :property => "users.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th= link_to _("State"), dashboard_path(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))})
-      %th= link_to _("Files"), dashboard_path(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))})
-      %th &nbsp;
-
-    != render(:partial => tasks)
+.l
+  .holder
+    /
+      data-table
+    - if tasks.blank?
+      = _("No Tasks found")
+    - else
+      %table.data-table
+        %tbody
+          %tr
+            %th.last.style13
+              %a.up{ :href => dashboard_path(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                = _("Name")
+            %th.style12
+              %a.up{ :href => dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                = _("Kind")
+            %th.style7
+              %a.up{ :href => dashboard_path(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
+                = _("State") 
+            %th.style12
+              %a.up{ :href => dashboard_path(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) } 
+                = _("Files") 
+            %th.first.style11
+              \&nbsp;
+          != render(:partial => tasks)
 - if tasks.respond_to?(:total_entries)
   != will_paginate(tasks)

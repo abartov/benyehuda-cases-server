@@ -1,5 +1,13 @@
-- set_tab :dashboard
+.heading
+  - set_tab :dashboard
 
-!= link_to _("back to dashboard"), dashboard_path
+.bar
+  / add-nav
+  %ul.add-nav
+    %li
+      %a.link1{ :href => dashboard_path }
+        %span
+          %em
+            != _("back to dashboard")
 
 != render(:partial => "tasks/index", :locals => {:tasks => @tasks, :title => _("Unassigned Tasks")})
