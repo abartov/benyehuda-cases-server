@@ -1,2 +1,6 @@
 - task.simple_editor_events.each do |e|
-  != link_to textify_event(e), task_path(task, :event => e), :method => :put, :confirm => _('Are you sure?')
+  %li
+    %a{ :href => task_path(task, :event => e), "data-method" => :put, "data-confirm" => _('Are you sure?') }
+      %span
+        != textify_event(e)
+    / != link_to textify_event(e), task_path(task, :event => e), :method => :put, :confirm => _('Are you sure?')

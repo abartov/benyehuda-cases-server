@@ -11,4 +11,6 @@
   / %td= task.documents_count
   / %td!= render(:partial => "tasks/task_actions", :locals => {:task => task})
   %td.style12= task.documents_count
-  %td.first.style11!= render(:partial => "tasks/task_actions", :locals => {:task => task})
+  %td.first.style11
+    %ul.links
+      != render(:partial => "tasks/task_actions", :locals => {:task => task})
