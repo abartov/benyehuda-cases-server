@@ -54,7 +54,7 @@ p{margin:0 0 18px;}
 #header .frame{
 	overflow:hidden;
 	background:#5b3260 url(../images/bg-header.gif);
-	color:#fff;
+	color:#c0afc5;
 }
 #header .holder{
 	background:url(../images/bg-header-holder.gif) repeat-x;
@@ -106,7 +106,7 @@ p{margin:0 0 18px;}
 	border:1px solid #938c8c;
 	border-top:1px solid #d4d1d1;
 	border-right:0;
-	padding:24px 28px 10px 27px;
+	padding:24px 20px 10px 20px;
 	background:#fefefe url(../images/line4.gif) repeat-y 100% 0;
 }
 /* nav */
