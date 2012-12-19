@@ -20,7 +20,7 @@ module ApplicationHelper
         opts = {}
         opts[:class] = "active" if @current_tab == tab[:name]
 
-        haml_tag :li do
+        haml_tag(:li, opts) do
           haml_tag(:a, :href => tab[:path]) do
             haml_tag :span, s_(tab[:title]) 
           end
