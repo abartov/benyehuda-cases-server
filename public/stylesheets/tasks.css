@@ -59,8 +59,9 @@ p{margin:0 0 18px;}
 #header .holder{
 	background:url(../images/bg-header-holder.gif) repeat-x;
 	overflow:hidden;
-	padding:4px 11px 11px;
+	padding:4px 21px 11px;
 }
+#header .holder ul{padding:10px 0px 0px 0px;}
 .logo{
 	float:right;
 	margin:-4px -11px 0 84px;
