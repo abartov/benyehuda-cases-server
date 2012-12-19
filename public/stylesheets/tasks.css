@@ -237,7 +237,7 @@ p{margin:0 0 18px;}
 	background:url(../images/bg-head.png) repeat-x;
 	padding:8px 5px 16px;
 }
-.head h2, .head h3{margin:0;}
+.head h2, .head h3{margin:0;color:white;}
 .block .container{
 	width:100%;
 	position:relative;
