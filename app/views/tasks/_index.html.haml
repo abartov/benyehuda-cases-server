@@ -1,9 +1,10 @@
-.heading
-  %h1
-    = title
-    = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size})"
-
 .block
+  .head
+    .l
+      .c
+        %h2
+          = title
+          = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size})"
   .container
     .t
       %span.l
