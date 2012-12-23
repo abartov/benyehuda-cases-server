@@ -17,12 +17,10 @@
           - if current_user.task_requested_at.nil?
             %a.link1.edit{ :href => task_requests_path, "data-method" => :post, "data-remote" => :true }
               %span
-                %em
-                  != _("Request a Task")
+                != _("Request a Task")
           - else
             %span
-              %em
-                != render(:partial => "users/task_request")
+              != render(:partial => "users/task_request")
     - when_editor do
       %li
         =link_to((_("Unassigned tasks (%{count})") % {:count => Task.unassigned.count}), tasks_path)
