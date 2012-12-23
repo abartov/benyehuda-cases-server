@@ -50,6 +50,7 @@ div.finished_reason {
   border:1px solid #ddd;
   background:#e5ecf9;
   border-left:1em solid #ddd;
+  width:60%;
 }
 
 .block.prominent {
