@@ -15,9 +15,9 @@
       #main
         / nav
         - render_tabs
-        - site_notices
         / area
         .area
+          - site_notices
           != render :partial => 'layouts/flashes'
           != yield
     / footer
