@@ -17,7 +17,8 @@
           - if current_user.task_requested_at.nil?
             %a.link1.edit{ :href => task_requests_path, "data-method" => :post, "data-remote" => :true }
               %span
-                != _("Request a Task")
+                %em
+                  != _("Request a Task")
           - else
             %span
               != render(:partial => "users/task_request")
@@ -37,7 +38,7 @@
     .head
       .l
         .c
-          %h2= _("Volunteers waiting for tasks")
+          %h2= _("Volunteers waiting for tasks")+" (#{@waiting_volunteers.nil? ? "0" : @waiting_volunteers.length.to_s})"
     .container
       .t
         %span.l
