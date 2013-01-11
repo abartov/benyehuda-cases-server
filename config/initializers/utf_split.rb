@@ -20,7 +20,7 @@ class String
     end
   end  
 
-  def utf_snippet(len = 20)
+  def utf_snippet(len = 40)
     if len < self.length
       "#{self.utf8_safe_split(len).first}..."
     else
