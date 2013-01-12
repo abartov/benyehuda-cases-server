@@ -5,7 +5,7 @@ class Notification < ActionMailer::Base
 
   def comment_added(comment, recipient_users)
     subject     s_("comment added notification subject|%{task_name_snippet} - New comment") % {
-                  :task_name_snippet => comment.task.name.utf_snippet(40),
+                  :task_name_snippet => comment.task.name.utf_snippet(70),
                   :domain => domain}
     from        from_address
     recipients  recipient_users.collect(&:email_recipient)
