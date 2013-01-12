@@ -66,7 +66,21 @@ div.finished_reason {
 .disabled-user td {
   background:red;
 }
+.site-notice {
+  /*margin:2em 0;
+  padding:1em 5em;
+  border:1px solid #ddd;
+  background:#e5ecf9;
+  border-left:1em solid #ddd; */
+  width:60%;
+  background-color: #f6f6f6;
+  border-radius: 10px;
+  box-shadow:0 3px 5px #555;
+  padding: .5em 1em;
+  margin: 1em;
+}
 
+/*
 .site-notice {
   margin-left:auto;
   margin-right:auto;
@@ -75,10 +89,11 @@ div.finished_reason {
   padding:5px 20px;
   border:1px solid #ddd;
   background:white;
-  /* background:#e5ecf9; */
+  / * background:#e5ecf9; * /
   border-left:1em solid #ddd;
   width:60%;
 }
+*/
 
 .block.prominent {
   font-size:125%;
