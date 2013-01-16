@@ -2,30 +2,44 @@
   %tr
     %td
       / login
-      != render(:partial => "user_session/new")
+      .box
+        .boxhead
+          %h2= _("Sign In")
+        .boxbody
+          != render(:partial => "user_session/new")
     %td
       / join
+      .box
+        .boxhead
+          %h2= _("Register")
+        .boxbody
+          moose
   %tr
     %td
       / vol links 
-      .boxhead
-        %h2= _("Links for Volunteers")
-      .boxbody
-        %a{ :href => "http://benyehuda.org/h_typing.html" }
-          = _("Typing Instructions")
-        %br
-        %a{ :href => "http://benyehuda.org/h_proof.html" }
-          = _("Proofing Instructions")
-        %br
-        %a{ :href => "http://benyehuda.org/h_nikud.html" }
-          = _("Nikud Instructions")
+      .box
+        .boxhead
+          %h2= _("Links for Volunteers")
+        .boxbody
+          %a{ :href => "http://benyehuda.org/h_typing.html" }
+            = _("Typing Instructions")
+          %br
+          %a{ :href => "http://benyehuda.org/h_proof.html" }
+            = _("Proofing Instructions")
+          %br
+          %a{ :href => "http://benyehuda.org/h_nikud.html" }
+            = _("Nikud Instructions")
     %td
       / web links
-      %a{ :href => "http://benyehuda.org/index.html" }
-        = _("Project Home")
-      %br
-      %a{ :href => "http://benyehuda.org/blog" }
-        = _("Project blog")
-      %br
-      %a{ :href => "http://www.facebook.com/pages/%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98-%D7%91%D7%9F-%D7%99%D7%94%D7%95%D7%93%D7%94/119140448124648" }
-        = _("Facebook page")
+      .box
+        .boxhead
+          %h2= _("General Links")
+        .boxbody
+          %a{ :href => "http://benyehuda.org/index.html" }
+            = _("Project Home")
+          %br
+          %a{ :href => "http://benyehuda.org/blog" }
+            = _("Project blog")
+          %br
+          %a{ :href => "http://www.facebook.com/pages/%D7%A4%D7%A8%D7%95%D7%99%D7%A7%D7%98-%D7%91%D7%9F-%D7%99%D7%94%D7%95%D7%93%D7%94/119140448124648" }
+            = _("Facebook page")

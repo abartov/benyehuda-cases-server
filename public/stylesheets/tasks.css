@@ -158,6 +158,21 @@ p{margin:0 0 18px;}
 	margin:0;
 	float:right;
 }
+.box{
+  border-radius: 15px;
+  background: #ececec;
+  padding:0px;
+  border:1px black solid;
+}
+.boxhead{
+  padding-right:10px;
+  padding-top:3px;
+}
+.boxbody{
+  padding:10px;
+  background: #ffffff;
+  border-radius: 15px;
+}
 /* bar */
 .bar{
 	overflow:hidden;
@@ -287,6 +302,10 @@ p{margin:0 0 18px;}
 }
 .block .container .m > .l{
 	background:url(../images/line3.gif) repeat-y;
+	padding:0 1px;
+}
+.box .l{
+	background:#fff url(../images/line3.gif) repeat-y;
 	padding:0 1px;
 }
 .block .container .m > .l:after{
