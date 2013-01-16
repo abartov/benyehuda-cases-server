@@ -355,8 +355,8 @@ p{margin:0 0 18px;}
 /*.data-table .style1{width:253px;}
 .data-table .style2{width:85px;}
 .data-table .style3{width:305px;}
-.data-table .style4{width:175px;}*/
-.data-table .style4.last{width:207px;}
+.data-table .style4{width:175px;}
+.data-table .style4.last{width:207px;} 
 .data-table .style5{width:359px;}
 .data-table .style6{width:97px;}
 .data-table .style7{width:87px;}
@@ -366,8 +366,8 @@ p{margin:0 0 18px;}
 .data-table .style10{width:79px;}
 .data-table .style11{width:270px;}
 .data-table .style12{width:68px;}
-.data-table .style13{width:293px;}*/
-.data-table .style13.last{width:325px;}
+.data-table .style13{width:293px;}
+.data-table .style13.last{width:325px;} */
 .data-table .last-line.odd td.last{background:url(../images/bg-data-table-odd-last.png) no-repeat 100% 100%;}
 .data-table .last-line.odd td.first{background:url(../images/bg-data-table-odd-first.png) no-repeat 0 100%;}
 .data-table td.last{padding:0;}
