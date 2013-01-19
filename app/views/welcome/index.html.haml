@@ -4,16 +4,21 @@
       / login
       .box
         .boxhead
-          %h2= _("Sign In")
+          %h2= _("Login")
         .boxbody
           != render(:partial => "user_session/new")
     %td
       / join
       .box
         .boxhead
-          %h2= _("Register")
+          %h2= _("Want to join?")
         .boxbody
-          moose
+          != _("join pitch")
+          %a.purple-button.gradient{ :href => signup_path }
+            %span
+              != _("To join")
+          %br
+          %br
   %tr
     %td
       / vol links 
