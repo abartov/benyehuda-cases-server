@@ -168,10 +168,17 @@ p{margin:0 0 18px;}
   padding-right:10px;
   padding-top:3px;
 }
-.boxbody{
-  padding:10px;
+.boxcontainer{
+  padding:0px;
   background: #ffffff;
   border-radius: 15px;
+}
+.boxbody{
+  padding:10px;
+}
+.midtitle{
+  padding:0px;
+  background: #ececec;
 }
 /* bar */
 .bar{
