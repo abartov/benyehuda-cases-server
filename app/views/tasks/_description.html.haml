@@ -1,6 +1,30 @@
 .block
-  %h3
+  .task-title
+    %b
+      = _("Task title")+": "
     = @task.name
+  .box
+    .boxhead
+      = _("Task details")
+    .boxcontainer
+      .boxbody
+        %b
+          = _("Task kind")+": "
+        = @task.kind.try(:name)
+        %br
+        %b
+          = _("Nikud")+": "
+        = textify_full_nikud(@task)
+        %br
+        %b
+          = _("Source")+": "
+        = @task.source
+      .midtitle
+        = _("Status and allocation")
+      .boxbody
+        = "more bla"
+
+
     %small
       = [@task.kind.try(:name), Task.textify_difficulty(@task.difficulty), textify_full_nikud(@task)].compact_blanks.join("/")
       - when_admin do
