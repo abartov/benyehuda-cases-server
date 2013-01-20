@@ -82,8 +82,13 @@ p{margin:0 0 18px;}
 	font:1.9285em/1.185 Arial, Helvetica, sans-serif;
 }
 .task-title{
+  padding-top:10px;
   padding-bottom:14px;
   font:1.5em/1.185 Arial, Helvetica, sans-serif;
+}
+.instructions{
+  background: #eaeefa;
+  border-radius:10px;
 }
 /* menu */
 .menu{
@@ -170,7 +175,7 @@ p{margin:0 0 18px;}
 }
 .boxhead{
   padding-right:10px;
-  padding-top:3px;
+  padding-top:5px;
 }
 .boxcontainer{
   padding:0px;
@@ -182,6 +187,7 @@ p{margin:0 0 18px;}
 }
 .midtitle{
   padding:0px;
+  font:bold 15px/18px Arial, Helvetica, sans-serif;
   background: #ececec;
 }
 /* bar */
@@ -214,10 +220,19 @@ p{margin:0 0 18px;}
 	padding:7px 10px;
 	margin:0 10px 0 -10px;
 }
+.assignees{
+  width:300px;
+}
+.vtop{
+  vertical-align:top;
+}
+.status{
+  height:30px;
+}
 .purple-button{
 	color:#fff !important;
 	height:33px;
-	display:block;
+	display:inline-block;
 	padding-right:5px;
 	/*background:url(../images/bg-link.png) no-repeat 100% -191px;*/
 	cursor:pointer;
@@ -228,7 +243,7 @@ p{margin:0 0 18px;}
   overflow:hidden;
   border-radius:10px;
   text-decoration:none;
-  float:right;
+  /* float:right;*/
 }
 
 .purple-button span{

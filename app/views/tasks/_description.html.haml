@@ -1,35 +1,51 @@
-.block
-  .task-title
+.boxbody
+  %b
+    = _("Task kind")+": "
+  = @task.kind.try(:name)
+  %br
+  %b
+    = _("Nikud")+": "
+  = textify_full_nikud(@task)
+  %br
+  %b
+    = _("Source")+": "
+  = @task.source
+  %br
+  %b
+    = _("Rashi")+": "
+  = textify_rashi(@task)
+  %br
+  %b
+    = _("Difficulty")+": "
+  = Task.textify_difficulty(@task.difficulty)
+.midtitle
+  .boxbody
+    = _("Status and allocation")
+.boxbody
+  .status
     %b
-      = _("Task title")+": "
-    = @task.name
-  .box
-    .boxhead
-      = _("Task details")
-    .boxcontainer
-      .boxbody
-        %b
-          = _("Task kind")+": "
-        = @task.kind.try(:name)
-        %br
-        %b
-          = _("Nikud")+": "
-        = textify_full_nikud(@task)
-        %br
-        %b
-          = _("Source")+": "
-        = @task.source
-      .midtitle
-        = _("Status and allocation")
-      .boxbody
-        = "more bla"
-
-
-    %small
-      = [@task.kind.try(:name), Task.textify_difficulty(@task.difficulty), textify_full_nikud(@task)].compact_blanks.join("/")
-      - when_admin do
-        != link_to _("Edit"), edit_admin_task_path(@task)
-
+      = _("Status")
+    = Task.textify_state(@task.state)
+  .assignees
+    %table{ :width => "300px" }
+      %tr
+        %td.vtop
+          %b
+            = _("Assignee:")
+        %td
+          - if @task.assignee
+            != render(:partial => "users/brief", :locals => {:brief_title => _("Assignee:"), :user => @task.assignee, :email_link => link_to_task_participant_email(@task, :assignee, _("Send Email to Assignee"))})
+        %td.vtop
+          %b
+            = _("Editor:")
+        %td
+          - if @task.editor
+            != render(:partial => "users/brief", :locals => {:brief_title => _("Editor:"), :user => @task.editor, :email_link => link_to_task_participant_email(@task, :editor, _("Send Email to Editor"))})
+  - unless @skip_assignment_links
+    - when_editor_or_admin do
+      %a.purple-button.gradient{ :href => edit_task_assignment_path(@task) }
+        %span
+          != _("change assignments")
 - when_editor_or_admin do
   - unless @task.children.blank?
     .block
@@ -40,19 +56,3 @@
     .block
       %h4= _("Parent task")
       != link_to(h(@task.parent.name), task_path(@task.parent))
-
-.block
-  %h3
-    = _("Status")
-  %h5
-    = Task.textify_state(@task.state)
-    - unless @skip_assignment_links
-      %small
-        - when_editor_or_admin do
-          != link_to("(#{_("change assignments")})", edit_task_assignment_path(@task))
-
-- if @task.editor
-  != render(:partial => "users/brief", :locals => {:brief_title => _("Editor:"), :user => @task.editor, :email_link => link_to_task_participant_email(@task, :editor, _("Send Email to Editor"))})
-
-- if @task.assignee
-  != render(:partial => "users/brief", :locals => {:brief_title => _("Assignee:"), :user => @task.assignee, :email_link => link_to_task_participant_email(@task, :assignee, _("Send Email to Assignee"))})

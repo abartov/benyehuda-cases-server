@@ -1,5 +1,7 @@
 class Task < ActiveRecord::Base
   PROP_SOURCE = 131
+  PROP_RASHI = 121
+  PROP_INSTRUCTIONS = 61
   include ActsAsAuditable
   acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud,
     :conversions => {
@@ -62,7 +64,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :difficulty, :full_nikkud, :comments_attributes, :source
+  attr_accessible :name, :kind_id, :difficulty, :full_nikkud, :comments_attributes
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, :order => "comments.task_id, comments.created_at"
@@ -155,7 +157,17 @@ class Task < ActiveRecord::Base
   # convenience method for custom prop
   def source
     self.task_properties.each {|p|
-      return p.custom_value if p.property_id = PROP_SOURCE
+      return p.custom_value if p.property_id == PROP_SOURCE
+    }
+  end
+  def rashi
+    self.task_properties.each{|p|
+      return p.custom_value if p.property_id == PROP_RASHI
+    }
+  end
+  def instructions
+    self.task_properties.each{|p|
+      return p.custom_value if p.property_id == PROP_INSTRUCTIONS
     }
   end
   def self.textify_difficulty(dif)
