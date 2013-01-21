@@ -6,9 +6,15 @@
         %span
           != textify_event(e)
   - if @task.can_create_new_task?
-    .float-right.purple-button.gradient{ :style => "padding:0px;"}
+    .float-right.purple-button.gradient{ :style => "padding:0px;", :id => "new_task_link"}
       %span
-        != link_to_function _("Create new task based on this one"), toggle_chained_js, :id => "new_task_link", :style=>"color:white;text-decoration:none"
+        != link_to_function _("Create new task based on this one"), toggle_chained_js, :style=>"color:white;text-decoration:none"
+    %div{ :style => 'padding-bottom:30px'}
     #new_task_container{:style => "display:none"}
-      != render(:partial => "tasks/new_chain_task")
+      .box
+        .boxhead
+          = _("Create new task based on this one")
+        .boxcontainer
+          .boxbody
+            != render(:partial => "tasks/new_chain_task")
   - commentable_event_form("reject")
