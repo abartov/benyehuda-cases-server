@@ -1,6 +1,8 @@
 - toggle_js = "jQuery('#reject_link, #reject_container').toggle();"
 
-!= link_to_function textify_event("reject"), "#{toggle_js}$('reject_comment_message').show().focus()", :id => "reject_link", :style => has_rejection_errors? ? "display:none" : ""
+.float-right.purple-button.gradient{ :id => "reject_link", :style => "padding:0px;"}
+  %span
+    != link_to_function textify_event("reject"), "#{toggle_js}$('reject_comment_message').show().focus()", :style => has_rejection_errors? ? "display:none" : "color:white;text-decoration:none"
 
 #reject_container.block{:style => has_rejection_errors? ? "" : "display:none"}
   - semantic_form_for(@task, :live_validations => false, :url => task_path(@task, :event => "reject"), :remote => true) do |f|
