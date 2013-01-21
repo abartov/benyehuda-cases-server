@@ -226,8 +226,23 @@ p{margin:0 0 18px;}
 .vtop{
   vertical-align:top;
 }
+.float-right{
+  float:right;
+  padding: 10px;
+}
 .status{
   height:30px;
+}
+.comment{
+  background: #f6f4f5;
+  border-radius: 8px;
+}
+.comment-header{
+  font-weight: bold;
+  padding-bottom: 10px;
+}
+.comment-text{
+  margin: 0 0 8px;
 }
 .purple-button{
 	color:#fff !important;

@@ -159,16 +159,19 @@ class Task < ActiveRecord::Base
     self.task_properties.each {|p|
       return p.custom_value if p.property_id == PROP_SOURCE
     }
+    return ""
   end
   def rashi
     self.task_properties.each{|p|
       return p.custom_value if p.property_id == PROP_RASHI
     }
+    return ""
   end
   def instructions
     self.task_properties.each{|p|
       return p.custom_value if p.property_id == PROP_INSTRUCTIONS
     }
+    return ""
   end
   def self.textify_difficulty(dif)
     s_(DIFFICULTIES[dif]) if DIFFICULTIES[dif]

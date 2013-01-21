@@ -1,8 +1,16 @@
-%h3= _("Comments")
-
-#comments
-  != render(:partial => "comments/comment", :collection => comments)
-
-%h4= _("Add Comment")
-#new_comment
-  != render(:partial => "comments/new")
+%table
+  %tr
+    %td.vtop
+      %b
+        = _("Comments")
+    %td
+      #comments
+        %ol
+          != render(:partial => "comments/comment", :collection => comments)
+  %tr
+    %td.vtop
+      %b
+        = _("Add Comment")
+    %td
+      #new_comment
+        != render(:partial => "comments/new")

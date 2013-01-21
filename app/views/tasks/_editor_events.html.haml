@@ -1,8 +1,14 @@
-!= render(:partial => "tasks/editor_simple_actions", :locals => {:task => @task})
-
-- commentable_event_form("reject")
-
-- if @task.can_create_new_task?
-  != link_to_function _("Create new task based on this one"), toggle_chained_js, :id => "new_task_link"
-  #new_task_container{:style => "display:none"}
-    != render(:partial => "tasks/new_chain_task")
+-#!= render(:partial => "tasks/editor_simple_actions", :locals => {:task => @task})
+%div
+  - @task.simple_editor_events.each do |e|
+    .float-right
+      %a.purple-button.gradient{ :href => task_path(@task, :event => e), "data-method" => :put, "data-confirm" => _('Are you sure?'), :style => "padding:0px;" }
+        %span
+          != textify_event(e)
+  - if @task.can_create_new_task?
+    .float-right.purple-button.gradient{ :style => "padding:0px;"}
+      %span
+        != link_to_function _("Create new task based on this one"), toggle_chained_js, :id => "new_task_link", :style=>"color:white;text-decoration:none"
+    #new_task_container{:style => "display:none"}
+      != render(:partial => "tasks/new_chain_task")
+  - commentable_event_form("reject")
