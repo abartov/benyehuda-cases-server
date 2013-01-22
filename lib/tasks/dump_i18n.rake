@@ -5,9 +5,9 @@ task :dumpstr => :environment do
     TranslationKey.all.each {|t|
       tt = TranslationText.find(:first, :conditions => "translation_key_id = #{t.id} and locale = 'he'")
       if tt
-        f.print("#{t.id}\n#{tt.text}\n\n")
+        f.print("#{t.id}\nen: #{t.key}\n#{tt.text}\n\n")
       else
-        f.print("#{t.id}\n---NO TRANSLATION---\n\n")
+        f.print("#{t.id}\nen: #{t.key}\n---NO TRANSLATION---\n\n")
       end
     }
   }

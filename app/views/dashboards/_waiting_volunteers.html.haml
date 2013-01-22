@@ -1,4 +1,4 @@
-﻿- if !@waiting_volunteers.blank? && !@waiting_volunteers_rendered_once
+- if !@waiting_volunteers.blank? && !@waiting_volunteers_rendered_once
   - @waiting_volunteers_rendered_once = true
   - @vol_rows = 0
   .l
@@ -28,10 +28,4 @@
                   %li
                     %a.delete{ :href => user_path(v)+"/cancel_task_request"}
                       %span
-                        ביטול
-  :javascript
-    jQuery(function(){
-      jQuery('#assign_now').dialog({draggable:false, modal: true, resizable:false, autoOpen: false, width: 800,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
-    });
-  #assign_now{:title => _("Assign a Task")}
-    
+                        = _("cancel_request")
