@@ -576,5 +576,7 @@ p{margin:0 0 18px;}
 	overflow:hidden;
 	padding:5px 50px;
 	min-height:62px;
+  text-align:center;
+  direction:rtl;
 }
 #footer p{margin:0;}

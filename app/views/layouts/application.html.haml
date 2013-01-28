@@ -1,7 +1,8 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %head
     %meta{ :content => "text/html; charset=utf-8", "http-equiv" => "Content-type" }
-    %meta{ :content => "IE=EmulateIE7", "http-equiv" => "X-UA-Compatible" }
+    %meta{ :content => "IE=edge", "http-equiv" => "X-UA-Compatible" }
+    -# %meta{ :content => "IE=EmulateIE7", "http-equiv" => "X-UA-Compatible" }
     %title!= @page_title || h(controller.action_name)
     != render(:partial => "layouts/html_head")
     != yield :head
@@ -22,6 +23,9 @@
           != yield
     / footer
     #footer
-      %h4=_("Footer")
+      =_("Supported by")
+      %br
+      %img{ :src => 'images/supported_by.jpg', :width => '120', :height => '108'}
+      %br
       - if current_user.try(:is_admin?)
-        != link_to "restart", restart_path, :method => :post, :confirm => "Really RESTART the server??!"
+        != link_to "restart", restart_path, :method => :post, :confirm => "Really RESTART the server?"
