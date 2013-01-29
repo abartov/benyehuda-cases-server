@@ -117,7 +117,7 @@ GEM
     polyglot (0.3.3)
     query_trace (0.1.1)
       activerecord
-    rack (1.2.7)
+    rack (1.2.6)
     rack-mount (0.6.14)
       rack (>= 1.0.0)
     rack-test (0.5.7)
@@ -224,6 +224,7 @@ DEPENDENCIES
   paperclip (~> 2.4.5)
   passenger (= 2.2.11)
   query_trace
+  rack (= 1.2.6)
   rails (= 3.0.20)
   rake (= 0.8.7)
   rmagick
