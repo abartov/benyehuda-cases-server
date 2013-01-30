@@ -190,6 +190,11 @@ p{margin:0 0 18px;}
   font:bold 15px/18px Arial, Helvetica, sans-serif;
   background: #ececec;
 }
+.regbox{
+  border-radius: 15px;
+  background: #b8b1b1;
+  padding:0px;
+}
 /* bar */
 .bar{
 	overflow:hidden;
