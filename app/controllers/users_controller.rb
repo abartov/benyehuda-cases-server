@@ -13,6 +13,7 @@ class UsersController < InheritedResources::Base
 
   def create
     user = build_resource
+    user.name = [params[:user][:firstname], params[:user][:lastname]].join ' '
     user.email = params[:user] && params[:user][:email] || user.email
     user.is_admin = true if User.count.zero?
     if user.save_without_session_maintenance

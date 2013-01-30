@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 2.weeks
   end
   include Astrails::Auth::Model
-  attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id
+  attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :firstname, :lastname
 
   has_gravatar
   has_attached_file :avatar, :styles => { :thumb => "50x50>", :medium => "100x100>" },
