@@ -1,6 +1,6 @@
 # ---- requirements
 require 'rubygems'
-require 'mocha'
+require 'mocha/setup'
 $LOAD_PATH << File.expand_path("../lib", File.dirname(__FILE__))
 require 'active_support'
 require 'active_record'

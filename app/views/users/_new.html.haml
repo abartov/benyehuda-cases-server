@@ -3,13 +3,20 @@
     %td
       .regbox  
         .boxbody
+          %h2= _("Joining phase %{phase} of 3") % { :phase => '1' }
+          = _("how to join")
+          %br
           - semantic_form_for(@user, :live_validations => true, :html => { :multipart => true }) do |f|
             = f.object.errors.on(:base)
-            != render :partial => "users/form", :locals => { :f => f }
-            != f.submit _("Signup")
-
-          != link_to _("login"), login_path
-    %td
+            != render :partial => "users/new_user_form", :locals => { :f => f }
+            != f.submit _("Signup"), :class => 'purple-button gradient'
+          %br
+          %p{ :align => "left" }         
+            != link_to _("already have user"), login_path
+    %td{ :width => "30%" }
       .regbox
         .boxbody
-          = 'mumble'
+          %h2= _("What is volunteering?")
+          %br
+          != _("Volunteering explained")
+

@@ -104,6 +104,12 @@ p{margin:0 0 18px;}
 	padding:0 28px 0 14px;
 	margin-left:-14px;
 }
+.right{
+  float:right;
+}
+.clear{
+  clear:both;
+}
 .menu a{color:#fff;}
 /* main */
 #main{
@@ -288,6 +294,7 @@ p{margin:0 0 18px;}
   overflow:hidden;
   border-radius:10px;
   text-decoration:none;
+  font-weight:bold; /* for when the button is also the text */
   /* float:right;*/
 }
 

@@ -1,0 +1,11 @@
+- f.inputs :name => _("Create New User") do
+  = f.input :firstname, :label => _("First name"), :placeholder => _("First name placeholder"), :wrapper_html => {:class => "right"}
+  = f.input :lastname, :label => _("Last name"), :placeholder => _("Last name placeholder"), :wrapper_html => {:class => "right"}
+  .clear
+  = _("Email explanations")
+  = f.input :email, :input_html => {:disabled => !f.object.allow_email_change?(current_user && current_user.is_admin?)}, :required => f.object.new_record?, :label => _("Email"), :wrapper_html => {:class => "clear"}, :placeholder => "name@something.net"
+  = _("Password explanations")
+  = f.input :password, :label =>  _("Password")
+  = f.input :password_confirmation, :label =>  _("Confirm Password")
+
+    

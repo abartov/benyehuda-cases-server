@@ -14,6 +14,7 @@ module GettextI18nRails
     end
 
     def translate_without_interpolation(locale, key, options)
+      debugger
       flat_key = flatten_key key, options
       if FastGettext.key_exist?(flat_key)
         raise "no yet build..." if options[:locale]
@@ -38,6 +39,7 @@ module GettextI18nRails
     end
 
     def translate(locale, key, options)
+      debugger
       res = translate_without_interpolation(locale, key, options)
 
       reserved = :scope, :default, :locale
@@ -48,6 +50,7 @@ module GettextI18nRails
 
 
     def method_missing(method, *args)
+      debugger
       backend.send(method, *args)
     end
 

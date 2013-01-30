@@ -3,6 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.20'
 gem 'rake', '0.8.7'
 gem 'rack', '1.2.6'
+gem 'gettext', '2.2.0'
 gem "builder"
 gem "json"
 gem "mysql"

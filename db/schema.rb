@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120709182605) do
+ActiveRecord::Schema.define(:version => 20130130053455) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -155,6 +155,14 @@ ActiveRecord::Schema.define(:version => 20120709182605) do
     t.integer  "kind_id"
   end
 
+  create_table "tmp_stats", :id => false, :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "tasks_assigned"
+    t.datetime "activated_at"
+    t.integer  "days_active"
+    t.float    "tasks_per_day"
+  end
+
   create_table "translation_keys", :force => true do |t|
     t.string   "key",        :limit => 1024, :null => false
     t.datetime "created_at"
@@ -203,6 +211,8 @@ ActiveRecord::Schema.define(:version => 20120709182605) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "volunteer_kind_id"
+    t.string   "firstname",                :limit => 50
+    t.string   "lastname",                 :limit => 40
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
