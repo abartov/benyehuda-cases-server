@@ -580,3 +580,33 @@ p{margin:0 0 18px;}
   direction:rtl;
 }
 #footer p{margin:0;}
+
+div.editor_eyes_only {
+  background:#eee;
+}
+
+div.rejection_reason {
+  border:1px solid red;
+}
+
+div.abandoning_reason {
+  border:1px solid blue;
+}
+
+div.finished_reason {
+  border:1px solid green;
+}
+
+.disabled-user td {
+  background:red;
+}
+
+.site-notice {
+  margin:2em 0;
+  padding:1em 5em;
+  border:1px solid #ddd;
+  background:#e5ecf9;
+  border-left:1em solid #ddd;
+  width:60%;
+}
+
