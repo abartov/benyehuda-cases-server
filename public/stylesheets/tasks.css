@@ -77,9 +77,15 @@ p{margin:0 0 18px;}
 	height:100%;
 }
 .slogan{
-	float:right;
-	margin:15px 0 12px;
-	font:1.9285em/1.185 Arial, Helvetica, sans-serif;
+/*	float:right;*/
+  text-align:center;
+	margin-top:15px;
+  font-weight:bold;
+	font:2em Arial, Helvetica, sans-serif;
+  right:-65px;
+  position:relative;
+  display:block;
+	/* font:1.9285em/1.185 Arial, Helvetica, sans-serif; */
 }
 .task-title{
   padding-top:10px;
