@@ -1,0 +1,21 @@
+%table
+  %tr
+    %td
+      .regbox
+        .boxbody
+          %h2= _("Joining phase %{phase} of 3") % { :phase => '2' }
+          = _("Registered; expect e-mail")
+          .highlightbox
+            .right
+              %b= @user.email
+            != link_to _("oops, wrong e-mail"), user_fix_email_path
+          .right
+            %b= _("if no e-mail")
+          .right
+            != _("what to do about missing e-mail")
+    %td{ :width => "30%" }
+      .regbox
+        .boxbody
+          %h2= _("What is volunteering?")
+          %br
+          != _("Volunteering explained")
