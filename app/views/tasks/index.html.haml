@@ -10,4 +10,4 @@
           %em
             != _("back to dashboard")
 
-!= render(:partial => "tasks/index", :locals => {:tasks => @tasks, :title => _("Unassigned Tasks")})
+!= render(:partial => "tasks/index", :locals => {:tasks => @tasks, :editing => false, :title => _("Unassigned Tasks")})

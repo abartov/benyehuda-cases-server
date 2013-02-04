@@ -23,6 +23,9 @@
                   %th.last.style13
                     %a.up{ :href => dashboard_path(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Name")
+                  - if editing
+                    %th.style12
+                      = _("Assignee")
                   %th.style12
                     %a.up{ :href => dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Kind")
@@ -34,7 +37,7 @@
                       = _("Files") 
                   %th.first.style11
                     \&nbsp;
-                != render(:partial => tasks)
+                != render(:partial => tasks, :locals => {:editing => editing})
     .b
       %span.l
         %span.c

@@ -1,12 +1,13 @@
 %tr{:class => cycle("odd", "even")}
   %td.last.style13!= link_to h(task.name), task_path(task)
+  - if editing
+    %td!= person_link(task.assignee)
   %td.style12= task.kind.try(:name)
   %td.style7= Task.textify_state(task.state)
   / %td= _("%{time} ago") % {:time => time_ago_in_words(task.updated_at)}
   / %td!= link_to h(task.name), task_path(task)
   / %td= task.kind.try(:name)
   / %td!= person_link(task.editor)
-  / %td!= person_link(task.assignee)
   / %td= Task.textify_state(task.state)
   / %td= task.documents_count
   / %td!= render(:partial => "tasks/task_actions", :locals => {:task => task})

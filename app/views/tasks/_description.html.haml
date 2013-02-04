@@ -27,7 +27,7 @@
       = _("Status")
     = Task.textify_state(@task.state)
   .assignees
-    %table{ :width => "300px" }
+    %table
       %tr
         %td.vtop
           %b
@@ -41,11 +41,12 @@
         %td
           - if @task.editor
             != render(:partial => "users/brief", :locals => {:brief_title => _("Editor:"), :user => @task.editor, :email_link => link_to_task_participant_email(@task, :editor, _("Send Email to Editor"))})
-  - unless @skip_assignment_links
-    - when_editor_or_admin do
-      %a.purple-button.gradient{ :href => edit_task_assignment_path(@task) }
-        %span
-          != _("change assignments")
+        %td
+          - unless @skip_assignment_links
+            - when_editor_or_admin do
+              %a.purple-button.gradient{ :href => edit_task_assignment_path(@task) }
+                %span
+                  != _("change assignments")
 - when_editor_or_admin do
   - unless @task.children.blank?
     .block

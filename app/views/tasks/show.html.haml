@@ -12,7 +12,8 @@
         != _("Edit")
 .box
   .boxhead
-    = _("Task details")
+    %b
+      = _("Task details")
   .boxcontainer
     != render(:partial => "description")
     %br
