@@ -32,13 +32,13 @@
         %td.vtop
           %b
             = _("Assignee:")
-        %td
+        %td.sp20
           - if @task.assignee
             != render(:partial => "users/brief", :locals => {:brief_title => _("Assignee:"), :user => @task.assignee, :email_link => link_to_task_participant_email(@task, :assignee, _("Send Email to Assignee"))})
         %td.vtop
           %b
             = _("Editor:")
-        %td
+        %td.sp20
           - if @task.editor
             != render(:partial => "users/brief", :locals => {:brief_title => _("Editor:"), :user => @task.editor, :email_link => link_to_task_participant_email(@task, :editor, _("Send Email to Editor"))})
         %td
@@ -49,11 +49,19 @@
                   != _("change assignments")
 - when_editor_or_admin do
   - unless @task.children.blank?
-    .block
-      %h4= _("Chained tasks")
+    .midtitle
+      .boxbody
+        = _("Chained tasks")
+    .boxbody
+      %b
+        = _("Chained tasks")+": "
       - @task.children.each do |c|
         != link_to(h(c.name), task_path(c))
   - if @task.parent
-    .block
-      %h4= _("Parent task")
+    .midtitle
+      .boxbody
+        = _("Parent task")
+    .boxbody
+      %b
+        = _("Parent task")+": "
       != link_to(h(@task.parent.name), task_path(@task.parent))

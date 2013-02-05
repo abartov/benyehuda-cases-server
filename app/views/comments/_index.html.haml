@@ -3,7 +3,7 @@
     %td.vtop
       %b
         = _("Comments")
-    %td
+    %td.left3
       #comments
         %ol
           != render(:partial => "comments/comment", :collection => comments)
@@ -11,6 +11,6 @@
     %td.vtop
       %b
         = _("Add Comment")
-    %td
+    %td.left3
       #new_comment
         != render(:partial => "comments/new")

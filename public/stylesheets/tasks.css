@@ -231,6 +231,7 @@ p{margin:0 0 18px;}
 }
 .vtop{
   vertical-align:top;
+  padding-right:0px;
 }
 .float-right{
   float:right;
@@ -618,4 +619,10 @@ div.finished_reason {
   padding: .5em 1em;
   margin: 1em;
 }
-
+.sp20{
+  padding-left:20px;
+  padding-right:20px;
+}
+.left3{
+  padding-left:3.333em;
+}
