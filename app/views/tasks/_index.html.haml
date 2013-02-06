@@ -4,7 +4,10 @@
       .c
         %h2
           = title
-          = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size})"
+          = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
+          - if editing
+            = " / #{total.to_s}"
+          = ")"
   .container
     .t
       %span.l

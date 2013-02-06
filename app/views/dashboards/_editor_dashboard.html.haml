@@ -1,4 +1,4 @@
-!= render(:partial => "tasks/index", :locals => {:tasks => current_user.editing_tasks.visible_in_my_tasks, :title => _("My Editing Tasks"), :editing => true})
+!= render(:partial => "tasks/index", :locals => {:tasks => current_user.editing_tasks.visible_in_my_tasks[0..29], :title => _("My Editing Tasks"), :editing => true, :total => current_user.editing_tasks.visible_in_my_tasks.length })
 
 %h4= _("Other")
 != link_to((_("Unassigned tasks (%{count})") % {:count => Task.unassigned.count}), tasks_path)
