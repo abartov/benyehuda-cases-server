@@ -1,5 +1,5 @@
 %tr{:class => cycle("odd", "even")}
-  %td.last.style13!= link_to h(task.name), task_path(task)
+  %td.first.style4!= link_to h(task.name), task_path(task)
   - if editing
     %td!= person_link(task.assignee)
   %td.style12= task.kind.try(:name)
