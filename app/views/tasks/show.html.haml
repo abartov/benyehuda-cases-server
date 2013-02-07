@@ -27,7 +27,7 @@
             %b
               = _("Instructions")+": "
           %td.instructions
-            = @task.instructions
+            != auto_link(@task.instructions)
       %br
       != render(:partial => "documents", :locals => {:documents => @task.documents})
       != render(:partial => "new_document")
