@@ -1,6 +1,6 @@
 - semantic_form_for(@chained_task ||= @task.clone, :task, :live_validations => false, :url => tasks_path(:id => @task.id), :remote => true, :method => :post) do |f|
   != f.object.errors.on(:base)
-  != render(:partial => "tasks/form", :locals => {:f => f})
+  != render(:partial => "tasks/form", :locals => {:f => f, :newkind => 'proofing'})
   - f.inputs do
     != f.fields_for :comments, @comment ||= @chained_task.comments.build do |comment|
       != comment.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => _("Message")
