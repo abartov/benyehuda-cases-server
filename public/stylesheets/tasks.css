@@ -77,9 +77,15 @@ p{margin:0 0 18px;}
 	height:100%;
 }
 .slogan{
-	float:right;
-	margin:15px 0 12px;
-	font:1.9285em/1.185 Arial, Helvetica, sans-serif;
+/*	float:right;*/
+  text-align:center;
+	margin-top:15px;
+  font-weight:bold;
+	font:2em Arial, Helvetica, sans-serif;
+  right:-65px;
+  position:relative;
+  display:block;
+	/* font:1.9285em/1.185 Arial, Helvetica, sans-serif; */
 }
 .task-title{
   padding-top:10px;
@@ -232,10 +238,11 @@ p{margin:0 0 18px;}
 	margin:0 10px 0 -10px;
 }
 .assignees{
-  width:300px;
+  width:500px;
 }
 .vtop{
   vertical-align:top;
+  padding-right:0px;
 }
 .float-right{
   float:right;
@@ -303,6 +310,7 @@ p{margin:0 0 18px;}
 	display:block;
   height:18px;
   padding:7px 10px 8px 12px;
+  border-radius:10px;
   font:bold 15px/18px Arial, Helvetica, sans-serif;
 }
 
@@ -331,6 +339,9 @@ p{margin:0 0 18px;}
   background: -moz-linear-gradient(top, #785f86, #53385b);
   /* IE 10 */
   background: -ms-linear-gradient(top, #785f86, #53385b);
+  /* older IE */
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#785f86', endColorstr='#53385b');
+
   /* Opera 11.10+ */
   background: -o-linear-gradient(top, #785f86, #53385b);
 }
@@ -592,3 +603,38 @@ p{margin:0 0 18px;}
   direction:rtl;
 }
 #footer p{margin:0;}
+
+div.editor_eyes_only {
+  background:#eee;
+}
+
+div.rejection_reason {
+  border:1px solid red;
+}
+
+div.abandoning_reason {
+  border:1px solid blue;
+}
+
+div.finished_reason {
+  border:1px solid green;
+}
+
+.disabled-user td {
+  background:red;
+}
+
+.site-notice {
+  background-color: #f6f6f6;
+  border-radius: 10px;
+  box-shadow:0 3px 5px #555;
+  padding: .5em 1em;
+  margin: 1em;
+}
+.sp20{
+  padding-left:20px;
+  padding-right:20px;
+}
+.left3{
+  padding-left:3.333em;
+}

@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   has_many_custom_properties :editor #editor_properties
 
   has_many :created_tasks, :class_name => "Task", :foreign_key => "creator_id"
-  has_many :editing_tasks, :class_name => "Task", :foreign_key => "editor_id", :order => "tasks.updated_at"
+  has_many :editing_tasks, :class_name => "Task", :foreign_key => "editor_id", :order => "tasks.updated_at desc"
   has_many :assigned_tasks, :class_name => "Task", :foreign_key => "assignee_id" #, :order => "tasks.updated_at"
 
   has_many :comments

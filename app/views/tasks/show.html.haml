@@ -12,7 +12,8 @@
         != _("Edit")
 .box
   .boxhead
-    = _("Task details")
+    %b
+      = _("Task details")
   .boxcontainer
     != render(:partial => "description")
     %br
@@ -26,7 +27,7 @@
             %b
               = _("Instructions")+": "
           %td.instructions
-            = @task.instructions
+            != auto_link(@task.instructions)
       %br
       != render(:partial => "documents", :locals => {:documents => @task.documents})
       != render(:partial => "new_document")

@@ -18,7 +18,7 @@
             - if @vol_rows == @waiting_volunteers.length
               - @theclass += " last-line"
             %tr{:class => @theclass}
-              %td.last.style4!= link_to(v.name, profiles_path(v))
+              %td.first.style4!= link_to(v.name, profiles_path(v))
               %td.style3!= mail_to v.email
               %td.style2!= waiting_for_task(v)
               %td.first.style1
@@ -29,3 +29,9 @@
                     %a.delete{ :href => user_path(v)+"/cancel_task_request"}
                       %span
                         = _("cancel_request")
+  :javascript
+    jQuery(function(){
+      jQuery('#assign_now').dialog({draggable:false, modal: true, resizable:false, autoOpen: false, width: 800,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
+    });
+  #assign_now{:title => _("Assign a Task")}
+
