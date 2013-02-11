@@ -4,18 +4,29 @@
       .regbox
         .boxbody
           %h2= _("Joining phase %{phase} of 3") % { :phase => '2' }
-          = _("Registered; expect e-mail")
           .highlightbox
+            %br
             .right
-              %b= @user.email
-            != link_to _("oops, wrong e-mail"), user_fix_email_path
-          .right
-            %b= _("if no e-mail")
-          .right
-            != _("what to do about missing e-mail")
+              #fix_email_link{ :class => "purple-button gradient" }
+                %span
+                  != link_to_function _("oops, wrong e-mail"), toggle_fix_email, :style=>"color:white;text-decoration:none" 
+            #fix_email_container{:style => "display:none"}
+              - form_for @user, :live_validations => true, :url => { :action => "fix_email", :id => @user.id } do |f|
+                = f.text_field :email, :required => true, :label => _("Email"), :wrapper_html => {:class => "clear"}, :placeholder => "name@something.net"
+                != f.submit _("Signup"), :class => 'purple-button gradient'
+            .clear
+            %br
+            .right
+              %b= _("if no e-mail")
+            %br  
+            .right
+              != _("what to do about missing e-mail")
+            %br
+          %br
     %td{ :width => "30%" }
       .regbox
         .boxbody
           %h2= _("What is volunteering?")
           %br
           != _("Volunteering explained")
+

@@ -6,6 +6,8 @@ CasesServer::Application.routes.draw do
   match '/login' => 'user_session#new', :as => :login
   resource :user_session, :controller => "user_session"
   match '/signup' => 'users#new', :as => :signup, :controller => "users"
+  match '/users/fix_email' => 'users#fix_email', :as => :fix_email, :controller => "users"
+  
   resources :users do
     resources :activation_instructions
     resources :assignment_histories

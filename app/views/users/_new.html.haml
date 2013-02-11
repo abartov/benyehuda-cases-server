@@ -4,8 +4,7 @@
       .regbox  
         .boxbody
           %h2= _("Joining phase %{phase} of 3") % { :phase => '1' }
-          = _("how to join")
-          %br
+          %p= _("how to join")
           - semantic_form_for(@user, :live_validations => true, :html => { :multipart => true }) do |f|
             = f.object.errors.on(:base)
             != render :partial => "users/new_user_form", :locals => { :f => f }

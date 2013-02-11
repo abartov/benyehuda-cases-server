@@ -1,6 +1,6 @@
 class UsersController < InheritedResources::Base
   before_filter :require_admin, :only => [:index, :destroy]
-  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_no_user, :only => [:new, :create, :fix_email]
   before_filter :require_owner, :only => [:edit, :update]
   before_filter :require_owner_or_public_profile, :only => :show
   before_filter :set_default_domain, :only => :create
@@ -12,18 +12,40 @@ class UsersController < InheritedResources::Base
   end
 
   def create
-    user = build_resource
-    user.name = [params[:user][:firstname], params[:user][:lastname]].join ' '
-    user.email = params[:user] && params[:user][:email] || user.email
-    user.is_admin = true if User.count.zero?
-    if user.save_without_session_maintenance
-      user.deliver_activation_instructions!
-      flash[:notice] = s_("Your account has been created. Please check your e-mail for your account activation instructions!")
-      redirect_to "/"
+    unless @fix_email.nil? 
+      @user = User.find(params[:id])
     else
+      @user = build_resource
+      @user.name = [params[:user][:firstname], params[:user][:lastname]].join ' '
+      @user.is_admin = true if User.count.zero? # automatically make first-ever user an administrator
+    end
+    @user.email = params[:user] && params[:user][:email] || user.email
+    if @user.save_without_session_maintenance
+      @user.deliver_activation_instructions!
+      flash[:notice] = s_("Your account has been created. Please check your e-mail (<b>%{email}</b>) for your account activation instructions!") % {:email => @user.email }
+      flash[:notice].html_safe
+      render :action => :reg2
+    else 
       render :action => :new
     end
   end
+  def fix_email
+    @fix_email = true
+    create
+  end
+#  def create
+#    user = build_resource
+#    user.name = [params[:user][:firstname], params[:user][:lastname]].join ' '
+#    user.email = params[:user] && params[:user][:email] || user.email
+#    user.is_admin = true if User.count.zero?
+#    if user.save_without_session_maintenance
+#      user.deliver_activation_instructions!
+#      flash[:notice] = s_("Your account has been created. Please check your e-mail for your account activation instructions!")
+#      redirect_to "/"
+#    else
+#      render :action => :new
+#    end
+#  end
 
   def update
     @user = User.find(params[:id])
@@ -64,7 +86,6 @@ class UsersController < InheritedResources::Base
       redirect_to '/'
     end
   end
-
 
   protected
 

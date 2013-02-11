@@ -68,6 +68,10 @@ module UserHelper
       ""
     end
   end
+  def toggle_fix_email
+    "jQuery('#fix_email_link, #fix_email_container').toggle();"
+  end
+
 
 protected
   def send_activation_link(user, text)
