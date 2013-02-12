@@ -149,6 +149,27 @@ class User < ActiveRecord::Base
     self.task_requested_at = nil
     save!
   end
+  def active?
+    active_in_last_n_years?(2)
+  end
+  def active_in_last_n_years?(n)
+    self.assignment_histories.each {|h|
+      if h.updated_at > n.years.ago
+        return true
+      end
+    }
+    return false  
+  end
+  def self.active_in_last_n_years(n)
+    ret = []
+    User.all_volunteers.each {|u|
+      ret << u if u.active_in_last_n_years?(n)
+    }
+    return ret
+  end
+  def to_csv
+    return "#{name.gsub('"','')}, #{email}, #{current_login_at.to_s}, #{activated_at.to_s}, #{assignment_histories.count}, http://tasks.benyehuda.org/profiles/#{id}"
+  end
 
   protected
 
