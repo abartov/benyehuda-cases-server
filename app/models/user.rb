@@ -149,10 +149,10 @@ class User < ActiveRecord::Base
     self.task_requested_at = nil
     save!
   end
-  def active?
+  def vol_active?
     active_in_last_n_years?(2)
   end
-  def active_in_last_n_years?(n)
+  def vol_active_in_last_n_years?(n)
     self.assignment_histories.each {|h|
       if h.updated_at > n.years.ago
         return true
@@ -160,10 +160,10 @@ class User < ActiveRecord::Base
     }
     return false  
   end
-  def self.active_in_last_n_years(n)
+  def self.vol_active_in_last_n_years(n)
     ret = []
     User.all_volunteers.each {|u|
-      ret << u if u.active_in_last_n_years?(n)
+      ret << u if u.vol_active_in_last_n_years?(n)
     }
     return ret
   end
