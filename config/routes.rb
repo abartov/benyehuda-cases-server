@@ -1,4 +1,11 @@
 CasesServer::Application.routes.draw do
+  get "report/stalled"
+  get "report/inactive"
+  get "report/active"
+  get "report/newvols"
+  get "report/index"
+  match '/report' => 'report#index'
+
   match '/activate/:id' => 'passwords#edit', :as => :activate
   match '/password' => 'passwords#update', :as => :password_update, :via => :put
   match '/password' => 'passwords#edit', :as => :password_edit, :via => :get
