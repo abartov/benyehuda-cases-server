@@ -153,14 +153,14 @@ class User < ActiveRecord::Base
     active_in_last_n_years?(2)
   end
   def vol_active_in_last_n_years?(n)
-    self.assignment_histories.each {|h|
+    self.assignment_histories.order('updated_at desc').each {|h|
       if h.updated_at > n.years.ago
         return true
       end
     }
     return false  
   end
-  def self.vol_active_in_last_n_years(n)
+  def self.vols_active_in_last_n_years(n)
     ret = []
     User.all_volunteers.each {|u|
       ret << u if u.vol_active_in_last_n_years?(n)
