@@ -1,0 +1,12 @@
+- set_tab :reports, _("Reports")
+
+%ul
+  %li
+    = link_to _("Stalled Tasks report"), report_stalled_path
+  %li
+    = link_to _("Inactive Volunteers report"), report_inactive_path
+  %li
+    = link_to _("Active Volunteers report"), report_active_path
+  %li
+    = link_to _("New Volunteers report"), report_newvols_path
+

@@ -7,6 +7,7 @@ module TabsHelper
     {:name => :profile, :title => N_("Profile"), :path => "/profile"},
     {:name => :volunteer_requests, :title => N_("Volunteer Requests"), :path => "/volunteer_requests", :if => :admin_or_editor?},
     {:name => :users, :title => N_("Users"), :path => "/users", :if => :is_admin?}, 
+    {:name => :reports, :title => N_("Reports"), :path => "/report", :if => :is_admin?},
     {:name => :tasks_admin, :title => N_("Tasks Admin"), :path => "/admin/tasks", :if => :is_admin?},
     {:name => :dashboard, :title => N_("Dashboard"), :path => "/dashboard"},
   ]
