@@ -32,7 +32,10 @@ class TasksController < InheritedResources::Base
 
   def index
     #@tasks = Task.unassigned.paginate(:page => params[:page], :per_page => params[:per_page])
-    tasks = Task.unassigned.sort_by {|t| t.kind.name + t.updated_at.to_i.to_s} # manual sort :( # TODO: figure out how to do this through the assoc
+    tasks = Task.unassigned.sort_by {|t| 
+      kindname = t.kind.nil? ? '' : t.kind.try(:name) # shouldn't happen -- is only the case in some odd old test items
+      kindname + t.updated_at.to_i.to_s # manual sort :( # TODO: figure out how to do this through the assoc
+    }
     @tasks = tasks.reverse.paginate(:page => params[:page], :per_page => params[:per_page])
     @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
   end
