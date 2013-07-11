@@ -33,7 +33,7 @@
                     %a.up{ :href => dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Kind")
                   %th.style7
-                    - if stalled
+                    - if defined? stalled and stalled 
                       %a.up{ :href=> dashboard_path(:order_by_updated_at => {:dir => order_direction(params[:order_by_updated_at].try(:[], :dir))})}
                         = _("Last Updated")
                     - else
