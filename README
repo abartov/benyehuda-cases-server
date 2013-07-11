@@ -8,3 +8,6 @@ We welcome patches, volunteer work, and interns interested in gaining experience
 
 Write to us at editor@benyehuda.org
 
+To set up an environment, install RVM (http://get.rvm.io), and, on Ubuntu, I needed to install development libraries for MySQL and libxml2 to allow bundler to install the gems, so use something like:
+
+  sudo apt-get install libmysqlclient-dev libxml2-dev
