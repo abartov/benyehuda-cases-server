@@ -33,14 +33,18 @@
                     %a.up{ :href => dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Kind")
                   %th.style7
-                    %a.up{ :href => dashboard_path(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
-                      = _("State") 
+                    - if stalled
+                      %a.up{ :href=> dashboard_path(:order_by_updated_at => {:dir => order_direction(params[:order_by_updated_at].try(:[], :dir))})}
+                        = _("Last Updated")
+                    - else
+                      %a.up{ :href => dashboard_path(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
+                        = _("State") 
                   %th.style12
                     %a.up{ :href => dashboard_path(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) } 
                       = _("Files") 
                   %th.first.style11
                     \&nbsp;
-                != render(:partial => tasks, :locals => {:editing => editing})
+                != render(:partial => tasks, :locals => {:editing => editing, :stalled => stalled})
     .b
       %span.l
         %span.c

@@ -3,8 +3,10 @@
   - if editing
     %td!= person_link(task.assignee)
   %td.style12= task.kind.try(:name)
-  %td.style7= Task.textify_state(task.state)
-  / %td= _("%{time} ago") % {:time => time_ago_in_words(task.updated_at)}
+  - if stalled
+    %td= _("%{time} ago") % {:time => time_ago_in_words(task.updated_at)}
+  - else
+    %td.style7= Task.textify_state(task.state)
   / %td!= link_to h(task.name), task_path(task)
   / %td= task.kind.try(:name)
   / %td!= person_link(task.editor)

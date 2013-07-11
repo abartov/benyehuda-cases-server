@@ -7,6 +7,7 @@ class ReportController < InheritedResources::Base
   def index
   end
   def stalled
+    @tasks = Task.assigned.where(:updated_at => 20.years.ago..6.months.ago)
   end
 
   def inactive

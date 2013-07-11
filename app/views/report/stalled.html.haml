@@ -1,2 +1,3 @@
-<h1>Report#stalled</h1>
-<p>Find me in app/views/report/stalled.html.erb</p>
+%h1= _("Stalled Tasks report")
+!= render :partial => "tasks/index", :locals => { :tasks => @tasks, :editing => false, :title => _("Stalled Tasks report"), :stalled => true }
+
