@@ -1,3 +1,9 @@
-!= render(:partial => "tasks/assignee_simple_actions", :locals => {:task => @task})
+-#!= render(:partial => "tasks/assignee_simple_actions", :locals => {:task => @task})
+- if @task.can_be_finished?
+  .float-right
+    %a.purple-button.gradient{ :href => edit_task_path(@task) }
+      %span
+        != textify_event("finish")
+.float-right
+  - commentable_event_form("abandon")
 
-- commentable_event_form("abandon")

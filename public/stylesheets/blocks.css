@@ -1,4 +1,5 @@
-.block {
+/* removed by Asaf to not conflict with new design */ /* .block { */
+.zblock {
 	border:2px solid #ddd;
 	border-radius: 4px;
 	padding:1em;

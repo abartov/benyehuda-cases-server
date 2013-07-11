@@ -19,6 +19,7 @@ module Task::States
       aasm_state          :stuck
 
       # assignee work in progress, and partially ready
+      # NOTE: As of Nov 2012, this state is not used.
       aasm_state          :partial
 
       # assignee complete the work

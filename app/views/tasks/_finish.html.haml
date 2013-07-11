@@ -4,4 +4,6 @@
       != comment_fields.input :message, :as => :text, :input_html => {:id => "finish_comment_message", :class => "comment_message #{has_abandoning_errors? && 'active activated'}"}, :label => _("Task Finishing Comments")
     != f.input :request_new_task, :as => :boolean, :label => _("Also request a new task")
   != f.submit _("Finish")
-  != link_to _("cancel"), task_path(@task)
+  .gray-button
+    %span
+      != link_to _("cancel"), task_path(@task), :style => "color:#565253"

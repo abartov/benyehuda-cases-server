@@ -25,7 +25,7 @@ protected
     when :params
       params[:locale]
     when :session
-      session[:locale] rescue ""
+      session[:locale] rescue "he"
     when :cookie
       cookies[:locale]
     when :domain
@@ -75,8 +75,12 @@ protected
   alias :authenticate_translations_admin :require_admin
 
   before_filter :setup_will_paginate
+  before_filter :set_locale
   def setup_will_paginate
     WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
     WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+  end
+  def set_locale
+    FastGettext.locale = 'he'
   end
 end

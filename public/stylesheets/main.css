@@ -1,0 +1,136 @@
+/* -------------------------------------------------------------------------------------------------
+
+Load this stylesheet after formtastic.css in your layouts to override the CSS to suit your needs.
+This will allow you to update formtastic.css with new releases without clobbering your own changes.
+
+For example, to make the inline hint paragraphs a little darker in color than the standard #666:
+
+form.formtastic fieldset ol li p.inline-hints { color:#333; }
+
+--------------------------------------------------------------------------------------------------*/
+
+.comment_message {
+	height:30px;
+	display:block;
+  -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;width: 100%;
+}
+
+.comment_message.activated {
+	height:120px;
+	display:block;
+}
+
+form.formtastic ol, form.formtastic ul { list-style:none; }
+
+#header, #content, #footer {
+  border:1px solid #eee;
+}
+
+#tabs {
+  padding-top:1em;
+}
+
+#tabs ul.tabs {
+  height:auto;
+  direction:rtl;
+  margin-left: 213px;
+}
+
+table.list {
+  width:100%;
+}
+
+table.list tr.title {
+  background:#eee;
+}
+
+table.list td,  table.list th{
+  border:1px solid #ddd;
+}
+
+div.editor_eyes_only {
+  background:#eee;
+}
+
+div.rejection_reason {
+  border:1px solid red;
+}
+
+div.abandoning_reason {
+  border:1px solid blue;
+}
+
+div.finished_reason {
+  border:1px solid green;
+}
+
+.disabled-user td {
+  background:red;
+}
+
+/*
+.site-notice {
+  margin-left:auto;
+  margin-right:auto;
+  margin-top:2px;
+  margin-bottom:2px;
+  padding:5px 20px;
+  border:1px solid #ddd;
+  background:white;
+  / * background:#e5ecf9; * /
+  border-left:1em solid #ddd;
+  width:60%;
+}
+*/
+
+.block.prominent {
+  font-size:125%;
+  background:#E5ECF9;
+}
+
+.prominent a {
+  font-weight:bold;
+}
+
+.simplemodal-data{
+  direction:rtl;
+}
+
+#simplemodal-container .simplemodal-container {
+  border:2px solid gray;
+  background:#e5ecf9;
+  padding-right:15px;
+  padding-left:15px;
+  padding-top:5px;
+}
+
+#simplemodal-container a.modalCloseImg {
+  background:url(/images/x.png) no-repeat; /* adjust url as required */
+  width:25px;
+  height:29px;
+  display:inline;
+  z-index:3200;
+  position:absolute;
+  top:-15px;
+  right:-18px;
+  cursor:pointer;
+}
+
+#new_kind_msg {
+  background:white;
+  display:none;
+}
+
+/*
+ * #XXX
+[if lt IE 7]
+#simplemodal-container a.modalCloseImg {
+  background:none;
+  right:-14px;
+  width:22px;
+  height:26px;
+  filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(
+    src='img/x.png', sizingMethod='scale'
+  );
+}
+*/

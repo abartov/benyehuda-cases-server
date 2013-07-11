@@ -12,4 +12,6 @@
     - custom_properties_fields(f, "request")
   - f.inputs do
     = f.submit _("Request")
-    = link_to _("cancel"), dashboard_path
+    .gray-button
+      %span
+        = link_to _("cancel"), dashboard_path, :style => "color:#565253"

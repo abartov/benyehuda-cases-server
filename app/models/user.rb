@@ -63,7 +63,7 @@ class User < ActiveRecord::Base
   has_many_custom_properties :editor #editor_properties
 
   has_many :created_tasks, :class_name => "Task", :foreign_key => "creator_id"
-  has_many :editing_tasks, :class_name => "Task", :foreign_key => "editor_id", :order => "tasks.updated_at"
+  has_many :editing_tasks, :class_name => "Task", :foreign_key => "editor_id", :order => "tasks.updated_at desc"
   has_many :assigned_tasks, :class_name => "Task", :foreign_key => "assignee_id" #, :order => "tasks.updated_at"
 
   has_many :comments
@@ -148,6 +148,36 @@ class User < ActiveRecord::Base
   def clear_task_requested!
     self.task_requested_at = nil
     save!
+  end
+  def vol_active?
+    active_in_last_n_years?(6)
+  end
+  def vol_active_in_last_n_months?(n)
+    self.assignment_histories.order('updated_at desc').each {|h|
+      if h.updated_at > n.months.ago
+        return true
+      end
+    }
+    return false  
+  end
+  def self.vols_active_in_last_n_months(n)
+    ret = []
+    User.all_volunteers.each {|u|
+      ret << u if u.vol_active_in_last_n_months?(n)
+    }
+    return ret
+  end
+  def self.vols_inactive_in_last_n_months(n)
+    ret = []
+    User.all_volunteers.each {|u|
+      ret << u unless u.vol_active_in_last_n_months?(n)
+    }
+  end
+  def self.vols_newer_than(t)
+    return User.all_volunteers.where(:activated_at => t..Date.today)
+  end
+  def to_csv
+    return "#{name.gsub('"','')}, #{email}, #{current_login_at.to_s}, #{activated_at.to_s}, #{assignment_histories.count}, http://tasks.benyehuda.org/profiles/#{id}"
   end
 
   protected

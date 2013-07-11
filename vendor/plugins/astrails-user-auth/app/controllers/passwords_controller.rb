@@ -40,7 +40,7 @@ class PasswordsController < InheritedResources::Base
 
     update! do |success, failure|
       if resource.errors.empty?
-        @user.send(@acticated ? :deliver_activation_confirmation! : :deliver_password_reset_confirmation!)
+        @user.send(@activated ? :deliver_activation_confirmation! : :deliver_password_reset_confirmation!)
       else
         resource.activated_at = nil if @activated # need to revert so that the password_edit_title will set right title
       end

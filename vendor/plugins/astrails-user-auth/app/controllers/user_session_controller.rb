@@ -7,12 +7,18 @@ class UserSessionController < InheritedResources::Base
   def create
     create! do |success, failure|
       success.html do
-        if current_user.disabled?
-          flash[:error] = _("Your account has been disabled, please contact support.")
-          flash.delete(:notice)
-          current_user_session.destroy
-          redirect_to login_path
+        # somehow current_user is sometimes nil here --AB
+        unless current_user.nil?
+          if current_user.disabled?
+            flash[:error] = _("Your account has been disabled, please contact support.")
+            flash.delete(:notice)
+            current_user_session.destroy
+            redirect_to login_path
+          else
+            redirect_to home_path
+          end
         else
+          current_user_session.destroy unless current_user_session.nil?
           redirect_to home_path
         end
       end

@@ -48,7 +48,8 @@ del {color:#666;}
 pre {margin:1.5em 0;white-space:pre;}
 pre, code, tt {font:1em 'andale mono', 'lucida console', monospace;line-height:1.5;}
 li ul, li ol {margin:0;}
-ul, ol {margin:0 1.5em 1.5em 0;padding-left:3.333em;}
+ul, ol {margin:0 1.5em 1.5em 0;}
+/*ul, ol {margin:0 1.5em 1.5em 0;padding-left:3.333em;}*/
 ul {list-style-type:disc;}
 ol {list-style-type:decimal;}
 dl {margin:0 0 1.5em 0;}
@@ -58,7 +59,7 @@ table {margin-bottom:1.4em;width:100%;}
 th {font-weight:bold;}
 thead th {background:#c3d9ff;}
 th, td, caption {padding:4px 10px 4px 5px;}
-tr.even td {background:#e5ecf9;}
+/* tr.even td {background:#e5ecf9;} */ /* commented out to not conflict with new design - Asaf */
 tfoot {font-style:italic;}
 caption {background:#eee;}
 .small {font-size:.8em;margin-bottom:1.875em;line-height:1.875em;}

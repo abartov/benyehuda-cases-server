@@ -1,23 +1,37 @@
-- if !@waiting_volunteers.blank? && !@waiting_volunteers_rednered_once
-  - @waiting_volunteers_rednered_once = true
-  %h4= _("Volunteers waiting for tasks")
-  %table.list
-    %tr.title
-      %th= _("Name")
-      %th= _("Email")
-      %th= _("Waits for")
-      %th &nbsp;
-      %th &nbsp;
-    - @waiting_volunteers.each do |v|
-      %tr{:class => cycle("odd", "even")}
-        %td!= link_to(v.name, profiles_path(v))
-        %td!= mail_to v.email
-        %td!= waiting_for_task(v)
-        %td!= link_to_assign_a_task(v)
-        %td!= link_to _("cancel_request"), {:controller => "users", :id => v.id, :action => "cancel_task_request" }
+- if !@waiting_volunteers.blank? && !@waiting_volunteers_rendered_once
+  - @waiting_volunteers_rendered_once = true
+  - @vol_rows = 0
+  .l
+    .holder
+      /
+        data-table
+      %table.data-table
+        %tbody
+          %tr
+            %th.first.style4= _("Name")
+            %th.style3= _("Email")
+            %th.style2= _("Waits for")
+            %th.first.style1 &nbsp;
+          - @waiting_volunteers.each do |v|
+            - @vol_rows += 1
+            - @theclass = cycle("odd", "even")
+            - if @vol_rows == @waiting_volunteers.length
+              - @theclass += " last-line"
+            %tr{:class => @theclass}
+              %td.first.style4!= link_to(v.name, profiles_path(v))
+              %td.style3!= mail_to v.email
+              %td.style2!= waiting_for_task(v)
+              %td.first.style1
+                %ul.links
+                  %li
+                    !=link_to_assign_a_task(v)
+                  %li
+                    %a.delete{ :href => user_path(v)+"/cancel_task_request"}
+                      %span
+                        = _("cancel_request")
   :javascript
     jQuery(function(){
       jQuery('#assign_now').dialog({draggable:false, modal: true, resizable:false, autoOpen: false, width: 800,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
     });
   #assign_now{:title => _("Assign a Task")}
-    laksdjf;lkaj dsfljhaslkjfhas
+

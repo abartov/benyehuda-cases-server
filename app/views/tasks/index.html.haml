@@ -1,5 +1,15 @@
-- set_tab :dashboard
+- stalled = false unless defined? stalled
 
-!= link_to _("back to dashboard"), dashboard_path
+.heading
+  - set_tab :dashboard
 
-!= render(:partial => "tasks/index", :locals => {:tasks => @tasks, :title => _("Unassigned Tasks")})
+.bar
+  / add-nav
+  %ul.add-nav
+    %li
+      %a.link1{ :href => dashboard_path }
+        %span
+          %em
+            != _("back to dashboard")
+
+!= render(:partial => "tasks/index", :locals => {:tasks => @tasks, :editing => false, :stalled => stalled, :title => _("Unassigned Tasks")})

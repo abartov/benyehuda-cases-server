@@ -1,4 +1,4 @@
-domain = (GlobalPreference.get(:domain) || "benyehuda.com") rescue "benyehuda.com"
+domain = (GlobalPreference.get(:domain) || "benyehuda.org") rescue "benyehuda.org"
 ActionMailer::Base.smtp_settings = {
   :address => "localhost",
   :port => 25,

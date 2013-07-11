@@ -1,4 +1,7 @@
 class Task < ActiveRecord::Base
+  PROP_SOURCE = 131
+  PROP_RASHI = 121
+  PROP_INSTRUCTIONS = 61
   include ActsAsAuditable
   acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud,
     :conversions => {
@@ -151,7 +154,25 @@ class Task < ActiveRecord::Base
     doc.user_id = uploader.id
     doc
   end
-
+  # convenience method for custom prop
+  def source
+    self.task_properties.each {|p|
+      return p.custom_value if p.property_id == PROP_SOURCE
+    }
+    return ""
+  end
+  def rashi
+    self.task_properties.each{|p|
+      return p.custom_value if p.property_id == PROP_RASHI
+    }
+    return ""
+  end
+  def instructions
+    self.task_properties.each{|p|
+      return p.custom_value if p.property_id == PROP_INSTRUCTIONS
+    }
+    return ""
+  end
   def self.textify_difficulty(dif)
     s_(DIFFICULTIES[dif]) if DIFFICULTIES[dif]
   end
