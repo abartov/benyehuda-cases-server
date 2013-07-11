@@ -3,7 +3,7 @@
   - if editing
     %td!= person_link(task.assignee)
   %td.style12= task.kind.try(:name)
-  - if stalled
+  - if defined? stalled and stalled
     %td= _("%{time} ago") % {:time => time_ago_in_words(task.updated_at)}
   - else
     %td.style7= Task.textify_state(task.state)
