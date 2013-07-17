@@ -31,7 +31,7 @@
                         = _("cancel_request")
   :javascript
     jQuery(function(){
-      jQuery('#assign_now').dialog({draggable:true, modal: true, resizable:true, autoOpen: false, width: 800,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
+      jQuery('#assign_now').dialog({draggable:true, modal: true, resizable:true, autoOpen: false, position: ['top', 20], width: 950,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
     });
   #assign_now{:title => _("Assign a Task")}
 
