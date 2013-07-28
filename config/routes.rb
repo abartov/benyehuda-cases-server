@@ -32,6 +32,7 @@ CasesServer::Application.routes.draw do
     resources :task_kinds, :only => [:create, :new, :index, :destroy]
     resources :volunteer_kinds, :only => [:create, :new, :index, :destroy]
   end
+  get '/admin/changes', :controller => 'admin/tasks', :action => 'changes'
 
   resources :tasks do
     resources :documents

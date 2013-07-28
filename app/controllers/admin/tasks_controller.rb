@@ -1,6 +1,6 @@
 class Admin::TasksController < InheritedResources::Base
   before_filter :require_admin
-  actions :index, :new, :create, :edit, :update, :destroy
+  actions :index, :new, :create, :edit, :update, :destroy, :changes
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
   respond_to :js
@@ -37,9 +37,18 @@ class Admin::TasksController < InheritedResources::Base
     current_user.search_settings.set_from_params!(params)
     default_index_with_search!
   end
-
+  def changes
+    changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page])
+    # group audits by task
+    @changes = {}
+    changes.each {|c|
+      unless @changes.has_key? c.task_id
+        @changes[c.task_id] = []
+      end
+      @changes[c.task_id] << c
+    }
+  end
   protected
-
   def collection
     @tasks ||= apply_scopes(Task).filter(params)
   end
