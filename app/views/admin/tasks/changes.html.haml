@@ -5,7 +5,14 @@
     %th= _('Changes')
   - @changes.each do |task_id, changes|
     %tr 
-      %td= link_to h(changes.first.task.name), task_path(changes.first.task)
+      - t = Task.find_by_id(task_id)
+      - if t.nil?
+        - tname = "ERROR"
+        - tpath = ''
+      - else
+        - tname = h(t.name)
+        - tpath = task_path(t)
+      %td= link_to h(tname), tpath
       %td
         %tr
           %th= _('Last Updated')
