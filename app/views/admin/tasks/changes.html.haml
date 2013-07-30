@@ -3,7 +3,9 @@
   %tr
     %th= _('Task title')
     %th= _('Changes')
-  - @changes.each do |task_id, changes|
+  - @ordered_changes.each do |chg|
+    - task_id = chg
+    - changes = @changes[chg]
     %tr 
       - t = Task.find_by_id(task_id)
       - if t.nil?

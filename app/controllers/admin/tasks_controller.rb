@@ -41,9 +41,11 @@ class Admin::TasksController < InheritedResources::Base
     @raw_changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page], :per_page => 100)
     # group audits by task
     @changes = {}
+    @ordered_changes = []
     @raw_changes.each {|c|
       unless @changes.has_key? c.task_id
         @changes[c.task_id] = []
+        @ordered_changes << c.task_id
       end
       @changes[c.task_id] << c
     }
