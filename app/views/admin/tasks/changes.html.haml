@@ -1,0 +1,22 @@
+%h1= _("Recent Changes")
+%table
+  %tr
+    %th= _('Task title')
+    %th= _('Changes')
+  - @changes.each do |task_id, changes|
+    %tr 
+      %td= link_to h(changes.first.task.name), task_path(changes.first.task)
+      %td
+        %tr
+          %th= _('Last Updated')
+          %th= _('Volunteer')
+          %th= _('Changes')
+        - changes.each do |c|  
+          %tr
+            %td= time_ago_in_words(c.updated_at)
+            %td= link_to(h(c.user.name), user_path(c.user))
+            %td= c.long_messages.join("; ")
+    %tr
+      %td{:colspan => 3}
+        %hr
+!= will_paginate(@raw_changes)

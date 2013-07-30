@@ -38,10 +38,10 @@ class Admin::TasksController < InheritedResources::Base
     default_index_with_search!
   end
   def changes
-    changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page])
+    @raw_changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page], :per_page => 100)
     # group audits by task
     @changes = {}
-    changes.each {|c|
+    @raw_changes.each {|c|
       unless @changes.has_key? c.task_id
         @changes[c.task_id] = []
       end
