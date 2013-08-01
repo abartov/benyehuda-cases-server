@@ -1,7 +1,16 @@
 - if @tasks.blank?
   = _("No Tasks found")
 - else
-  %h4= _("Assign a task to %{user_name}") % {:user_name => h(@assignee.name)}
+  .right
+    %h4= _("Assign a task to %{user_name}") % {:user_name => h(@assignee.name)}
+    = form_tag(tasks_path, params.merge(:method => :get, :remote => true)) do
+      / = label_tag :full_nikkud, _("Full Nikkud")
+      / = check_box_tag :full_nikkud, "true", "true" == params[:full_nikkud]
+      = label_tag :kind, _("Kind")
+      = select_tag :kind, options_for_select([""] + task_kinds_for_select(:name), params[:kind])
+      != '<input type="hidden" name="assignee_id" value="%{a}"/>' % {:a => @assignee.id}
+      != '<input type="hidden" name="per_page" value="15"/>' 
+      = submit_tag _("Filter")
   %table.list
     %tr
       %th &nbsp;

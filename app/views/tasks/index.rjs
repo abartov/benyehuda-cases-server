@@ -1,1 +1,0 @@
-page << "jQuery('#assign_now').html(#{render(:partial => "tasks/unassigned_index").to_json})"

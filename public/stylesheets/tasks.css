@@ -592,6 +592,10 @@ p{margin:0 0 18px;}
 }
 #footer p{margin:0;}
 
+div.right {
+  direction:rtl;
+  text-align:right;
+}
 div.editor_eyes_only {
   background:#89BCE8;
 }
