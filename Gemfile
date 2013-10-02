@@ -40,6 +40,7 @@ gem 'jquery-rails', '>= 1.0.12'
 gem 'image_science', :require => false
 gem 'rmagick'
 gem 'mini_magick'
+gem 'nokogiri', '1.5.6' # required by something, and 1.6.0 dropped Ruby 1.8.7 support, so we force it here
 
 gem 'astrails-safe'
 
