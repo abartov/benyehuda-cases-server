@@ -69,8 +69,7 @@ GEM
     formtastic (2.2.1)
       actionpack (>= 3.0)
     gravtastic (2.2.0)
-    haml (4.0.3)
-      tilt
+    haml (3.1.7)
     has_scope (0.5.1)
     high_voltage (1.2.1)
     hoe (2.8.0)
@@ -182,7 +181,6 @@ GEM
       innertube (~> 1.0.2)
       riddle (>= 1.5.6)
     thor (0.14.6)
-    tilt (1.4.1)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -215,7 +213,7 @@ DEPENDENCIES
   fastercsv
   formtastic
   gravtastic (= 2.2.0)
-  haml
+  haml (= 3.1.7)
   has_scope
   high_voltage (= 1.2.1)
   hoe (= 2.8.0)

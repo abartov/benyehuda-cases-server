@@ -12,7 +12,7 @@ gem 'will_paginate', "2.3.15", :require => 'will_paginate'
 gem "tzinfo"
 gem 'formtastic'
 gem 'sass'
-gem 'haml'
+gem 'haml', '3.1.7'
 gem 'fast_gettext'
 gem 'ruby_parser', :require => false
 gem "aasm", '3.0.16'
