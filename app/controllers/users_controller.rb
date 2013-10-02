@@ -36,6 +36,7 @@ class UsersController < InheritedResources::Base
       @user.email = params[:user][:email] || @user.email
     end
     update!
+    redirect_to "/"
   end
 
   def destroy
