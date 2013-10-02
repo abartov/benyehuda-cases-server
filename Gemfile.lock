@@ -72,7 +72,7 @@ GEM
     haml (4.0.3)
       tilt
     has_scope (0.5.1)
-    high_voltage (1.2.4)
+    high_voltage (1.2.1)
     hoe (2.8.0)
       rake (>= 0.8.7)
     i18n (0.5.0)
@@ -217,7 +217,7 @@ DEPENDENCIES
   gravtastic (= 2.2.0)
   haml
   has_scope
-  high_voltage
+  high_voltage (= 1.2.1)
   hoe (= 2.8.0)
   image_science
   inherited_resources

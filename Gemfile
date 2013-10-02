@@ -24,7 +24,7 @@ gem 'gravtastic', "2.2.0"
 gem 'vlad', '1.4.0', :require => false
 gem "RubyInline"
 gem "daemons"
-gem 'high_voltage'
+gem 'high_voltage', '1.2.1'
 gem 'inherited_resources'
 gem 'has_scope'
 gem 'hoe', '2.8.0'
