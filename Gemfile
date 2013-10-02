@@ -15,7 +15,7 @@ gem 'sass'
 gem 'haml'
 gem 'fast_gettext'
 gem 'ruby_parser', :require => false
-gem "aasm"
+gem "aasm", '3.0.16'
 gem 'mime-types', :require => 'mime/types'
 gem "fastercsv"
 gem 'airbrake'
