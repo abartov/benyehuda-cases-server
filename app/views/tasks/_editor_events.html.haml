@@ -9,12 +9,16 @@
     .float-right.purple-button.gradient{ :style => "padding:0px;", :id => "new_task_link"}
       %span
         != link_to_function _("Create new task based on this one"), toggle_chained_js, :style=>"color:white;text-decoration:none"
-    %div{ :style => 'padding-bottom:30px'}
-    #new_task_container{:style => "display:none"}
-      .box
-        .boxhead
-          = _("Create new task based on this one")
-        .boxcontainer
-          .boxbody
-            != render(:partial => "tasks/new_chain_task")
+  .float-right
+    %a.purple-button.gradient{ :href => task_path(@task)+'/make_comments_editor_only' }
+      %span
+        = _("Make comments editor-only")
+  %div{ :style => 'padding-bottom:30px'}
+  #new_task_container{:style => "display:none"}
+    .box
+      .boxhead
+        = _("Create new task based on this one")
+      .boxcontainer
+        .boxbody
+          != render(:partial => "tasks/new_chain_task")
   - commentable_event_form("reject")

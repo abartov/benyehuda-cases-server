@@ -18,6 +18,7 @@ CasesServer::Application.routes.draw do
     resources :assignment_histories
   end
   get '/users/:id/cancel_task_request', :controller => 'users', :action => 'cancel_task_request'
+  get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
 
   resource :profile, :controller => "users"
   match '/profiles/:id' => 'users#show', :as => :profiles, :public_profile => true

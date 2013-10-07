@@ -10,6 +10,14 @@ class TasksController < InheritedResources::Base
     return unless _allow_event?(resource, :finish, current_user)
     @no_docs_uploaded = resource.documents.uploaded_by(current_user).count.zero?
   end
+  def make_comments_editor_only
+    @task = Task.find(params[:id])
+    @task.comments.each {|c|
+      c.editor_eyes_only = true
+      c.save!
+    }
+    redirect_to(@task)
+  end
 
   def create
     @task = Task.find(params[:id])
