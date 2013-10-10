@@ -10,7 +10,7 @@ class Notification < ActionMailer::Base
     from        from_address
     recipients  recipient_users.collect(&:email_recipient)
     sent_on     Time.now.utc
-    body        :comment => comment, :task_url => task_url(comment.task), :domain => domain
+    body        :comment => comment, :task_url => task_url(comment.task)
   end
 
   def task_state_changed(task, recipient_users)
