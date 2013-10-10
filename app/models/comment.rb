@@ -38,6 +38,6 @@ class Comment < ActiveRecord::Base
     end
     return if recipients.blank?
 
-    I18n.with_locale(I18n.locale) { Notification.deliver_comment_added(self, recipients) }
+    I18n.with_locale('he') { Notification.deliver_comment_added(self, recipients) }
   end
 end
