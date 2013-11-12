@@ -1,3 +1,4 @@
 %h1= _("New Volunteers report")
+%h2= _("Total volunteers: ")+@users.count.to_s
 != render :partial => "users/index", :locals => { :users => @users }
 
