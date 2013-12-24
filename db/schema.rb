@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20131006191248) do
+ActiveRecord::Schema.define(:version => 20131224195017) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(:version => 20131006191248) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.boolean  "done"
   end
 
   create_table "global_preferences", :force => true do |t|

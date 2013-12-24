@@ -154,6 +154,17 @@ class Task < ActiveRecord::Base
     doc.user_id = uploader.id
     doc
   end
+  
+  def files_todo
+    todo = self.documents_by_extensions(['pdf', 'jpg'])
+    return todo.length
+  end
+  def files_done
+    self.documents.where(done: true).length
+  end
+  def files_left
+    return files_todo - files_done
+  end
   # convenience method for custom prop
   def source
     self.task_properties.each {|p|
@@ -179,5 +190,15 @@ class Task < ActiveRecord::Base
 
   def self.textify_state(state)
     s_(TaskState.find_by_name(state.to_s).value)
+  end
+  protected
+  def documents_by_extensions(exts)
+    ret = []
+    self.documents.each { |f|
+      pos = f.file_file_name.rindex('.')
+      next if pos.nil?
+      ret << f if exts.include?(f.file_file_name[pos+1..-1])
+    }
+    return ret
   end
 end
