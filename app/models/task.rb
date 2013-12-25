@@ -165,6 +165,9 @@ class Task < ActiveRecord::Base
   def files_left
     return files_todo - files_done
   end
+  def percent_done
+    return (files_done.to_f / files_todo * 100).round
+  end
   # convenience method for custom prop
   def source
     self.task_properties.each {|p|
