@@ -166,6 +166,9 @@ class Task < ActiveRecord::Base
     return files_todo - files_done
   end
   def percent_done
+    total = files_todo
+    return 0 if total.nil? or total == 0
+    done = files_done || 0
     return (files_done.to_f / files_todo * 100).round
   end
   # convenience method for custom prop
