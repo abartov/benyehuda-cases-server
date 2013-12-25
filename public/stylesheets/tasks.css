@@ -630,3 +630,6 @@ div.finished_reason {
 .left3{
   padding-left:3.333em;
 }
+div.ajaxed {
+  background-color: #72C49E;
+}

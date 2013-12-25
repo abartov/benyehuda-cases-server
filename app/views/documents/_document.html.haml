@@ -1,17 +1,24 @@
 %li
   %div[document]
-    -#= raw (document_counter+1).to_s+". \t"
+    = check_box_tag("doc#{document.id}", "done", (document.done || false), :class => "dyn_checkbox", 'data-remote' => true, 'data-method' => 'get', 'data-url' => "/tick_file/#{document.id}")
+    = raw ' &mdash; '
     - if document.image?
       %a{ :href => task_document_path(document.task, document), :target => "_blank"}
         != document.file_file_name
       -# != link_to document.file_file_name+'&rlm;', task_document_path(document.task, document), :target => "_blank"
-      = raw '&rlm;'
     - else
       %a{ :href => document.file.url, :target => "_blank"}
         != document.file_file_name
       -#!= link_to document.file_file_name+'&rlm;', document.file.url
-      = raw '&rlm;'
+    = raw '&rlm;'
     = "(#{sprintf("%.2f", document.file_file_size.to_f/1024)} KB)"
     != _("Uploaded by %{user} %{time} ago") % {:user => link_to(h(document.user.name), profiles_path(document.user)), :time => time_ago_in_words(document.created_at)}
     - if document_can_be_deleted_by?(document, current_user)
       != link_to _("Remove"), task_document_path(document.task_id, document), :method => :delete, :confirm => _('Are you sure?'), :remote => true
+
+:javascript
+  $(document).ready(function() {
+    $('.dyn_checkbox')
+      .bind("ajax:success", function(evt, xhr, settings) { $(this).parent().addClass("ajaxed"); }); 
+  });
+

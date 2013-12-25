@@ -160,7 +160,7 @@ class Task < ActiveRecord::Base
     return todo.length
   end
   def files_done
-    self.documents.where(done: true).length
+    self.documents.where("done" => true).length
   end
   def files_left
     return files_todo - files_done
