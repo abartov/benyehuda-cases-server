@@ -111,24 +111,22 @@ class Task < ActiveRecord::Base
     "short" => 0..7,
     "medium" => 8..24,
   }
-  TASK_LENGTH.default = 25..100000000
+  TASK_LENGTH.default = 25..100000
 
   SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length"]
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
-
     search_opts = {:conditions => {}, :with => {}}
     search_opts[:conditions][:state] = opts[:state] unless opts[:state].blank?
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
-
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
-      self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
+      ret = self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
-      self.search Riddle.escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
+      ret = self.search Riddle.escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
     end
   end
 

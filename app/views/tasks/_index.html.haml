@@ -44,7 +44,7 @@
                     %a.up{ :href => dashboard_path(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) } 
                       = _("Files") 
                   %th.style7
-                    %a.up{ :href => dashboard_path(:order_by => {:property => "percent_done", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                    %a.up{ :href => dashboard_path(:sort_by => "percent_done", :dir => order_direction(params[:order_by].try(:[], :dir)), :order_by => { :dir =>order_direction(params[:order_by].try(:[], :dir)), :property => 'documents_count' })}
                       = _("Progress")
                   %th.first.style11
                     \&nbsp;
