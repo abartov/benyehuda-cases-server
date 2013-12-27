@@ -1,14 +1,15 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.20'
-gem 'rake', '0.8.7'
-gem 'rack', '1.2.6'
+gem 'rails', '3.2.15'
+gem 'rake'
+gem 'rack'
 gem "builder"
 gem "json", '>=1.7.7'
 gem "mysql"
+gem "mysql2"
 gem 'authlogic'
 gem 'whenever'
-gem 'will_paginate', "2.3.15", :require => 'will_paginate'
+gem 'will_paginate', '~> 3.0.5'
 gem "tzinfo"
 gem 'formtastic'
 gem 'sass'
@@ -29,9 +30,9 @@ gem 'inherited_resources'
 gem 'has_scope'
 gem 'hoe', '2.8.0'
 #gem 'grosser-pomo', :source => "http://gems.github.com/", :version => '>=0.5.1'
-
+gem 'debugger'
 gem 'aws-s3', :require => "aws/s3"
-gem 'paperclip', '~>2.4.5'  # XXX until we're in the 1.9 land
+gem 'paperclip'
 gem 'cocaine' ,'0.3.2'
 #gem 'paperclip', :git => "git://github.com/jeanmartin/paperclip.git", :branch => "master"
 
@@ -40,14 +41,13 @@ gem 'jquery-rails', '>= 1.0.12'
 gem 'image_science', :require => false
 gem 'rmagick'
 gem 'mini_magick'
-gem 'nokogiri', '1.5.6' # required by something, and 1.6.0 dropped Ruby 1.8.7 support, so we force it here
+gem 'nokogiri'
 
 gem 'astrails-safe'
-
+#gem 'prototype-rails' # TODO: kick this out, replace with jQuery
 # TODO sort this out
 gem 'ZenTest', '4.0.0'
 gem 'test-unit', '1.2.3'
-gem "ruby-debug#{RUBY_VERSION =~ /1.9/ ? '19' : ''}", :require => 'ruby-debug'
 
 group :production do
   gem "passenger", '2.2.11'

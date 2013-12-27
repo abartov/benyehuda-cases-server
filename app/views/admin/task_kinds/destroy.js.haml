@@ -4,5 +4,5 @@
   $("#task_kind_id option[value='#{@task_kind.id}']").remove();
   index_html = "#{escape_javascript(render :template => "admin/task_kinds/index")}";
 - else
-  $("#new_kind_msg").html("#{resource.errors.full_messages.to_a.join(',')}");
+  $("#new_kind_msg").html("#{resource.errors.full_messages.lines.to_a.join(',')}");
   $("#new_kind_msg").show();
