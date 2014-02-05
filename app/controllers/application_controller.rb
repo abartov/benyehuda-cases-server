@@ -5,7 +5,8 @@ class ApplicationController < ActionController::Base
 
   helper :all
   protect_from_forgery
-
+  config.relative_url_root = "" # workaround for https://github.com/rails/rails/issues/9619
+  
 protected
   def default_index_with_search!
     begin
