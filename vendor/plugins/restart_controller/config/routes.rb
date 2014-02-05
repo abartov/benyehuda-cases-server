@@ -1,3 +1,3 @@
-ActionController::Routing::Routes.draw do |map|
+Rails.application.routes.draw do |map|
   map.restart "/restart", :controller => "restart", :action => "restart", :conditions => { :method => :post }
 end
