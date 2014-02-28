@@ -26,12 +26,18 @@ class ReportController < InheritedResources::Base
       @users << t.assignee unless @users.include?(t.assignee)
     }
     emails = @users.map {|u| u.email}
-    @emails = emails.join(',')   
+    @emails = emails.join(', ')   
+    session["vols_to_notify"] = @users
   end
   def do_notify
     # do notify
-    @users.each {|u| Notification.tasks_added_to_site(u).deliver }
-    flash[:notice] = _("E-mails sent to volunteers")
-    index
+    users = session["vols_to_notify"]
+    unless users.nil? or users.empty?
+      users.each {|u| Notification.tasks_added_to_site(u).deliver }
+      flash[:notice] = _("E-mails sent to volunteers")
+    else
+      flash[:error] = _("No volunteers to notify")
+    end
+    redirect_to report_path
   end
 end
