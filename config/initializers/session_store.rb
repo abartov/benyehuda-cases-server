@@ -9,7 +9,7 @@ CasesServer::Application.config.session_store :active_record_store
 # CasesServer::Application.config.session_store :active_record_store
 
 Rails.application.config.middleware.insert_before(
-  ActionDispatch::Session::CookieStore,
+  Rails.application.config.session_store,
   FlashSessionCookieMiddleware,
   Rails.application.config.session_options[:key]
 )
