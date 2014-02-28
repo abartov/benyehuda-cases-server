@@ -33,7 +33,7 @@ class Notification < ActionMailer::Base
   def tasks_added_to_site(user)
     subject     s_("your work added to site subject|Your contributions are now published on the Ben-Yehuda site!")
     from        from_address
-    recipients  users.collect(&:email_recipient)
+    recipients  user.email_recipient
     sent_on     Time.now.utc
     body        :user => user
   end
