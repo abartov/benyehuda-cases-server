@@ -1,7 +1,9 @@
 # Be sure to restart your server when you modify this file.
 
 #CasesServer::Application.config.session_store :cookie_store, :key => '_cases_server_session'
-CasesServer::Application.config.session_store :active_record_store
+CasesServer::Application.config.session_store :active_record_store, :key => '_uploader_session'
+
+#CasesServer::Application.config.session_store :active_record_store
 
 # Use the database for sessions instead of the cookie-based default,
 # which shouldn't be used to store highly confidential information
