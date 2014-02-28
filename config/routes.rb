@@ -3,6 +3,8 @@ CasesServer::Application.routes.draw do
   get "report/inactive"
   get "report/active"
   get "report/newvols"
+  get "report/vols_notify"
+  get "report/do_notify"
   get "report/index"
   match '/report' => 'report#index'
 

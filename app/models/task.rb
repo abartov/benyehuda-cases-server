@@ -1,3 +1,4 @@
+
 class Task < ActiveRecord::Base
   PROP_SOURCE = 131
   PROP_RASHI = 121
