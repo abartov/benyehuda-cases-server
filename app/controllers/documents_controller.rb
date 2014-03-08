@@ -1,6 +1,6 @@
 class DocumentsController < InheritedResources::Base
   belongs_to :task
-  before_filter :require_task_participant, :only => [:new, :create, :show]
+  before_filter :require_task_participant, :only => [:new, :create, :show, :tick_file]
   before_filter :require_owner, :only => :destroy
   actions :new, :create, :destroy, :show
   layout nil
@@ -42,6 +42,11 @@ class DocumentsController < InheritedResources::Base
         end
       end
     end
+  end
+  def tick_file
+    document = Document.find(params[:id])
+    document.toggle! :done
+    render :nothing => true
   end
 
   protected

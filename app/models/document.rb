@@ -25,7 +25,7 @@ class Document < ActiveRecord::Base
       :secret_access_key => GlobalPreference.get(:s3_secret),
     },
     :url => ':s3_domain_url'
-  attr_accessible :file
+  attr_accessible :file, :done
   validates_attachment_presence :file
   validates_attachment_size :file, :less_than => 10.megabytes
 
@@ -42,7 +42,7 @@ class Document < ActiveRecord::Base
   def image?
     !file_file_name.blank? && IMAGE_FILE_EXTS.member?((File.extname(file_file_name)[1..-1] || "").downcase)
   end
-
+  
   def self.convert_pdf_to_img(pdf_path, out_file_name)
     pdf = Magick::ImageList.new(pdf_path)
     pdf.write(out_file_name) # if pdf has several pages it will output the same amount of images
