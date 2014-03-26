@@ -42,7 +42,7 @@
 %hr
 != render(:partial => "comments/index", :locals => {:comments => @comments})
 %hr
-- if @task.editor?(current_user)
+- if @task.editor?(current_user) or current_user.is_admin?
   != render(:partial => "editor_events")
 %br
 %br
