@@ -1,5 +1,6 @@
 class Admin::TasksController < InheritedResources::Base
-  before_filter :require_admin
+  before_filter :require_admin, :only => [:create, :update, :changes]
+  before_filter :require_editor_or_admin, :only => :index
   actions :index, :new, :create, :edit, :update, :destroy, :changes
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
