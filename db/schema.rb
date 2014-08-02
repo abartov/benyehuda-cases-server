@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140228013947) do
+ActiveRecord::Schema.define(:version => 20140802225113) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(:version => 20140228013947) do
   add_index "search_settings", ["user_id", "search_key"], :name => "index_search_settings_on_user_id_and_search_key"
 
   create_table "sessions", :force => true do |t|
-    t.string   "session_id", :null => false
-    t.text     "data"
+    t.string   "session_id",                     :null => false
+    t.text     "data",       :limit => 16777215
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -222,8 +222,6 @@ ActiveRecord::Schema.define(:version => 20140228013947) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "volunteer_kind_id"
-    t.string   "firstname",                :limit => 50
-    t.string   "lastname",                 :limit => 40
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
