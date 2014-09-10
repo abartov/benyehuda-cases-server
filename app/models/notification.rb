@@ -3,11 +3,11 @@ class Notification < ActionMailer::Base
   include TasksHelper
   helper :tasks
 
-  def comment_added(comment, recipient_users)
+  def comment_added(comment, recipient_users, from_user)
     subject     s_("comment added notification subject|%{task_name_snippet} - New comment") % {
                   :task_name_snippet => comment.task.name.utf_snippet(70),
                   :domain => domain}
-    from        from_address
+    from        from_user || from_address
     recipients  recipient_users.collect(&:email_recipient)
     sent_on     Time.now.utc
     body        :comment => comment, :task_url => task_url(comment.task)
