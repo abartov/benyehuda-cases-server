@@ -206,9 +206,9 @@ class Task < ActiveRecord::Base
     }
     return ret
   end
-  def fixed_Riddle_escape(s)
+  def self.fixed_Riddle_escape(s)
     # Riddle.escape was incorrectly escaping minus signs, used as 'makaf' in Hebrew concatenated words.
     #string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
-    string.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
+    s.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
   end
 end
