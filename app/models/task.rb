@@ -127,7 +127,7 @@ class Task < ActiveRecord::Base
       ret = self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
-      ret = self.search Riddle.escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
+      ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
     end
   end
 
@@ -205,5 +205,10 @@ class Task < ActiveRecord::Base
       ret << f if exts.include?(f.file_file_name[pos+1..-1])
     }
     return ret
+  end
+  def fixed_Riddle_escape(s)
+    # Riddle.escape was incorrectly escaping minus signs, used as 'makaf' in Hebrew concatenated words.
+    #string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
+    string.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
   end
 end
