@@ -20,6 +20,6 @@ class DashboardsController < InheritedResources::Base
   protected
 
   def collection
-    @tasks ||= apply_scopes(current_user.assigned_tasks).visible_in_my_tasks.paginate(:page => params[:page], :per_page => params[:per_page])
+    @tasks ||= apply_scopes(current_user.assigned_tasks).visible_in_my_tasks.order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
   end
 end
