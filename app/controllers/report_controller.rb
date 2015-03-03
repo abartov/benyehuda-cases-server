@@ -9,10 +9,12 @@ class ReportController < InheritedResources::Base
   end
 
   def inactive
+    @total = User.vols_inactive_in_last_n_months(6).count
     @users = User.vols_inactive_in_last_n_months(6).paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
   def active
+    @total = User.vols_active_in_last_n_months(6).count
     @users = User.vols_active_in_last_n_months(6).paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
