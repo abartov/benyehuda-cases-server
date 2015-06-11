@@ -23,8 +23,12 @@ module GettextI18nRails
           try_key = flat_key + (1 == options[:count] ? ".one" : ".other")
           return FastGettext._(try_key) if FastGettext.key_exist?(try_key)
         end
+
         if self.class.translate_defaults
-          options[:default].to_a.each do |default|
+          s = options[:default] ||  ''
+          s = s.lines.to_a unless s.is_a?(Array)
+
+          s.each do |default|
             #try the more specific key first e.g. 'activerecord.errors.my custom message'
             flat_key = flatten_key default, options
             return FastGettext._(flat_key) if FastGettext.key_exist?(flat_key)
