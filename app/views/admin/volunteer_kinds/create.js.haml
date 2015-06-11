@@ -5,5 +5,5 @@
   $("#new_kind_msg").show();
 - else
   $("#link_to_new_kind").replaceWith("#{escape_javascript(render :partial => "admin/task_kinds/new")}");
-  $("#new_kind_msg").html("#{resource.errors.full_messages.to_a.join(',')}");
+  $("#new_kind_msg").html("#{resource.errors.full_messages.lines.to_a.join(',')}");
   $("#new_kind_msg").show();
