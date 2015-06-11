@@ -222,7 +222,7 @@ DEPENDENCIES
   query_trace
   rack (= 1.2.6)
   rails (= 3.0.20)
-  rake (= 0.8.7)
+  rake
   rmagick
   rspec
   rspec-rails
