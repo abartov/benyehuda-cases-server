@@ -47,7 +47,7 @@ gem 'astrails-safe'
 # TODO sort this out
 gem 'ZenTest', '4.0.0'
 gem 'test-unit', '1.2.3'
-gem "ruby-debug#{RUBY_VERSION =~ /1.9/ ? '19' : ''}", :require => 'ruby-debug'
+#gem "ruby-debug#{RUBY_VERSION =~ /1.9/ ? '19' : ''}", :require => 'ruby-debug'
 
 group :production do
   gem "passenger", '2.2.11'
