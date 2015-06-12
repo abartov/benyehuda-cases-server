@@ -1,6 +1,6 @@
 - # encoding: utf-8
 - child_task = @chained_task || @task.clone
-= semantic_form_for(child_task, :live_validations => false, :url => tasks_path(:id => @task.id), :remote => true, :method => :post) do |f|
+= semantic_form_for(child_task, :live_validations => false, :url => tasks_path(:id => @task.id), :method => :post) do |f|
   != f.semantic_errors
   != render(:partial => "tasks/form", :locals => {:f => f, :newkind => TaskKind.find_by_name('הגהה').id})
   = f.inputs do

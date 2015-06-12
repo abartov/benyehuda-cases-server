@@ -10,28 +10,19 @@ class Notification < ActionMailer::Base
   end
 
   def task_state_changed(task, recipient_users)
-    subject     s_("state changed notification subject|%{state} (%{domain}): %{task_name_snippet}") % {
-                  :state => Task.textify_state(task.state), :task_name_snippet => task.name.utf_snippet(20),
-                  :domain => domain}
-    from        from_address
-    recipients  recipient_users.collect(&:email_recipient)
-    sent_on     Time.now.utc
-    body        :task => task, :task_url => task_url(task)
+    @task = task
+    @task_url = task_url(task)
+    mail to: recipient_users.collect(&:email_recipient), from: from_address, subject: s_("state changed notification subject|%{state} (%{domain}): %{task_name_snippet}") % { :state => Task.textify_state(task.state), :task_name_snippet => task.name.utf_snippet(20), :domain => domain}
   end
 
   def volnteer_welcome(user)
-    subject     s_("volunteer welcome subject|Welcome to Ben Yehuda Project")
-    from        from_address
-    recipients  user.email_recipient
-    sent_on     Time.now.utc
-    body        :user => user, :domain => domain
+    @user = user
+    @domain = domain
+    mail to: user.email_recipient, from: from_address, subject: s_("volunteer welcome subject|Welcome to Ben Yehuda Project")
   end
   def tasks_added_to_site(user)
-    subject     s_("your work added to site subject|Your contributions are now published on the Ben-Yehuda site!")
-    from        from_address
-    recipients  user.email_recipient
-    sent_on     Time.now.utc
-    body        :user => user
+    @user = user
+    mail to: user.email_recipient, from: from_address, subject: s_("your work added to site subject|Your contributions are now published on the Ben-Yehuda site!")
   end
 
 protected

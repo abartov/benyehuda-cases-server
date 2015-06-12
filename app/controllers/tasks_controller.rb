@@ -23,18 +23,16 @@ class TasksController < InheritedResources::Base
     @task = Task.find(params[:id])
 
     return unless _allow_event?(@task, :create_other_task, current_user)
-
+    debugger
     @chained_task = @task.build_chained_task(params[:task], current_user)
     @comment = @chained_task.comments.first
     if @chained_task.save
       flash[:notice] = _("Task created.")
-      render(:update) do |page|
-        page.redirect_to task_path(@chained_task)
-      end
+      redirect_to task_path(@chained_task)
     else
-      render(:update) do |page|
-        page[:new_task_container].replaceWith render(:partial => "new_chain_task")
-      end
+      puts "DBG: #{@chained_task.errors.full_messages}"
+      flash[:error] = @chained_task.errors.full_messages
+      redirect_to task_path(@task)
     end
   end
 

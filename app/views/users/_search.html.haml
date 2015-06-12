@@ -1,6 +1,6 @@
 != javascript_include_tag "jquery.lookup_updater"
 .block
-  - form_tag users_path, :method => :get do
+  = form_tag users_path, :method => :get do
     != text_field_tag "query", params[:query].force_encoding('UTF-8'), :id => "users_query", :autocomplete => "off"
     != hidden_field_tag "all", params[:all]
     != submit_tag _("Find")
