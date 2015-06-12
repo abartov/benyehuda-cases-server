@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -166,21 +167,13 @@ ActiveRecord::Schema.define(:version => 20140802225113) do
     t.integer  "kind_id"
   end
 
-  create_table "tmp_stats", :id => false, :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "tasks_assigned"
-    t.datetime "activated_at"
-    t.integer  "days_active"
-    t.float    "tasks_per_day"
-  end
-
   create_table "translation_keys", :force => true do |t|
     t.string   "key",        :limit => 1024, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "translation_keys", ["key"], :name => "index_translation_keys_on_key", :length => {"key"=>"255"}
+  add_index "translation_keys", ["key"], :name => "index_translation_keys_on_key", :length => {"key"=>255}
 
   create_table "translation_texts", :force => true do |t|
     t.text     "text"

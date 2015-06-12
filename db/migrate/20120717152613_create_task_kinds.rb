@@ -1,4 +1,4 @@
-require 'config/initializers/i18n'
+#require 'config/initializers/i18n'
 
 class CreateTaskKinds < ActiveRecord::Migration
   KINDS = {  # deleted from app/models/task.rb

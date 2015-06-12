@@ -1,3 +1,5 @@
+require "fast_gettext/translation_repository/db"
+
 module TabsHelper
   TABS = [
     {:name => :translations, :title => N_("Translations"), :path => "/translation_keys", :if => :is_admin?},

@@ -26,7 +26,12 @@ module GettextI18nRails
 
         if self.class.translate_defaults
           s = options[:default] ||  ''
-          s = s.lines.to_a unless s.is_a?(Array)
+          #s = s.to_a unless s.is_a?(Array)
+          if s.is_a?(String)
+            s = s.lines.to_a
+          else
+            s = s.to_a
+          end
 
           s.each do |default|
             #try the more specific key first e.g. 'activerecord.errors.my custom message'

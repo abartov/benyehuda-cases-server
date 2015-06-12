@@ -11,7 +11,7 @@ CasesServer::Application.configure do
 
   # Show full error reports and disable caching
   config.consider_all_requests_local       = true
-  config.action_view.debug_rjs             = true
+#  config.action_view.debug_rjs             = true
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send
@@ -22,11 +22,11 @@ CasesServer::Application.configure do
 
   # Only use best-standards-support built into browsers
   config.action_dispatch.best_standards_support = :builtin
+  config.eager_load = false
 
-
-  if ENV['RUBY_DEBUG_PORT']
-    Debugger.start_remote nil, ENV['RUBY_DEBUG_PORT'].to_i
-  else  # optional
-    Debugger.start_remote
-  end
+#  if ENV['RUBY_DEBUG_PORT']
+#    Debugger.start_remote nil, ENV['RUBY_DEBUG_PORT'].to_i
+#  else  # optional
+#    Debugger.start_remote
+#  end
 end
