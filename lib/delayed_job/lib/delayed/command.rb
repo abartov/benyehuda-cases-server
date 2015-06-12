@@ -42,19 +42,19 @@ module Delayed
       
       worker_count.times do |worker_index|
         process_name = worker_count == 1 ? "delayed_job" : "delayed_job.#{worker_index}"
-        Daemons.run_proc(process_name, :dir => "#{RAILS_ROOT}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|
+        Daemons.run_proc(process_name, :dir => "#{::Rails.root.to_s}/tmp/pids", :dir_mode => :normal, :ARGV => @args) do |*args|
           run process_name
         end
       end
     end
     
     def run(worker_name = nil)
-      Dir.chdir(RAILS_ROOT)
+      Dir.chdir(::Rails.root.to_s)
       
       # Re-open file handles
       @files_to_reopen.each do |file|
         begin
-          file.reopen File.join(RAILS_ROOT, 'log', 'delayed_job.log'), 'a+'
+          file.reopen File.join(::Rails.root.to_s, 'log', 'delayed_job.log'), 'a+'
           file.sync = true
         rescue ::Exception
         end
