@@ -1,4 +1,4 @@
-ln_shared << ".bundle"
+#ln_shared << ".bundle"
 
 namespace :bundle do
   desc "install bundled gems"

@@ -3,7 +3,10 @@
 
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
-
+require 'vlad'
+require 'vlad/core'
+Vlad.load :scm => :git, :app => nil, :web => nil
+require 'vladify/lib/vladify/core'
 FastGettext.silence_errors  # XXX
 
 CasesServer::Application.load_tasks

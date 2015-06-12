@@ -1,12 +1,12 @@
-require "vladify/delayed_job"
+require "vladify/lib/vladify/delayed_job"
 # require "vladify/delayed_job_monit"
 # require "vladify/fast_gettext"  # RFCT there's no pomo sync atm
 # require "vladify/gettext"
-require "vladify/thinking_sphinx"
+require "vladify/lib/vladify/thinking_sphinx"
 # require "vladify/ultrasphinx"
-require "vladify/whenever"
+require "vladify/lib/vladify/whenever"
 # require "vladify/workling"
-require 'vladify/bundler'
+require 'vladify/lib/vladify/bundler'
 
 
 set :repository, "https://github.com/abartov/benyehuda-cases-server.git"
