@@ -6,7 +6,8 @@ gem 'rake', '0.8.7'
 gem 'rack'
 gem "builder"
 gem "json", '>=1.7.7'
-gem "mysql2"
+gem "mysql"
+#gem "mysql2"
 gem 'authlogic'
 gem 'whenever'
 gem 'will_paginate', :require => 'will_paginate'
