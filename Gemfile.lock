@@ -97,16 +97,17 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.1)
-    mysql (2.9.1)
+    mysql2 (0.3.18)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     open4 (1.3.4)
-    paperclip (2.4.5)
-      activerecord (>= 2.3.0)
-      activesupport (>= 2.3.2)
+    paperclip (3.2.1)
+      activemodel (>= 3.0.0)
+      activerecord (>= 3.0.0)
+      activesupport (>= 3.0.0)
       cocaine (>= 0.0.2)
       mime-types
     passenger (5.0.10)
@@ -132,6 +133,8 @@ GEM
       activesupport (= 3.1.12)
       bundler (~> 1.0)
       railties (= 3.1.12)
+    rails_autolink (1.1.6)
+      rails (> 3.1)
     rails_legacy_mapper (1.1.0)
       actionpack (~> 3.1)
     railties (3.1.12)
@@ -234,13 +237,14 @@ DEPENDENCIES
   mime-types
   mini_magick
   mocha
-  mysql
+  mysql2
   nokogiri
-  paperclip (~> 2.4.5)
+  paperclip
   passenger
   query_trace
   rack
   rails (= 3.1.12)
+  rails_autolink
   rails_legacy_mapper
   rake (= 0.8.7)
   rmagick

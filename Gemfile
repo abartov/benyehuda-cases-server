@@ -6,11 +6,12 @@ gem 'rake', '0.8.7'
 gem 'rack'
 gem "builder"
 gem "json", '>=1.7.7'
-gem "mysql"
-#gem "mysql2"
+#gem "mysql"
+gem "mysql2"
 gem 'authlogic'
 gem 'whenever'
 gem 'will_paginate', :require => 'will_paginate'
+gem 'rails_autolink'
 gem "tzinfo"
 gem 'formtastic'
 gem 'sass'
@@ -37,7 +38,8 @@ gem 'hoe', '2.8.0'
 
 gem 'aws-sdk', '~> 1'
 #gem 'aws-s3', :require => "aws/s3"
-gem 'paperclip', '~>2.4.5'  # XXX until we're in the 1.9 land
+gem 'paperclip'
+#gem 'paperclip', '~>2.4.5'  # XXX until we're in the 1.9 land
 gem 'cocaine' ,'0.3.2'
 #gem 'paperclip', :git => "git://github.com/jeanmartin/paperclip.git", :branch => "master"
 
