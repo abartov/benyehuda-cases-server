@@ -12,11 +12,10 @@ class CommentsController < InheritedResources::Base
     @comment = task.comments.build(params[:comment])
     @comment.user = current_user
     create! do |success, failure|
-      success.js {
-        render(:update) do |page|
-          page[:comments].append render(:partial => "comment", :object => @comment)
-          @comment = nil
-          page[:new_comment].html render(:partial => "new")
+      success.js { 
+        respond_to do |format|
+          format.html
+          format.js
         end
       }
       failure.js {

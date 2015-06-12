@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.12'
+gem 'rails', '~>3.2'
 #gem 'rails'
 gem 'rake', '0.8.7'
 gem 'rack'
@@ -79,3 +79,5 @@ group :test do
   gem 'query_trace', :require => 'query_trace'
   gem 'rspec2-rails-views-matchers'
 end
+
+gem 'debugger'

@@ -123,7 +123,7 @@ class User < ActiveRecord::Base
   end
 
   def public_roles
-    @public_roles ||= returning([]) do |res|
+    @public_roles ||= [].tap do |res|
       res << "admin" if is_admin?
       res << "editor" if is_editor?
       res << "volunteer" if is_volunteer?
