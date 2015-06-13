@@ -19,9 +19,7 @@ class CommentsController < InheritedResources::Base
         end
       }
       failure.js {
-        render(:update) do |page|
-          page[:new_comment].html render(:partial => "new")
-        end
+        render :partial => 'failure'
       }
     end
     flash[:notice] = nil

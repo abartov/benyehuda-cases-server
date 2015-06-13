@@ -37,8 +37,9 @@ class DocumentsController < InheritedResources::Base
         redirect_to task_path(task)
       end
       wants.js do
-        render(:update) do |page|
-          page[dom_id(document)].remove
+        respond_to do |format|
+          format.html
+          format.js
         end
       end
     end

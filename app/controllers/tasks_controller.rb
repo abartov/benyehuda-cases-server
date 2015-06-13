@@ -85,16 +85,18 @@ protected
 
   def _event_with_comment(event)
     unless resource.event_with_comment(event, params[:task])
-      render(:update) do |page|
-        page["#{event}_task"].html render(:partial => "tasks/#{event}")
+      respond_to do |format|
+        format.html
+        format.js { render :partial => "event_with_comment", :locals => {:event => event } }
       end
       return
     end
 
     resource.save
     flash[:notice] = s_(resource.class.event_complete_message(event))
-    render(:update) do |page|
-      page.redirect_to(resource.participant?(current_user) ? task_path(resource) : dashboard_path)
+    respond_to do |format|
+      format.html
+      format.js { render :partial => 'event_with_comment_redir', :locals => {:to => resource.participant?(current_user) ? task_path(resource) : dashboard_path} }
     end    
   end
 
@@ -106,9 +108,7 @@ protected
     respond_to do |wants|
       wants.html {redirect_to task_path(task)}
       wants.js do
-        render(:update) do |page|
-          page.redirect_to task_path(task)
-        end
+        render :partial => 'redir_task', :locals => {:task => task }
       end
     end
 

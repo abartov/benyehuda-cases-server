@@ -123,8 +123,6 @@ class UsersController < InheritedResources::Base
   def _remove_avatar
     @user.avatar = nil
     @user.save
-    render(:update) do |page|
-      page.redirect_to user_path(@user)
-    end
+    redirect_to user_path(@user)
   end
 end
