@@ -2,7 +2,7 @@
 
 - # no live validations, scoped uniquness fails
 - semantic_form_for(@property) do |f|
-  = f.object.errors.on(:base)
+  = f.semantic_errors
   != render :partial => "form", :locals => { :f => f }
   != f.submit _("Save")
   != link_to _("Cancel"), properties_path

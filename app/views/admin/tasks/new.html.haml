@@ -2,7 +2,7 @@
 
 = semantic_form_for(@task, :live_validations => true, :url => admin_tasks_path) do |f|
   = f.inputs do
-    = f.object.errors.on(:base)
+    = f.semantic_errors
   != render(:partial => "form", :locals => {:f => f})
   = f.inputs do
     != f.submit _("Save")

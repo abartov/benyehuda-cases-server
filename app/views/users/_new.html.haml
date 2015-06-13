@@ -1,5 +1,5 @@
 - semantic_form_for(@user, :live_validations => true, :html => { :multipart => true }) do |f|
-  = f.object.errors.on(:base)
+  = f.semantic_errors
   != render :partial => "users/form", :locals => { :f => f }
   != f.submit _("Signup")
 
