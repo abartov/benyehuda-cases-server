@@ -15,9 +15,9 @@ class DocumentsController < InheritedResources::Base
 
     create! do |success, failure|
       success.js do
-        render(:update) do |page|
-          page[:documents].append render(:partial => "documents/document", :object => @document)
-          page[:no_docs_uploaded].remove
+        respond_to do |format|
+          format.html 
+          format.js 
         end
       end
       success.html {redirect_to task_path(task); flash[:notice] = nil}

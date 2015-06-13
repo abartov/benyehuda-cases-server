@@ -167,7 +167,8 @@ module Task::States
     parent.documents.each do |doc|
       d = doc.clone
       d.task_id = self.id
-      d.file = doc.file.to_file
+      #d.file = Paperclip.io_adapters.for(doc.file)
+      d.file = doc.file.to_file # to_file deprecated in Paperclip 3.0.1
       d.save
     end
   end
