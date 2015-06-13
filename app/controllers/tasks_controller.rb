@@ -23,7 +23,6 @@ class TasksController < InheritedResources::Base
     @task = Task.find(params[:id])
 
     return unless _allow_event?(@task, :create_other_task, current_user)
-    debugger
     @chained_task = @task.build_chained_task(params[:task], current_user)
     @comment = @chained_task.comments.first
     if @chained_task.save
