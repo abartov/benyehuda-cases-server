@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
     c.validates_length_of_password_confirmation_field_options =
       {:on => :update, :minimum => 4, :if => :has_no_credentials?}
     c.perishable_token_valid_for = 2.weeks
+    c.crypto_provider = Authlogic::CryptoProviders::Sha512 # addressing a breaking change in Authlogic 3.4.0, sigh (June 2015)
   end
   include Astrails::Auth::Model
   attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id
