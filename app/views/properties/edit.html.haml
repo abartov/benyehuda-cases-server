@@ -1,7 +1,7 @@
 - set_tab :object_prefs, _("Edit Project Property")
 
 - # no live validations, scoped uniquness fails
-- semantic_form_for(@property) do |f|
+= semantic_form_for(@property) do |f|
   = f.semantic_errors
   != render :partial => "form", :locals => { :f => f }
   != f.submit _("Save")
