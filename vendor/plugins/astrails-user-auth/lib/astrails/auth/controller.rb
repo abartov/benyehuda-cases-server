@@ -76,7 +76,7 @@ module Astrails
       end
 
       def store_location
-        session[:return_to] = request.request_uri if request.get? # we can only return to GET locations
+        session[:return_to] = request.url if request.get? # we can only return to GET locations
       end
 
       def redirect_back_or_default(default)
