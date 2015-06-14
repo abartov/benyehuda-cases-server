@@ -1,1 +1,0 @@
-page << "$('##{dom_id(resource)}').hide('fast', function() { $('##{dom_id(resource)}').remove() })"
