@@ -8,7 +8,9 @@ class DocumentsController < InheritedResources::Base
   # new - shouldn't be used
 
   # show
-
+  def show
+    render :layout => false
+  end
   # create
   def create
     @document = task.prepare_document(current_user, params[:document])
@@ -28,20 +30,15 @@ class DocumentsController < InheritedResources::Base
   end
 
   def destroy
-    document = task.documents.find(params[:id])
-    document.mark_as_deleted!
+    @document = task.documents.find(params[:id])
+    @document.mark_as_deleted!
 
     respond_to do |wants|
       wants.html do
         flash[:notice] = _("Document deleted")
         redirect_to task_path(task)
       end
-      wants.js do
-        respond_to do |format|
-          format.html
-          format.js
-        end
-      end
+      wants.js
     end
   end
   def tick_file
