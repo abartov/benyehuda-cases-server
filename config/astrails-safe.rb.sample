@@ -1,6 +1,6 @@
 safe do
   local :path => "/var/backups/stage.benyehuda.org/:kind/:id"
- 
+  # this is used by the backup process only; the buckets used for storing the documents are set in the database, in the global_preferences table
   s3 do
     key "<your-key>"
     secret "<your-secret>"
