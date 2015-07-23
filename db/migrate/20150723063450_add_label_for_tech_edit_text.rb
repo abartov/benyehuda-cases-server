@@ -1,4 +1,4 @@
-d Encoding: utf-8
+# Encoding: utf-8
 class AddLabelForTechEditText < ActiveRecord::Migration
   def self.up
     pairs = [['task event|Mark for technical editing', 'לעריכה טכנית'], ['task state|Technical editing', 'ממתינה לעריכה טכנית']]
