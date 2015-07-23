@@ -97,7 +97,7 @@ module Task::States
 
       # edtior, admin marks as ready to publish
       aasm_event :complete do
-        transitions :from => [:approved, :other_task_creat], :to => :ready_to_publish
+        transitions :from => [:approved, :other_task_creat, :techedit], :to => :ready_to_publish
       end
 
       aasm_event :create_other_task do
