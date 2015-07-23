@@ -9,7 +9,8 @@ module TasksHelper
     "finish" => N_("task event|Finish"),
     "abandon" => N_("task event|Abandon"),
     "help_required" => N_("task event|Need Editor's Help"),
-    "finish_partially" => N_("task event|Mark as Finished Partly")
+    "finish_partially" => N_("task event|Mark as Finished Partly"),
+    "to_techedit" => N_("task event|Mark for technical editing")
   }
 
   def order_direction(param)

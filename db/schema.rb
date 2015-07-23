@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20140802225113) do
+ActiveRecord::Schema.define(:version => 20150723063450) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -165,6 +165,14 @@ ActiveRecord::Schema.define(:version => 20140802225113) do
     t.datetime "updated_at"
     t.integer  "documents_count",               :default => 0
     t.integer  "kind_id"
+  end
+
+  create_table "tmp_stats", :id => false, :force => true do |t|
+    t.integer  "user_id"
+    t.integer  "tasks_assigned"
+    t.datetime "activated_at"
+    t.integer  "days_active"
+    t.float    "tasks_per_day"
   end
 
   create_table "translation_keys", :force => true do |t|

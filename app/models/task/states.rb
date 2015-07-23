@@ -31,6 +31,9 @@ module Task::States
       # editor confirms that task is completed by assignee
       aasm_state          :approved
 
+      # editor marks for technical editing
+      aasm_state          :techedit
+
       # editor confirms that task is ready to be published
       aasm_state          :ready_to_publish
 
@@ -47,6 +50,7 @@ module Task::States
         transitions :from => :confirmed, :to => :confirmed
         transitions :from => :other_task_creat, :to => :other_task_creat
         transitions :from => :approved, :to => :approved
+        transitions :from => :approved, :to => :techedit
         transitions :from => :ready_to_publish, :to => :ready_to_publish
         transitions :from => :stuck, :to => :stuck
         transitions :from => :partial, :to => :partial
@@ -78,6 +82,11 @@ module Task::States
       # editor approves the work
       aasm_event :approve do
         transitions :from => :waits_for_editor, :to => :approved
+      end
+      
+      # editor marks for technical editing
+      aasm_event :to_techedit do
+        transitions from: :approved, to: :techedit
       end
 
       # editor rejects the work
@@ -195,7 +204,7 @@ module Task::States
   end
 
   def simple_editor_events
-    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["approve", "complete"]
+    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
   end
 
   def can_be_rejected?
@@ -218,7 +227,7 @@ module Task::States
     self.state = value
   end
 
-  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve]
+  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve, :to_techedit]
   ASSIGNEE_EVENTS = [:abandon, :finish, :help_required, :finish_partially]
 
   def allow_event_for?(event, user)
