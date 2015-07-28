@@ -10,7 +10,10 @@
 
   %td!= activation_email_links(user)
 
-  %td= user.activated_at
+  %td
+    = user.activated_at
+    - if user.on_break
+      = ' '+_("on break")
   %td= user.current_login_at ? (_("%{time} ago") % {:time => time_ago_in_words(user.current_login_at)}) : s_("last login|never")
   %td.edit!= link_to _("Edit"), edit_user_path(user)
   - if user.activated_at

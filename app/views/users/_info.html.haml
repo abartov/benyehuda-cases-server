@@ -8,3 +8,7 @@
   != image_tag(avatar_for(@user, :medium))
   - if @user.avatar? && (current_user == @user || current_user.is_admin?)
     != link_to _("remove avatar"), user_path(@user, :remove_avatar => true), :method => :put, :confirm => _("Are you sure?")
+  - if @user.on_break
+    %br
+    %span{:style => 'color:red'}
+      = _("on break")

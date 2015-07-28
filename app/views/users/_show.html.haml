@@ -6,3 +6,6 @@
       != link_to _("edit my profile"), edit_profile_path
     %p
       != link_to _("change my password"), password_edit_path
+    %p
+      %a.delete{ :href => user_path(@user)+'/take_break'}
+        = _("take a break")

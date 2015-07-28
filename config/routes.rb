@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   match '/report' => 'report#index', via: [:get, :post]
 
   match '/activate/:id' => 'passwords#edit', :as => :activate, via: [:get, :post]
+  get '/users/:id/take_break', :controller => 'users', :action => 'take_break', :as => :users_take_break, :via => :get
   match '/password' => 'passwords#update', :as => :password_update, :via => :put
   match '/password' => 'passwords#edit', :as => :password_edit, :via => :get
   resources :passwords, :only => [:new, :create, :edit, :update]

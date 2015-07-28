@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20150723063450) do
+ActiveRecord::Schema.define(:version => 20150728050333) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(:version => 20150723063450) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "volunteer_kind_id"
+    t.boolean  "on_break"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

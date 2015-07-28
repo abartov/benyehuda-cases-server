@@ -39,7 +39,7 @@ class Admin::TasksController < InheritedResources::Base
     default_index_with_search!
   end
   def changes
-    @raw_changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page], :per_page => 100)
+    @raw_changes = Audit.order('updated_at desc').limit(500).paginate(:page => params[:page], :per_page => 100)
     # group audits by task
     @changes = {}
     @ordered_changes = []
