@@ -2,3 +2,9 @@
 
 != render(:partial => "users/public_profile")
 != render(:partial => "users/show") unless public_profile?
+- if @user.id == current_user.id or @user.admin_or_editor?
+  - unless @user.on_break
+    %p
+      %a.delete{ :href => user_path(@user)+'/take_break'}
+        = _("take a break")
+
