@@ -50,7 +50,13 @@ module Astrails
         redirect_to "/"
         return false
       end
-
+      def require_editor
+        return false if false == require_user
+        return true if current_user.is_editor?
+        flash[:error] = _("You must be an admin or editor to access this page")
+        redirect_to "/"
+        return false
+      end
       def require_same_user
         return false if false == require_user
 

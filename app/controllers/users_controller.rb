@@ -18,6 +18,7 @@ class UsersController < InheritedResources::Base
     @user.save!
     redirect_to :action => :show
   end
+
   def create
     user = build_resource
     user.email = params[:user] && params[:user][:email] || user.email

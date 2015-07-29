@@ -4,27 +4,21 @@ class PasswordsController < InheritedResources::Base
 
   actions :new, :update, :edit
 
-  before_filter :require_no_user, :except => [:edit, :update]
+  before_filter :require_no_user, :except => [:edit, :update, :reset_password_by_editor]
+  before_filter :require_editor, :only => [:reset_password_by_editor]
 
   # new! + new.html.haml
 
   def create
     @user = User.find_by_email(params[:user][:email])
-    if @user
-      @user.deliver_password_reset_instructions!
-      if @user.activated_at
-        # user is already active
-        flash[:notice] = _("Instructions to reset your password have been emailed to you. Please check your email.")
-      else
-        flash[:notice] = _("Instructions to activate your account have been emailed to you. Please check your email.")
-      end
-      redirect_to "/"
-    else
-      flash[:error] = _("No user was found with that email address")
-      render :action => :new
-    end
+    do_create(false)
   end
 
+  def reset_password_by_editor
+    @user = User.find(params[:id])
+    # @user already populated by users#reset_password
+    do_create(true)
+  end
   def edit
     return unless load_user_using_perishable_token(true)
     edit!
@@ -52,6 +46,30 @@ class PasswordsController < InheritedResources::Base
   end
 
   private
+
+  def do_create(by_editor)
+    if @user
+      @user.deliver_password_reset_instructions!
+      if @user.activated_at
+        # user is already active
+        if by_editor
+          flash[:notice] = _("Instructions to reset their password have been e-mailed to the user.")
+        else
+          flash[:notice] = _("Instructions to reset your password have been emailed to you. Please check your email.")
+        end
+      else
+        flash[:notice] = _("Instructions to activate your account have been emailed to you. Please check your email.")
+      end
+      if logged_in?
+        redirect_to dashboard_path
+      else
+        redirect_to '/'
+      end 
+    else
+      flash[:error] = _("No user was found with that email address")
+      render :action => :new
+    end
+  end
 
   def build_resource
     @user ||= User.new
