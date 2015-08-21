@@ -3,7 +3,7 @@ namespace :remote do
     %w/index start restart stop rebuild config/.each do |op|
       desc "#{op} sphinx"
       remote_task op.to_sym, :roles => :app do
-        run "./rvmdo.sh 'rake(\"ts:#{op}\")'"
+        run rake("ts:#{op}")
       end
     end
   end
