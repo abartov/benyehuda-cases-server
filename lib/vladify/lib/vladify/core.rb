@@ -59,6 +59,9 @@ namespace :vlad do
   remote_task :dbmigrate, :roles => :app do
     run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake db:migrate'"
   end
+  remote_task :restart_thin do
+    run ". ~/.profile && rvm use 1.9.3 && cd ~/tasks && ./stop.sh && ./start.sh"
+  end
 end
 
 namespace :git do
@@ -78,7 +81,8 @@ namespace :deploy do
   #task :prepare => %w/vlad:migrate/
   task :prepare => %w/vlad:dbmigrate/
   # restart all the services
-  task :restart => %w/mod_rails:restart/
+  task :restart => %w/vlad:restart_thin/
+  #task :restart => %w/mod_rails:restart/
   # cleanup
   task :cleanup => %w/vlad:cleanup/
 end
