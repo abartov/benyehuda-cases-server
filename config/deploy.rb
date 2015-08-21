@@ -14,13 +14,15 @@ set :repository, "https://github.com/abartov/benyehuda-cases-server.git"
 desc "production server"
 task :prod do
   set :application, "tasks.benyehuda.org"
-  set :domain, "astrails@tasks.benyehuda.org"
+#  set :domain, "bybe@52.20.112.68"
+  set :domain, "bybe@tasks.benyehuda.org"
 end
 
 desc "stage server"
 task :staging do
   set :application, "staging.benyehuda.org"
-  set :domain, "astrails@tasks.benyehuda.org"
+  #set :domain, "bybe@52.20.112.68"
+  set :domain, "bybe@tasks.benyehuda.org"
 end
 
 # desc "beta server"
