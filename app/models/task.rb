@@ -118,7 +118,18 @@ class Task < ActiveRecord::Base
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
-    search_opts[:conditions][:state] = opts[:state] unless opts[:state].blank?
+    unless opts[:state].blank?
+      if opts[:invert_state].blank? or opts[:invert_state] == "false"
+        puts "DEBUG: no invert_state" # TODO
+        search_opts[:conditions][:state] = opts[:state] 
+      else
+        puts "DEBUG: invert_state is #{opts[:invert_state]}" # TODO
+        states = Task.aasm_states.collect(&:name).collect(&:to_s)
+        states.delete(opts[:state]) # all states except the specified one
+        search_opts[:conditions][:state] = states
+        puts "DEBUG: search_opts[:conditions][:state] = #{search_opts[:conditions][:state].to_s}"
+      end
+    end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
