@@ -120,14 +120,11 @@ class Task < ActiveRecord::Base
     search_opts = {:conditions => {}, :with => {}}
     unless opts[:state].blank?
       if opts[:invert_state].blank? or opts[:invert_state] == "false"
-        puts "DEBUG: no invert_state" # TODO
         search_opts[:conditions][:state] = opts[:state] 
       else
-        puts "DEBUG: invert_state is #{opts[:invert_state]}" # TODO
         states = Task.aasm_states.collect(&:name).collect(&:to_s)
         states.delete(opts[:state]) # all states except the specified one
         search_opts[:conditions][:state] = states
-        puts "DEBUG: search_opts[:conditions][:state] = #{search_opts[:conditions][:state].to_s}"
       end
     end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
@@ -138,6 +135,7 @@ class Task < ActiveRecord::Base
       ret = self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
+      search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
       ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
     end
   end
