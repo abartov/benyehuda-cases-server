@@ -10,7 +10,7 @@ class AddLabelsForPriorities < ActiveRecord::Migration
               ['Completing an author', 'השלמת יוצר/ת']
             ]
     pairs.each {|pair|
-      k = TranslationKey.find_by_key(pair[0]
+      k = TranslationKey.find_by_key(pair[0])
       if k.nil?
         k = TranslationKey.new(:key => pair[0])
         k.save
