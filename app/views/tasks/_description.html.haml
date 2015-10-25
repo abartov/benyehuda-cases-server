@@ -18,6 +18,10 @@
   %b
     = _("Difficulty")+": "
   = Task.textify_difficulty(@task.difficulty)
+  %br
+  %b
+    = _("Priority")+": "
+  = Task.textify_priority(@task.priority)
 .midtitle
   .boxbody
     = _("Status and allocation")

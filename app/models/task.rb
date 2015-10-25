@@ -4,13 +4,14 @@ class Task < ActiveRecord::Base
   PROP_RASHI = 121
   PROP_INSTRUCTIONS = 61
   include ActsAsAuditable
-  acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud,
+  acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud, :priority,
     :conversions => {
       :creator_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :editor_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :assignee_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :kind_id => proc {|v| v ? TaskKind.find_by_id(v).try(:name) : "" },
       :difficulty => proc {|v| Task.textify_difficulty(v) },
+      :priority => proc {|v| Task.textify_priority(v) },
       :task_state_id => proc {|v| v ? Task.textify_state(TaskState.find_by_id(v).try(:name)) : "" },
       :full_nikkud => proc {|v| v ? _("true") : _("false")},
       :default_title => N_("auditable|Task"),
@@ -30,6 +31,8 @@ class Task < ActiveRecord::Base
           _("Kind")
         when :difficulty
           _("Difficulty")
+        when :priority
+          _("Priority")
         when :full_nikkud
           _("Full Nikkud")
         end
@@ -61,11 +64,20 @@ class Task < ActiveRecord::Base
     "normal" => N_("task difficulty|normal"),
     "hard" => N_("task difficulty|hard")
   }
+  PRIORITIES = {
+    "first" => N_("First task of new volunteer"),
+    "very_old" => N_("Very old task"),
+    "expiry" => N_("Copyright expiring"),
+    "permission" => N_("Given permission"),
+    "completing" => N_("Completing an author")
+  }
+
   validates :difficulty, :inclusion => {:in => DIFFICULTIES.keys, :message => "not included in the list"}
-  validates :creator_id, :name, :kind_id, :difficulty, :presence => true
+  validates :priority, :inclusion => {:in => PRIORITIES.keys, :message => "not included in the list"}
+  validates :creator_id, :name, :kind_id, :priority, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :difficulty, :full_nikkud, :comments_attributes
+  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, :order => "comments.task_id, comments.created_at"
@@ -99,6 +111,7 @@ class Task < ActiveRecord::Base
     has :updated_at
     has :full_nikkud, :type => :boolean
     indexes :difficulty, :sortable => true
+    indexes :priority, :sortable => true
     indexes kind.name, :sortable => true, :as => :kind
     indexes :state, :sortable => true
     has :documents_count, :type => :integer
@@ -114,7 +127,7 @@ class Task < ActiveRecord::Base
   }
   TASK_LENGTH.default = 25..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length"]
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority"]
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -129,6 +142,7 @@ class Task < ActiveRecord::Base
     end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
+    search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
@@ -197,6 +211,9 @@ class Task < ActiveRecord::Base
       return p.custom_value if p.property_id == PROP_INSTRUCTIONS
     }
     return ""
+  end
+  def self.textify_priority(p)
+    s_(PRIORITIES[p]) if PRIORITIES[p]
   end
   def self.textify_difficulty(dif)
     s_(DIFFICULTIES[dif]) if DIFFICULTIES[dif]
