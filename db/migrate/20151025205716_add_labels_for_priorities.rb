@@ -10,8 +10,11 @@ class AddLabelsForPriorities < ActiveRecord::Migration
               ['Completing an author', 'השלמת יוצר/ת']
             ]
     pairs.each {|pair|
-      k = TranslationKey.new(:key => pair[0])
-      k.save
+      k = TranslationKey.find_by_key(pair[0]
+      if k.nil?
+        k = TranslationKey.new(:key => pair[0])
+        k.save
+      end
       ['he','en','ru'].each do |locale|
         k.translations.build(:locale => locale)
       end
