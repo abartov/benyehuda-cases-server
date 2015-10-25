@@ -6,7 +6,7 @@ class AddLabelsForPriorities < ActiveRecord::Migration
               ['First task of new volunteer', 'משימה ראשונה של מתנדב חדש'],
               ['Very old task', 'משימה ישנה מאוד'],
               ['Copyright expiring', 'זכויות יוצרים פוקעות'],
-              ['Given permission', 'התקלבה רשות פרסום'],
+              ['Given permission', 'התקבלה רשות פרסום'],
               ['Completing an author', 'השלמת יוצר/ת']
             ]
     pairs.each {|pair|
