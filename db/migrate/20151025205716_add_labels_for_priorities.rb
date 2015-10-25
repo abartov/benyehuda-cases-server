@@ -1,5 +1,4 @@
 # encoding: utf-8
-require 'debugger'
 class AddLabelsForPriorities < ActiveRecord::Migration
   def up
     pairs = [
@@ -11,14 +10,12 @@ class AddLabelsForPriorities < ActiveRecord::Migration
               ['Completing an author', 'השלמת יוצר/ת']
             ]
     pairs.each {|pair|
-      debugger
       k = TranslationKey.new(:key => pair[0])
       k.save!
       ['he','en','ru'].each do |locale|
         k.translations.build(:locale => locale)
       end
       k.save!
-      debugger
       t = k.translations.find_by_locale('he')
       t.text = pair[1]
       t.save
