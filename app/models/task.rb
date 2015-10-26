@@ -73,7 +73,7 @@ class Task < ActiveRecord::Base
   }
 
   validates :difficulty, :inclusion => {:in => DIFFICULTIES.keys, :message => "not included in the list"}
-  validates :priority, :inclusion => {:in => PRIORITIES.keys, :message => "not included in the list"}
+  #validates :priority, :inclusion => {:in => PRIORITIES.keys, :message => "not included in the list"}
   validates :creator_id, :name, :kind_id, :priority, :difficulty, :presence => true
   validate :parent_task_updated
 
