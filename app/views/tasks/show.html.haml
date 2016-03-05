@@ -28,7 +28,12 @@
               = _("Instructions")+": "
           %td.instructions
             != auto_link(@task.instructions)
+      %a.purple-button.gradient{ :href => 'http://benyehuda.org/h_typing.html', :target => '_new'}
+        %span
+          = _("Standard instructions")
       %br
+      %br
+
       != render(:partial => "documents", :locals => {:documents => @task.documents})
       != render(:partial => "new_document")
 
