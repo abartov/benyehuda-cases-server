@@ -279,6 +279,3 @@ DEPENDENCIES
   vlad (= 1.4.0)
   whenever
   will_paginate
-
-BUNDLED WITH
-   1.10.3
