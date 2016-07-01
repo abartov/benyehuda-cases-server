@@ -1,5 +1,5 @@
 - (@user.id == current_user.id) ? set_tab(:profile, false) : set_tab(:users, false)
-- if @user.id == current_user
+- if @user.id == current_user.id
   - if current_user.might_become_volunteer?
     != button_to _("Become Volunteer"), new_volunteer_request_path, :method => :get
   
