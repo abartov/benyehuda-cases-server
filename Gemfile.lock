@@ -113,7 +113,7 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.11.1)
-    mysql2 (0.3.18)
+    mysql2 (0.3.21)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.9.2)
@@ -256,7 +256,7 @@ DEPENDENCIES
   mime-types
   mini_magick
   mocha
-  mysql2
+  mysql2 (~> 0.3.10)
   nokogiri
   paperclip (~> 2.8)
   passenger
@@ -279,3 +279,6 @@ DEPENDENCIES
   vlad (= 1.4.0)
   whenever
   will_paginate
+
+BUNDLED WITH
+   1.10.3
