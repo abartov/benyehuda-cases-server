@@ -3,7 +3,7 @@ class TasksController < InheritedResources::Base
   before_filter :require_editor_or_admin, :only => [:index, :create]
   actions :index, :show, :update, :create
 
-  EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
+  EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned")}
 
   # finishing tasks
   def edit
