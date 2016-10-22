@@ -57,13 +57,12 @@ gem 'astrails-safe'
 # TODO sort this out
 gem 'ZenTest', '4.0.0'
 gem 'test-unit', '1.2.3'
-#gem "ruby-debug#{RUBY_VERSION =~ /1.9/ ? '19' : ''}", :require => 'ruby-debug'
 
-group :production do
-  gem "passenger"
-end
+#group :production do
+#  gem "passenger"
+#end
 
-group :development do
+group :test, :development do
   gem 'rspec-rails'
   gem 'rspec'
   gem 'mocha'
@@ -73,13 +72,9 @@ group :development do
 end
 
 group :test do
-  gem 'rspec-rails'
-  gem 'rspec'
-  gem 'mocha'
   gem 'factory_girl_rails', '1.4.0'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
-  gem 'query_trace', :require => 'query_trace'
   gem 'rspec2-rails-views-matchers'
 end
 
-gem 'debugger'
+gem 'byebug'
