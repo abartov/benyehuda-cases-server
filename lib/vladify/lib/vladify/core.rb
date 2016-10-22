@@ -60,7 +60,7 @@ namespace :vlad do
     run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake db:migrate'"
   end
   remote_task :restart_thin do
-    run ". ~/.profile && rvm use 1.9.3 && cd ~/tasks && ./stop.sh && ./start.sh"
+    run ". ~/.profile && rvm use 2.2 && cd ~/tasks && ./stop.sh && ./start.sh"
   end
 end
 
