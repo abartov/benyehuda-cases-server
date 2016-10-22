@@ -1,4 +1,4 @@
-ln_shared << ".bundle"
+#ln_shared << ".bundle"
 
 namespace :bundle do
   desc "install bundled gems"
@@ -11,7 +11,7 @@ namespace :remote do
   namespace :bundle do
     desc "remote bundle install"
     remote_task :install, :roles => :app do
-      run "cd #{current_release} && bundle install --without test"
+      run "cd #{current_release} && ./rvmdo.sh 'bundle install --without test'"
     end
 
   end

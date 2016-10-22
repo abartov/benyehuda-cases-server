@@ -1,9 +1,9 @@
 safe do
   local :path => "/var/backups/stage.benyehuda.org/:kind/:id"
- 
+  # this is used by the backup process only; the buckets used for storing the documents are set in the database, in the global_preferences table
   s3 do
-    key "AKIAJAQH5UIRARAHXIZQ"
-    secret "UTeIybNdx8LMM7atqSJAQ0z1rRml3igXZW+H4xmS"
+    key "<your-key>"
+    secret "<your-secret>"
     bucket "backup.benyehuda.org"
     path ":kind/:id"
   end
@@ -14,9 +14,9 @@ safe do
   end
  
   mysqldump do
-    options "-ceKq --single-transaction --create-options -uastrails -pDM8VEgG4GMIQaN"
+    options "-ceKq --single-transaction --create-options -uastrails -p<your MySQL user password>"
     user "astrails"
-    password "DM8VEgG4GMIQaN"
+    password "<your MySQL user password>"
     socket "/var/run/mysqld/mysqld.sock"
     database :benyehuda_stage
   end
@@ -24,7 +24,7 @@ safe do
   gpg do
     command "/usr/bin/gpg"
     options  "--no-use-agent"
-    password "Udh567Rvg*I"
+    password "<your GPG key password>"
   end
  
   tar do

@@ -31,6 +31,9 @@ module Task::States
       # editor confirms that task is completed by assignee
       aasm_state          :approved
 
+      # editor marks for technical editing
+      aasm_state          :techedit
+
       # editor confirms that task is ready to be published
       aasm_state          :ready_to_publish
 
@@ -47,6 +50,7 @@ module Task::States
         transitions :from => :confirmed, :to => :confirmed
         transitions :from => :other_task_creat, :to => :other_task_creat
         transitions :from => :approved, :to => :approved
+        transitions :from => :approved, :to => :techedit
         transitions :from => :ready_to_publish, :to => :ready_to_publish
         transitions :from => :stuck, :to => :stuck
         transitions :from => :partial, :to => :partial
@@ -79,6 +83,11 @@ module Task::States
       aasm_event :approve do
         transitions :from => :waits_for_editor, :to => :approved
       end
+      
+      # editor marks for technical editing
+      aasm_event :to_techedit do
+        transitions from: :approved, to: :techedit
+      end
 
       # editor rejects the work
       aasm_event :_reject do
@@ -88,7 +97,7 @@ module Task::States
 
       # edtior, admin marks as ready to publish
       aasm_event :complete do
-        transitions :from => [:approved, :other_task_creat], :to => :ready_to_publish
+        transitions :from => [:approved, :other_task_creat, :techedit], :to => :ready_to_publish
       end
 
       aasm_event :create_other_task do
@@ -165,9 +174,11 @@ module Task::States
 
   def clone_parent_documents
     parent.documents.each do |doc|
-      d = doc.clone
+      #d = doc.clone # deprecated and removed in Rails 3.1; silently does EXACTLY what you don't want it to do!
+      d = doc.dup
       d.task_id = self.id
-      d.file = doc.file.to_file
+      #d.file = Paperclip.io_adapters.for(doc.file)
+      d.file = doc.file.to_file # to_file deprecated in Paperclip 3.0.1
       d.save
     end
   end
@@ -193,7 +204,7 @@ module Task::States
   end
 
   def simple_editor_events
-    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["approve", "complete"]
+    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
   end
 
   def can_be_rejected?
@@ -216,14 +227,15 @@ module Task::States
     self.state = value
   end
 
-  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve]
+  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve, :to_techedit]
   ASSIGNEE_EVENTS = [:abandon, :finish, :help_required, :finish_partially]
 
   def allow_event_for?(event, user)
     return false if event.blank?
-    return false unless user.is_admin? || participant?(user)
+    return true if user.is_admin?
+    return false unless participant?(user)
     return false unless Task.aasm_events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
-
+    
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)
 

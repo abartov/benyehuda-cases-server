@@ -1,0 +1,4 @@
+$('#comments').append('<%= escape_javascript(render(:partial => "comment", :object => @comment))%>');
+<% @comment = nil %>
+//$('#new_comment').html = '< %= escape_javascript(render(:partial => "new")) %>';
+$('#comment_message').val('');

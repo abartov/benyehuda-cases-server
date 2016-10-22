@@ -1,15 +1,17 @@
+
 class Task < ActiveRecord::Base
   PROP_SOURCE = 131
   PROP_RASHI = 121
   PROP_INSTRUCTIONS = 61
   include ActsAsAuditable
-  acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud,
+  acts_as_auditable :name, :state, :creator_id, :editor_id, :assignee_id, :kind_id, :difficulty, :full_nikkud, :priority,
     :conversions => {
       :creator_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :editor_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :assignee_id => proc { |v| v ? (User.find_by_id(v).try(:name)) : "" },
       :kind_id => proc {|v| v ? TaskKind.find_by_id(v).try(:name) : "" },
       :difficulty => proc {|v| Task.textify_difficulty(v) },
+      :priority => proc {|v| Task.textify_priority(v) },
       :task_state_id => proc {|v| v ? Task.textify_state(TaskState.find_by_id(v).try(:name)) : "" },
       :full_nikkud => proc {|v| v ? _("true") : _("false")},
       :default_title => N_("auditable|Task"),
@@ -29,6 +31,8 @@ class Task < ActiveRecord::Base
           _("Kind")
         when :difficulty
           _("Difficulty")
+        when :priority
+          _("Priority")
         when :full_nikkud
           _("Full Nikkud")
         end
@@ -60,11 +64,20 @@ class Task < ActiveRecord::Base
     "normal" => N_("task difficulty|normal"),
     "hard" => N_("task difficulty|hard")
   }
+  PRIORITIES = {
+    "first" => N_("First task of new volunteer"),
+    "very_old" => N_("Very old task"),
+    "expiry" => N_("Copyright expiring"),
+    "permission" => N_("Given permission"),
+    "completing" => N_("Completing an author")
+  }
+
   validates :difficulty, :inclusion => {:in => DIFFICULTIES.keys, :message => "not included in the list"}
+  #validates :priority, :inclusion => {:in => PRIORITIES.keys, :message => "not included in the list"}
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :difficulty, :full_nikkud, :comments_attributes
+  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, :order => "comments.task_id, comments.created_at"
@@ -92,17 +105,6 @@ class Task < ActiveRecord::Base
     creator.assignment_histories.create(:task_id => self.id, :role => "creator") if creator_id_changed? && !creator.blank?
   end
 
-  define_index do
-    indexes :name, :sortable => true
-    has :created_at
-    has :updated_at
-    has :full_nikkud, :type => :boolean
-    indexes :difficulty, :sortable => true
-    indexes kind.name, :sortable => true, :as => :kind
-    indexes :state, :sortable => true
-    has :documents_count, :type => :integer
-  end
-
   SEARCH_INCLUDES = {
     :include => [:creator, :assignee, :editor, :kind]
   }
@@ -111,24 +113,32 @@ class Task < ActiveRecord::Base
     "short" => 0..7,
     "medium" => 8..24,
   }
-  TASK_LENGTH.default = 25..100000000
+  TASK_LENGTH.default = 25..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length"]
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority"]
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
-
     search_opts = {:conditions => {}, :with => {}}
-    search_opts[:conditions][:state] = opts[:state] unless opts[:state].blank?
+    unless opts[:state].blank?
+      if opts[:invert_state].blank? or opts[:invert_state] == "false"
+        search_opts[:conditions][:state] = opts[:state] 
+      else
+        states = Task.aasm_states.collect(&:name).collect(&:to_s)
+        states.delete(opts[:state]) # all states except the specified one
+        search_opts[:conditions][:state] = states
+      end
+    end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
+    search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
-
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
-      self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
+      ret = self.find(:all, SEARCH_INCLUDES.merge(:order => "tasks.updated_at DESC").merge(:conditions => search_opts[:conditions].merge(search_opts[:with]))).paginate(:page => opts[:page], :per_page => opts[:per_page])
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
-      self.search opts[:query], search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
+      search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
+      ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(SEARCH_INCLUDES).merge(:order => :updated_at, :sort_mode => :desc, :page => opts[:page], :per_page => opts[:per_page])
     end
   end
 
@@ -154,6 +164,23 @@ class Task < ActiveRecord::Base
     doc.user_id = uploader.id
     doc
   end
+  
+  def files_todo
+    todo = self.documents_by_extensions(['pdf', 'jpg'])
+    return todo.length
+  end
+  def files_done
+    self.documents.where("done" => true).length
+  end
+  def files_left
+    return files_todo - files_done
+  end
+  def percent_done
+    total = files_todo
+    return 0 if total.nil? or total == 0
+    done = files_done || 0
+    return (files_done.to_f / files_todo * 100).round
+  end
   # convenience method for custom prop
   def source
     self.task_properties.each {|p|
@@ -173,11 +200,29 @@ class Task < ActiveRecord::Base
     }
     return ""
   end
+  def self.textify_priority(p)
+    s_(PRIORITIES[p]) if PRIORITIES[p]
+  end
   def self.textify_difficulty(dif)
     s_(DIFFICULTIES[dif]) if DIFFICULTIES[dif]
   end
 
   def self.textify_state(state)
     s_(TaskState.find_by_name(state.to_s).value)
+  end
+  protected
+  def documents_by_extensions(exts)
+    ret = []
+    self.documents.each { |f|
+      pos = f.file_file_name.rindex('.')
+      next if pos.nil?
+      ret << f if exts.include?(f.file_file_name[pos+1..-1])
+    }
+    return ret
+  end
+  def self.fixed_Riddle_escape(s)
+    # Riddle.escape was incorrectly escaping minus signs, used as 'makaf' in Hebrew concatenated words.
+    #string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
+    s.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
   end
 end

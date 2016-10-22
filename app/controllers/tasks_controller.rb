@@ -10,23 +10,28 @@ class TasksController < InheritedResources::Base
     return unless _allow_event?(resource, :finish, current_user)
     @no_docs_uploaded = resource.documents.uploaded_by(current_user).count.zero?
   end
+  def make_comments_editor_only
+    @task = Task.find(params[:id])
+    @task.comments.each {|c|
+      c.editor_eyes_only = true
+      c.save!
+    }
+    redirect_to(@task)
+  end
 
   def create
     @task = Task.find(params[:id])
 
     return unless _allow_event?(@task, :create_other_task, current_user)
-
     @chained_task = @task.build_chained_task(params[:task], current_user)
     @comment = @chained_task.comments.first
     if @chained_task.save
       flash[:notice] = _("Task created.")
-      render(:update) do |page|
-        page.redirect_to task_path(@chained_task)
-      end
+      redirect_to task_path(@chained_task)
     else
-      render(:update) do |page|
-        page[:new_task_container].replaceWith render(:partial => "new_chain_task")
-      end
+      puts "DBG: #{@chained_task.errors.full_messages}"
+      flash[:error] = @chained_task.errors.full_messages
+      redirect_to task_path(@task)
     end
   end
 
@@ -80,16 +85,18 @@ protected
 
   def _event_with_comment(event)
     unless resource.event_with_comment(event, params[:task])
-      render(:update) do |page|
-        page["#{event}_task"].html render(:partial => "tasks/#{event}")
+      respond_to do |format|
+        format.html
+        format.js { render :partial => "event_with_comment", :locals => {:event => event } }
       end
       return
     end
 
     resource.save
     flash[:notice] = s_(resource.class.event_complete_message(event))
-    render(:update) do |page|
-      page.redirect_to(resource.participant?(current_user) ? task_path(resource) : dashboard_path)
+    respond_to do |format|
+      format.html
+      format.js { render :partial => 'event_with_comment_redir', :locals => {:to => resource.participant?(current_user) ? task_path(resource) : dashboard_path} }
     end    
   end
 
@@ -101,9 +108,7 @@ protected
     respond_to do |wants|
       wants.html {redirect_to task_path(task)}
       wants.js do
-        render(:update) do |page|
-          page.redirect_to task_path(task)
-        end
+        render :partial => 'redir_task', :locals => {:task => task }
       end
     end
 

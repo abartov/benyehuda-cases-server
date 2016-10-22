@@ -1,7 +1,7 @@
 - set_tab :object_prefs, _("New Property")
 
-- semantic_form_for(@property, :live_validations => true) do |f|
-  = f.object.errors.on(:base)
+= semantic_form_for(@property, :live_validations => true) do |f|
+  = f.semantic_errors
   != render :partial => "form", :locals => { :f => f }
   != f.submit _("Save")
   != link_to _("Cancel"), properties_path

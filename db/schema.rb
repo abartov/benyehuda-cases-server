@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130728233602) do
+ActiveRecord::Schema.define(:version => 20151025205716) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -85,6 +86,7 @@ ActiveRecord::Schema.define(:version => 20130728233602) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "deleted_at"
+    t.boolean  "done"
   end
 
   create_table "global_preferences", :force => true do |t|
@@ -116,6 +118,16 @@ ActiveRecord::Schema.define(:version => 20130728233602) do
   end
 
   add_index "search_settings", ["user_id", "search_key"], :name => "index_search_settings_on_user_id_and_search_key"
+
+  create_table "sessions", :force => true do |t|
+    t.string   "session_id",                     :null => false
+    t.text     "data",       :limit => 16777215
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
+  add_index "sessions", ["updated_at"], :name => "index_sessions_on_updated_at"
 
   create_table "site_notices", :force => true do |t|
     t.datetime "start_displaying_at"
@@ -153,6 +165,7 @@ ActiveRecord::Schema.define(:version => 20130728233602) do
     t.datetime "updated_at"
     t.integer  "documents_count",               :default => 0
     t.integer  "kind_id"
+    t.string   "priority"
   end
 
   create_table "tmp_stats", :id => false, :force => true do |t|
@@ -169,7 +182,7 @@ ActiveRecord::Schema.define(:version => 20130728233602) do
     t.datetime "updated_at"
   end
 
-  add_index "translation_keys", ["key"], :name => "index_translation_keys_on_key", :length => {"key"=>"255"}
+  add_index "translation_keys", ["key"], :name => "index_translation_keys_on_key", :length => {"key"=>255}
 
   create_table "translation_texts", :force => true do |t|
     t.text     "text"
@@ -211,8 +224,7 @@ ActiveRecord::Schema.define(:version => 20130728233602) do
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "volunteer_kind_id"
-    t.string   "firstname",                :limit => 50
-    t.string   "lastname",                 :limit => 40
+    t.boolean  "on_break"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"

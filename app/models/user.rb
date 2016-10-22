@@ -1,3 +1,4 @@
+include ThinkingSphinx::Scopes
 class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.merge_validates_format_of_email_field_options :live_validator =>
@@ -7,6 +8,7 @@ class User < ActiveRecord::Base
     c.validates_length_of_password_confirmation_field_options =
       {:on => :update, :minimum => 4, :if => :has_no_credentials?}
     c.perishable_token_valid_for = 2.weeks
+    c.crypto_provider = Authlogic::CryptoProviders::Sha512 # addressing a breaking change in Authlogic 3.4.0, sigh (June 2015)
   end
   include Astrails::Auth::Model
   attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id
@@ -45,6 +47,7 @@ class User < ActiveRecord::Base
   scope :admins, where(:is_admin => true)
 
   scope :enabled, where("users.disabled_at IS NULL")
+  scope :not_on_break, where("users.is_volunteer = 1 AND users.on_break = 0 AND users.disabled_at IS NULL")
   scope :active, where("users.activated_at IS NOT NULL")
   scope :not_activated, where("users.activated_at is NULL")
   scope :active_first, order("users.current_login_at DESC")
@@ -76,14 +79,6 @@ class User < ActiveRecord::Base
   before_update :handle_volunteer_kind, :request_task_on_volunteering
   after_update :welcome_on_volunteering
 
-  define_index do
-    indexes :name, :sortable => true
-    indexes :email, :sortable => true
-    indexes kind.name, :sortable => true, :as => :kind
-    has :disabled_at
-    has :activated_at
-    has :current_login_at
-  end
   sphinx_scope(:sp_enabled) { {:where => "disabled_at is NULL"}}
   sphinx_scope(:sp_active_first) { {:order => "current_login_at DESC"}}
   sphinx_scope(:sp_all) { {}}
@@ -123,7 +118,7 @@ class User < ActiveRecord::Base
   end
 
   def public_roles
-    @public_roles ||= returning([]) do |res|
+    @public_roles ||= [].tap do |res|
       res << "admin" if is_admin?
       res << "editor" if is_editor?
       res << "volunteer" if is_volunteer?
@@ -142,6 +137,7 @@ class User < ActiveRecord::Base
 
   def set_task_requested
     self.task_requested_at = Time.now.utc
+    self.on_break = false
     self
   end
 

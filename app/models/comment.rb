@@ -37,7 +37,10 @@ class Comment < ActiveRecord::Base
       recipients = (recipients || []).select {|r| r.admin_or_editor?}
     end
     return if recipients.blank?
-
-    I18n.with_locale(I18n.locale) { Notification.deliver_comment_added(self, recipients) }
+    from_addr = nil
+    unless task.editor.nil?
+      from_addr = task.editor.email
+    end
+    I18n.with_locale('he') { Notification.comment_added(self, recipients, from_addr).deliver }
   end
 end

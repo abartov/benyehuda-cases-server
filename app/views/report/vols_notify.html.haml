@@ -1,0 +1,10 @@
+%h1= _("Volunteers to Notify")
+%h2= _("Total volunteers: ")+@users.count.to_s
+
+/ TBD
+/ %h2= _("Volunteers list")
+%h2= _("e-mail addresses to notify: ")
+= @emails
+
+= link_to _("Send notification to these users"), report_do_notify_path
+%br

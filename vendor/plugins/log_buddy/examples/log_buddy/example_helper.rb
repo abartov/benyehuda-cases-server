@@ -1,5 +1,5 @@
 require 'logger'
-require "mocha"
+require "mocha/setup"
 require 'micronaut'
 require File.expand_path(File.join(File.dirname(__FILE__), "..", "..", "lib", "log_buddy"))
 

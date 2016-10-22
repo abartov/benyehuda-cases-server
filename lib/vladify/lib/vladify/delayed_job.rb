@@ -12,7 +12,7 @@ namespace :remote do
     %w/start stop restart/.each do |c|
       desc "#{c} delayed_job"
       remote_task c, :roles => :app do
-        run "cd #{current_path} && RAILS_ENV=#{rails_env} script/delayed_job #{c}"
+        run "cd #{current_path} && RAILS_ENV=#{rails_env} ./rvmdo.sh 'script/delayed_job #{c}'"
       end
     end
   end

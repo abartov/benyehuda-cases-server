@@ -12,7 +12,7 @@ set(:revision) {`git rev-parse HEAD`.strip}
 
 # command to run a rake task in $current_path
 def rake(target)
-  res = "cd #{current_release} && #{rake_cmd} RAILS_ENV=#{rails_env} #{target}"
+  res = "cd #{current_release} && ./rvmdo.sh '#{rake_cmd} RAILS_ENV=#{rails_env} #{target}'"
   puts res
   res
 end
@@ -56,6 +56,12 @@ namespace :vlad do
     # current revision
     run "echo #{revision} > #{latest_release}/REVISION"
   end
+  remote_task :dbmigrate, :roles => :app do
+    run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake db:migrate'"
+  end
+  remote_task :restart_thin do
+    run ". ~/.profile && rvm use 1.9.3 && cd ~/tasks && ./stop.sh && ./start.sh"
+  end
 end
 
 namespace :git do
@@ -72,9 +78,11 @@ namespace :deploy do
   # configure. should not interfere with the running code
   task :config
   # stuff to do just before restarting.
-  task :prepare => %w/vlad:migrate/
+  #task :prepare => %w/vlad:migrate/
+  task :prepare => %w/vlad:dbmigrate/
   # restart all the services
-  task :restart => %w/mod_rails:restart/
+  task :restart => %w/vlad:restart_thin/
+  #task :restart => %w/mod_rails:restart/
   # cleanup
   task :cleanup => %w/vlad:cleanup/
 end

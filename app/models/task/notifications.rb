@@ -42,6 +42,6 @@ module Task::Notifications
     recipients = (task_changes_recipients || []).select {|r| r.wants_to_be_notified_of?(:state)}
     return if recipients.blank?
 
-    I18n.with_locale(I18n.locale) { Notification.deliver_task_state_changed(self, recipients) }
+    I18n.with_locale('he') { Notification.task_state_changed(self, recipients).deliver }
   end
 end

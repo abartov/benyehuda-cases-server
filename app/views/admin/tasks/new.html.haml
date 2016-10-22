@@ -1,10 +1,10 @@
 - set_tab :tasks_admin, _("New Task")
 
-- semantic_form_for(@task, :live_validations => true, :url => admin_tasks_path) do |f|
-  - f.inputs do
-    = f.object.errors.on(:base)
+= semantic_form_for(@task, :live_validations => true, :url => admin_tasks_path) do |f|
+  = f.inputs do
+    = f.semantic_errors
   != render(:partial => "form", :locals => {:f => f})
-  - f.inputs do
+  = f.inputs do
     != f.submit _("Save")
     != f.submit _("Save and New")
     != link_to _("Cancel"), admin_tasks_path

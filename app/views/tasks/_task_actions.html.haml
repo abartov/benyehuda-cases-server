@@ -9,14 +9,11 @@
     %a{ :href => edit_task_assignment_path(task) }
       %span
         = _("Reassign") 
-  / = link_to _("Reassign"), edit_task_assignment_path(task)
   %li
     %a{ :href => admin_task_path(task), "remote" => "true", "data-method" => :delete, "data-confirm" => _('Are you sure?') }
       %span
         = _("Delete")
-  / = link_to _("Delete"), admin_task_path(task), :remote => true, :method => :delete, :confirm => _("Are you sure?")
   %li
     %a{ :href => task_path(task) }
       %span
         = _("More Actions")
-  / = link_to _("More Actions"), task_path(task)

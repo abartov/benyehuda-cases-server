@@ -39,7 +39,7 @@ module UserHelper
 
   def activation_email_links(user)
     link_opts = 
-    returning("") do |res|
+    "".tap do |res|
       if user.activation_email_sent_at
         res << user.activation_email_sent_at.to_s
         res << " " << send_activation_link(user, s_("activation email|Resend")) unless user.activated_at
@@ -50,7 +50,7 @@ module UserHelper
   end
 
   def email_notifications(user)
-    returning([]) do |res|
+    [].tap do |res|
       res << _("When a comment added to my task") if user.notify_on_comments?
       res << _("When my task status changed") if user.notify_on_status?
       res << s_("notifications|None") if res.blank?

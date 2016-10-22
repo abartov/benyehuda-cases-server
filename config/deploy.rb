@@ -1,12 +1,12 @@
-require "vladify/delayed_job"
+require "vladify/lib/vladify/delayed_job"
 # require "vladify/delayed_job_monit"
 # require "vladify/fast_gettext"  # RFCT there's no pomo sync atm
 # require "vladify/gettext"
-require "vladify/thinking_sphinx"
+require "vladify/lib/vladify/thinking_sphinx"
 # require "vladify/ultrasphinx"
-require "vladify/whenever"
+require "vladify/lib/vladify/whenever"
 # require "vladify/workling"
-require 'vladify/bundler'
+require 'vladify/lib/vladify/bundler'
 
 
 set :repository, "https://github.com/abartov/benyehuda-cases-server.git"
@@ -14,13 +14,15 @@ set :repository, "https://github.com/abartov/benyehuda-cases-server.git"
 desc "production server"
 task :prod do
   set :application, "tasks.benyehuda.org"
-  set :domain, "astrails@tasks.benyehuda.org"
+#  set :domain, "bybe@52.20.112.68"
+  set :domain, "bybe@tasks.benyehuda.org"
 end
 
 desc "stage server"
 task :staging do
   set :application, "staging.benyehuda.org"
-  set :domain, "astrails@tasks.benyehuda.org"
+  #set :domain, "bybe@52.20.112.68"
+  set :domain, "bybe@tasks.benyehuda.org"
 end
 
 # desc "beta server"

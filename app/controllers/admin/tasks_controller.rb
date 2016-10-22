@@ -1,5 +1,6 @@
 class Admin::TasksController < InheritedResources::Base
-  before_filter :require_admin
+  before_filter :require_admin, :only => [:create, :update, :changes]
+  before_filter :require_editor_or_admin, :only => :index
   actions :index, :new, :create, :edit, :update, :destroy, :changes
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
@@ -38,7 +39,7 @@ class Admin::TasksController < InheritedResources::Base
     default_index_with_search!
   end
   def changes
-    @raw_changes = Audit.order('updated_at desc').limit(1000).paginate(:page => params[:page], :per_page => 100)
+    @raw_changes = Audit.order('updated_at desc').limit(500).paginate(:page => params[:page], :per_page => 100)
     # group audits by task
     @changes = {}
     @ordered_changes = []

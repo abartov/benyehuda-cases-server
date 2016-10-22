@@ -1,6 +1,6 @@
 class DocumentsController < InheritedResources::Base
   belongs_to :task
-  before_filter :require_task_participant, :only => [:new, :create, :show]
+  before_filter :require_task_participant, :only => [:new, :create, :show, :tick_file]
   before_filter :require_owner, :only => :destroy
   actions :new, :create, :destroy, :show
   layout nil
@@ -8,16 +8,18 @@ class DocumentsController < InheritedResources::Base
   # new - shouldn't be used
 
   # show
-
+  def show
+    render :layout => false
+  end
   # create
   def create
     @document = task.prepare_document(current_user, params[:document])
 
     create! do |success, failure|
       success.js do
-        render(:update) do |page|
-          page[:documents].append render(:partial => "documents/document", :object => @document)
-          page[:no_docs_uploaded].remove
+        respond_to do |format|
+          format.html 
+          format.js 
         end
       end
       success.html {redirect_to task_path(task); flash[:notice] = nil}
@@ -28,20 +30,21 @@ class DocumentsController < InheritedResources::Base
   end
 
   def destroy
-    document = task.documents.find(params[:id])
-    document.mark_as_deleted!
+    @document = task.documents.find(params[:id])
+    @document.mark_as_deleted!
 
     respond_to do |wants|
       wants.html do
         flash[:notice] = _("Document deleted")
         redirect_to task_path(task)
       end
-      wants.js do
-        render(:update) do |page|
-          page[dom_id(document)].remove
-        end
-      end
+      wants.js
     end
+  end
+  def tick_file
+    document = Document.find(params[:id])
+    document.toggle! :done
+    render :nothing => true
   end
 
   protected

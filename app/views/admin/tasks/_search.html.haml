@@ -4,6 +4,8 @@
   .boxcontainer
     .boxbody
       = form_tag(url_for(params), :method => :get) do
+        = label_tag :invert_state, _("invert state?")
+        = check_box_tag :invert_state, "true", "true" == params[:invert_state]
         = label_tag :state, _("State")
         = select_tag :state, options_for_select([""] + task_states_for_select, params[:state])
         = label_tag :full_nikkud, _("Full Nikkud")
@@ -14,6 +16,8 @@
         = select_tag :difficulty, options_for_select([""] + task_difficulties_for_select, params[:difficulty])
         = label_tag :length, _("Length")
         = select_tag :length, options_for_select([""] + task_length_for_select, params[:length])
+        = label_tag :priority, _("Priority")
+        = select_tag :priority, options_for_select([""] + task_priorities_for_select, params[:priority])
         %br
         = label_tag :query, _("Query")
         = text_field_tag :query, params[:query]

@@ -54,9 +54,9 @@ class Audit < ActiveRecord::Base
     return nil unless to
     human_attr = convert_attribute_name(attribute_name) || attribute_name.to_s.humanize
     if from.blank?
-      s_("audit set|%{attr} set to %{to}") % {:attr => human_attr, :to => escape_blanks(to)}
+      s_("audit set|%{attr} set to %{to}") % {:attr => human_attr, :to => escape_blanks(to.force_encoding('utf-8'))}
     else
-      s_("audit changed|%{attr} changed from %{from} to %{to}") % {:attr => human_attr, :to => escape_blanks(to), :from => escape_blanks(from)}
+      s_("audit changed|%{attr} changed from %{from} to %{to}") % {:attr => human_attr, :to => escape_blanks(to.force_encoding('utf-8')), :from => escape_blanks(from.force_encoding('utf-8'))}
     end
   end
 

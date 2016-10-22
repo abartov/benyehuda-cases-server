@@ -2,6 +2,7 @@ class UsersController < InheritedResources::Base
   before_filter :require_admin, :only => [:index, :destroy]
   before_filter :require_no_user, :only => [:new, :create]
   before_filter :require_owner, :only => [:edit, :update]
+  before_filter :require_owner, :only => [:edit, :update, :take_break]
   before_filter :require_owner_or_public_profile, :only => :show
   before_filter :set_default_domain, :only => :create
 
@@ -9,6 +10,13 @@ class UsersController < InheritedResources::Base
 
   def index
     default_index_with_search!
+  end
+  def take_break
+    @user = User.find(params[:id])
+    @user.on_break = true
+    flash[:notice] = s_("You're now on break! Request a new task to come out of break.")
+    @user.save!
+    redirect_to :action => :show
   end
 
   def create
@@ -123,8 +131,6 @@ class UsersController < InheritedResources::Base
   def _remove_avatar
     @user.avatar = nil
     @user.save
-    render(:update) do |page|
-      page.redirect_to user_path(@user)
-    end
+    redirect_to user_path(@user)
   end
 end

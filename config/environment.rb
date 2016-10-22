@@ -12,3 +12,6 @@ CasesServer::Application.initialize!
 if ENV['RUBY_DEBUG_PORT']
   Debugger.start_remote nil, ENV['RUBY_DEBUG_PORT'].to_i
 end
+
+#Rails.application.routes.default_url_options[:host] = "52.20.112.68" # EC2 machine
+Rails.application.routes.default_url_options[:host] = (GlobalPreference.get(:domain) || "benyehuda.org") rescue "benyehuda.org"

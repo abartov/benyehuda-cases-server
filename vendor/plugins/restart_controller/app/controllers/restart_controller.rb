@@ -1,5 +1,5 @@
 class RestartController < ApplicationController
-  verify :method => :post, :redirect_to => "/"
+  #verify :method => :post, :redirect_to => "/"
   before_filter :require_admin
 
   def restart

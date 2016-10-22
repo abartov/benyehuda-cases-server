@@ -1,0 +1,13 @@
+
+- make order_by work.  Figure out the m/task.rb scope issue (test locally!)
+
+When clicking "finish task", check completeness vs. files_left and warn, like when no attachment.
+
+https://github.com/rails/rails/issues/7766
+https://stackoverflow.com/questions/10948779/expected-to-define-when-calling-class-inside-a-module
+
+replace cloudfiles to fog
+
+deploy on ruby 2.0
+
+replace flash uploader component with FineUploader https://fineuploader.com/
