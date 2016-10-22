@@ -1,3 +1,4 @@
+include ThinkingSphinx::Scopes
 class User < ActiveRecord::Base
   acts_as_authentic do |c|
     c.merge_validates_format_of_email_field_options :live_validator =>
@@ -78,14 +79,6 @@ class User < ActiveRecord::Base
   before_update :handle_volunteer_kind, :request_task_on_volunteering
   after_update :welcome_on_volunteering
 
-  define_index do
-    indexes :name, :sortable => true
-    indexes :email, :sortable => true
-    indexes kind.name, :sortable => true, :as => :kind
-    has :disabled_at
-    has :activated_at
-    has :current_login_at
-  end
   sphinx_scope(:sp_enabled) { {:where => "disabled_at is NULL"}}
   sphinx_scope(:sp_active_first) { {:order => "current_login_at DESC"}}
   sphinx_scope(:sp_all) { {}}

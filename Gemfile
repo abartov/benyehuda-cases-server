@@ -24,8 +24,11 @@ gem "aasm", '3.0.16'
 gem 'mime-types', :require => 'mime/types'
 gem "fastercsv"
 gem 'airbrake'
-gem 'thinking-sphinx', '~>2', :require => 'thinking_sphinx'
+gem 'thinking-sphinx', '~> 3.2.0'
+
+#gem 'thinking-sphinx', '~>2', :require => 'thinking_sphinx'
 gem 'gravtastic', "2.2.0"
+#gem 'vlad', :require => false
 gem 'vlad', '1.4.0', :require => false
 gem "RubyInline"
 gem "daemons"
