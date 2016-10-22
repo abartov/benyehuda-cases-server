@@ -1,7 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '~>3.2'
-gem 'rake', '0.8.7'
+gem 'rake'
 gem 'rack'
 gem "builder"
 gem "json", '>=1.7.7'
