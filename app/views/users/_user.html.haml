@@ -16,10 +16,11 @@
       = ' '+_("on break")
   %td= user.current_login_at ? (_("%{time} ago") % {:time => time_ago_in_words(user.current_login_at)}) : s_("last login|never")
   %td.edit!= link_to _("Edit"), edit_user_path(user)
+  %td.delete!= link_to _("take a break"), user_path(@user)+'/take_break'
   - if user.activated_at
     - if user.disabled_at
       %td.delete!= link_to _("Enable"), user_path(user, :enable => true), :method => "delete"
     - else
       %td.delete!= link_to _("Disable"), user, :method => "delete", :confirm => _("Are you sure?")
-  - else    
+  - else
     %td &nbsp;
