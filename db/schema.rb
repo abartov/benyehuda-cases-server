@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20151025205716) do
+ActiveRecord::Schema.define(:version => 20170525190746) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -88,6 +88,8 @@ ActiveRecord::Schema.define(:version => 20151025205716) do
     t.datetime "deleted_at"
     t.boolean  "done"
   end
+
+  add_index "documents", ["task_id"], :name => "index_documents_on_task_id"
 
   create_table "global_preferences", :force => true do |t|
     t.string   "name"
@@ -225,6 +227,7 @@ ActiveRecord::Schema.define(:version => 20151025205716) do
     t.datetime "avatar_updated_at"
     t.integer  "volunteer_kind_id"
     t.boolean  "on_break"
+    t.date     "last_reminder"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email"
