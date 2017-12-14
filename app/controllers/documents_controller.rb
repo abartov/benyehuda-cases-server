@@ -1,6 +1,6 @@
 class DocumentsController < InheritedResources::Base
   belongs_to :task
-  before_filter :require_task_participant, :only => [:new, :create, :show, :tick_file]
+  before_filter :require_task_participant, :only => [:new, :create, :show]
   before_filter :require_owner, :only => :destroy
   actions :new, :create, :destroy, :show
   layout nil
@@ -18,8 +18,8 @@ class DocumentsController < InheritedResources::Base
     create! do |success, failure|
       success.js do
         respond_to do |format|
-          format.html 
-          format.js 
+          format.html
+          format.js
         end
       end
       success.html {redirect_to task_path(task); flash[:notice] = nil}
@@ -43,8 +43,13 @@ class DocumentsController < InheritedResources::Base
   end
   def tick_file
     document = Document.find(params[:id])
-    document.toggle! :done
-    render :nothing => true
+    if (require_user && document.task.participant?(current_user)) || (require_user && current_user.try(:is_admin?))
+      document.toggle! :done
+      render :nothing => true
+    else
+      flash[:error] = _("Only participant can see this page")
+      redirect_to task_path(task)
+    end
   end
 
   protected
