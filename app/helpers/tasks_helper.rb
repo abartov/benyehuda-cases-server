@@ -37,7 +37,7 @@ module TasksHelper
       script_data[#{session_key.to_json}] = #{cookies[session_key].to_json};
       $("#upload_documents").uploadifive({
         'method'         : 'POST',
-        'uploader'       : #{task_documents_path(@task).to_json},
+        'uploadScript'       : #{task_documents_path(@task).to_json},
         'formData'       : script_data,
         'fileObjName'    : 'document[file]',
         'auto'           : true,
