@@ -38,6 +38,7 @@ module TasksHelper
       $("#upload_documents").uploadifive({
         'method'         : 'POST',
         'uploadScript'       : #{task_documents_path(@task).to_json},
+        'buttonText'     : 'העלאת קבצים',
         'formData'       : script_data,
         'fileObjName'    : 'document[file]',
         'auto'           : true,
