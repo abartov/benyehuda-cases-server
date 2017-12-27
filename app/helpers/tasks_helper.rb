@@ -32,14 +32,10 @@ module TasksHelper
     session_key = Rails.application.config.session_options[:key]
     javascript_tag <<-EOJS
     $(function() {
-      if (!swfobject.hasFlashPlayerVersion("9.0.24")) {
-        jQuery("#no_flash_player, #upload_documents").toggle();
-        return;
-      }
       var script_data = {format: 'js'};
       script_data[$('meta[name=csrf-param]').attr('content')] = encodeURI($('meta[name=csrf-token]').attr('content'));
       script_data[#{session_key.to_json}] = #{cookies[session_key].to_json};
-      $("#upload_documents").uploadify({
+      $("#upload_documents").uploadifive({
         'method'         : 'POST',
         'uploader'       : #{task_documents_path(@task).to_json},
         'formData'       : script_data,
@@ -49,8 +45,7 @@ module TasksHelper
         'fileTypeDesc'   : #{_('Choose files to attach to the project:').to_json},
         'queueID'        : 'fileQueue',
         'fileSizeLimit'  : 9*1024*1024,
-        'successTimeout' : 21600,
-        'swf'            : '/uploadify.swf',
+        'successTimeout' : 42600,
         'onUploadSuccess': function(file, data, response) {
           eval(data);
         },

@@ -1,13 +1,10 @@
-!= javascript_include_tag "jquery.uploadify.min.js"
+!= javascript_include_tag "jquery.uploadifive.min.js"
 != upload_javascripts
-!= stylesheet_link_tag "uploadify"
+!= stylesheet_link_tag "uploadifive"
 
 %b= _("Attach new document")
 %br
 %br
-#no_flash_player{:style => "display:none"}
-  != _("It looks like you don't have %{flash} installed or enabled.") % {:flash => link_to(_("Flash Media Player"), "http://www.adobe.com/go/getflashplayer", :target => "_blank")}
-  %a{:href => "http://www.adobe.com/go/getflashplayer", :target => "_blank"}= _("Get Flash Media Player!")
 
 %input#upload_documents{:type => "file", :name => "upload_documents"}
 
