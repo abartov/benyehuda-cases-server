@@ -43,6 +43,7 @@ module TasksHelper
         'fileObjName'    : 'document[file]',
         'auto'           : true,
         'multi'          : true,
+        'queueSizeLimit' : 1,
         'removeCompleted': true,
         'fileTypeDesc'   : #{_('Choose files to attach to the project:').to_json},
         'queueID'        : 'fileQueue',
