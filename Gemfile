@@ -6,6 +6,7 @@ gem 'rack'
 gem "builder"
 gem "json", '>=1.7.7'
 gem "mysql2", '~> 0.3.10' # Rails 3.x can't deal with 0.4.x
+gem 'scrypt', '2.1.1'
 gem 'authlogic'
 gem 'whenever'
 gem 'will_paginate', :require => 'will_paginate'
