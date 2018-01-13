@@ -11,6 +11,7 @@ class UsersController < InheritedResources::Base
   def index
     default_index_with_search!
   end
+
   def take_break
     @user = User.find(params[:id])
     @user.on_break = true

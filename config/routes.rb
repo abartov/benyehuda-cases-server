@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get "report/do_notify"
   get "report/index"
   match '/report' => 'report#index', via: [:get, :post]
-  match '/users' => 'users#index', via: [:get, :post]
+  match '/users' => 'users#index', via: [:get]
 
   match '/activate/:id' => 'passwords#edit', :as => :activate, via: [:get, :post]
   get '/users/:id/take_break', :controller => 'users', :action => 'take_break', :as => :users_take_break, :via => :get
