@@ -5,7 +5,7 @@
       .c
         %h2
           = title
-          = "(#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
+          = "#{_('total')} (#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
           - if editing
             = " / #{total.to_s}"
           = ")"
@@ -21,7 +21,6 @@
           - if tasks.blank?
             = _("No Tasks found")
           - else
-            = _("Total")+':'+tasks.length.to_s
             %table.data-table
               %tbody
                 %tr

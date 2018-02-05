@@ -5,6 +5,7 @@
 != link_to _("New"), new_admin_task_path
 
 - unless @tasks.blank?
+  = "(#{@tasks.respond_to?(:total_entries) ? @tasks.total_entries : @tasks.size}"
   %table.list
     %tr
       %th &nbsp;
