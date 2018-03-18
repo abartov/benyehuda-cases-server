@@ -47,8 +47,8 @@ module TasksHelper
         'removeCompleted': true,
         'fileTypeDesc'   : #{_('Choose files to attach to the project:').to_json},
         'queueID'        : 'fileQueue',
-        'fileSizeLimit'  : 9*1024*1024,
-        'successTimeout' : 42600,
+        'fileSizeLimit'  : 39*1024*1024,
+        'successTimeout' : 122600,
         'onUploadComplete': function(file, data, response) {
           eval(data);
         },
