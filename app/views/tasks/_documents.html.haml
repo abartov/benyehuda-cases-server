@@ -1,9 +1,8 @@
 #documents
-  - unless documents.blank?
-    %table
-      %tr
-        %td.vtop
-          %h4= _("Attached documents")
-        %td
-          %ol#ol_documents
-            != render(:partial => "documents/document", :collection => documents, :as => :document)
+  %table
+    %tr
+      %td.vtop
+        %h4= _("Attached documents")
+      %td
+        %ol#ol_documents
+          != render(:partial => "documents/document", :collection => documents, :as => :document)
