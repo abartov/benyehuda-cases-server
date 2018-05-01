@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
     save!
   end
   def vol_active?
-    active_in_last_n_months?(6)
+    vol_active_in_last_n_months?(6)
   end
   def vol_active_in_last_n_months?(n)
     self.assignment_histories.order('updated_at desc').each {|h|
@@ -154,7 +154,7 @@ class User < ActiveRecord::Base
         return true
       end
     }
-    return false  
+    return false
   end
   def self.vols_active_in_last_n_months(n)
     ret = []
