@@ -168,6 +168,7 @@ class User < ActiveRecord::Base
     User.all_volunteers.each {|u|
       ret << u unless u.vol_active_in_last_n_months?(n)
     }
+    return ret
   end
   def self.vols_newer_than(t)
     return User.all_volunteers.where(:activated_at => t..Date.today)
