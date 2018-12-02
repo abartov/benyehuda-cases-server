@@ -5,7 +5,7 @@ class Document < ActiveRecord::Base
   belongs_to :user
   belongs_to :task , :touch => true, :counter_cache => true
 
-  IMAGE_FILE_EXTS = ["jpg", "png", "tiff", "tif", "gif", "jpeg", "bmp"]
+  IMAGE_FILE_EXTS = ["jpg", "png", "tiff", "tif", "gif", "jpeg", "bmp", "xls", "xlsx"]
 
   include ActsAsAuditable
   acts_as_auditable :file_file_name,
@@ -13,7 +13,7 @@ class Document < ActiveRecord::Base
     :auditable_title => proc {|d| s_("document audit|Document %{file_name}") % {:file_name => d.file_file_name}},
     :audit_source => proc {|d| s_("document audit| by %{user_name}") % {:user_name => d.user.try(:name)}},
     :default_title => N_("auditable|Document")
-  
+
 
   has_attached_file :file,
     :storage        => :s3,
@@ -42,7 +42,7 @@ class Document < ActiveRecord::Base
   def image?
     !file_file_name.blank? && IMAGE_FILE_EXTS.member?((File.extname(file_file_name)[1..-1] || "").downcase)
   end
-  
+
   def self.convert_pdf_to_img(pdf_path, out_file_name)
     pdf = Magick::ImageList.new(pdf_path)
     pdf.write(out_file_name) # if pdf has several pages it will output the same amount of images
