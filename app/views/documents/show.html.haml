@@ -1,3 +1,6 @@
 %html{ "xml:lang" => "en", :lang => "en", :xmlns => "http://www.w3.org/1999/xhtml" }
   %body
-    != image_tag resource.file.url
+    - if resource.file_content_type !~ /sheet/
+      != image_tag resource.file.url
+    - else
+      != link_to resource.file_file_name, resource.file.url
