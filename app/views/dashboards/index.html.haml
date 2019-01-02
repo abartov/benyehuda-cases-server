@@ -4,6 +4,9 @@
 - if current_user.might_become_volunteer?
   != button_to _("Become Volunteer"), new_volunteer_request_path, :method => :get
 
+- when_editor do
+  != render(:partial => "stats")
+
 / bar
 .bar
   - when_admin do
@@ -25,13 +28,13 @@
     - when_editor do
       %li
         =link_to((_("Unassigned tasks (%{count})") % {:count => Task.unassigned.count}), tasks_path)
-    - when_admin do      
+    - when_admin do
       %li
         %a.link1{ :href => new_admin_task_path }
           %span
             %em
               =_("New Task")
-              
+
 - when_admin do
   / block
   .block
@@ -48,7 +51,7 @@
       .b
         %span.l
           %span.c
-  
+
 != render(:partial => "tasks/index", :locals => {:tasks => collection, :title => _("My Tasks"), :editing => false})
 
 - when_editor do

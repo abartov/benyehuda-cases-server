@@ -1,0 +1,4 @@
+%h4= "סטטיסטיקה"
+- TaskKind.all.each do |tk|
+  - if Task.where(kind_id: tk.id).count > 100
+    = "משימות #{tk.name}: #{Task.where(kind_id: tk.id).unassigned.count} לא מוקצות, #{Task.where(kind_id: tk.id).assigned.count} מוקצות, #{Task.where(kind_id: tk.id).approved.count} מאושרות, #{Task.where(kind_id: tk.id).where("updated_at > '#{30.days.ago}'").approved.count} הושלמו בחודש האחרון."
