@@ -38,7 +38,7 @@ class TasksController < InheritedResources::Base
   def index
     #@tasks = Task.unassigned.paginate(:page => params[:page], :per_page => params[:per_page])
     if params[:kind].nil? or params[:kind].blank?
-      tasks = Task.unassigned.sort_by {|t| 
+      tasks = Task.unassigned.sort_by {|t|
         kindname = t.kind.nil? ? '' : t.kind.try(:name) # shouldn't happen -- is only the case in some odd old test items
         kindname + t.updated_at.to_i.to_s # manual sort :( # TODO: figure out how to do this through the assoc
       }
@@ -46,9 +46,13 @@ class TasksController < InheritedResources::Base
     else
       #params[:state] = :unassigned
       #current_user.search_settings.set_from_params!(params)
-      @tasks = Task.unassigned.where(:kind_id => TaskKind.find_by_name(params[:kind]).id).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
+      unless params[:full_nikkud].nil? || params[:full_nikkud].empty?
+        @tasks = Task.unassigned.where(:kind_id => TaskKind.find_by_name(params[:kind]).id, full_nikkud: params[:full_nikkud] == 'true' ? true : false).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
+      else
+        @tasks = Task.unassigned.where(:kind_id => TaskKind.find_by_name(params[:kind]).id).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
+      end
     end
-    
+
     @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
   end
 
@@ -97,7 +101,7 @@ protected
     respond_to do |format|
       format.html
       format.js { render :partial => 'event_with_comment_redir', :locals => {:to => resource.participant?(current_user) ? task_path(resource) : dashboard_path} }
-    end    
+    end
   end
 
   def _allow_event?(task, event, user)
