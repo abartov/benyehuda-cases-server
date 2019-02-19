@@ -100,7 +100,7 @@ GEM
     joiner (0.2.0)
       activerecord (>= 3.1.0, < 4.1.0)
     journey (1.0.4)
-    json (1.8.3)
+    json (1.8.6)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -250,7 +250,7 @@ DEPENDENCIES
   hoe (= 2.8.0)
   image_science
   inherited_resources
-  json (>= 1.7.7)
+  json
   mime-types
   mini_magick
   mocha
@@ -279,4 +279,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   1.16.0
+   1.16.2

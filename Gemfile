@@ -4,7 +4,8 @@ gem 'rails', '~>3.2'
 gem 'rake'
 gem 'rack'
 gem "builder"
-gem "json", '>=1.7.7'
+gem "json"
+#gem "json", '>=1.7.7'
 gem "mysql2", '~> 0.3.10' # Rails 3.x can't deal with 0.4.x
 gem 'scrypt', '2.1.1'
 gem 'authlogic'
