@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20170525190746) do
+ActiveRecord::Schema.define(:version => 20190612164155) do
 
   create_table "assignment_histories", :force => true do |t|
     t.integer  "user_id"
@@ -169,6 +169,11 @@ ActiveRecord::Schema.define(:version => 20170525190746) do
     t.integer  "kind_id"
     t.string   "priority"
   end
+
+  add_index "tasks", ["assignee_id"], :name => "index_tasks_on_assignee_id"
+  add_index "tasks", ["editor_id"], :name => "index_tasks_on_editor_id"
+  add_index "tasks", ["kind_id"], :name => "index_tasks_on_kind_id"
+  add_index "tasks", ["state"], :name => "index_tasks_on_state"
 
   create_table "tmp_stats", :id => false, :force => true do |t|
     t.integer  "user_id"
