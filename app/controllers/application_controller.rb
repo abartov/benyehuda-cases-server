@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   helper :all
   protect_from_forgery
   config.relative_url_root = "" # workaround for https://github.com/rails/rails/issues/9619
-  
+
 protected
   def default_index_with_search!
     begin
@@ -70,6 +70,15 @@ protected
 
     flash[:error] = _("Only participant can see this page")
     redirect_to task_path(task)
+    return false
+  end
+  def require_task_participant_or_editor
+    return false unless require_user
+    return true if current_user.admin_or_editor?
+    return true if resource.participant?(current_user) # participant
+
+    flash[:error] = _("Only participant can see this page")
+    redirect_to "/"
     return false
   end
 
