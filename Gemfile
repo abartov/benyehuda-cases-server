@@ -50,7 +50,7 @@ gem 'cocaine' ,'0.4.0' # paperclip 2.8 works with this version; Paperclip 3.x wo
 #gem 'jquery-rails', '>= 1.0.12'
 
 gem 'image_science', :require => false
-gem 'rmagick'
+#gem 'rmagick', '~>2.0' # upgrade safe once we move to Ruby 2.3+
 gem 'mini_magick'
 gem 'nokogiri'
 

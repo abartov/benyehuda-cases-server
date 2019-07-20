@@ -65,6 +65,15 @@ class DocumentsController < InheritedResources::Base
     return false
   end
 
+  def require_task_participant_or_editor
+    return false unless require_user
+    return true if current_user.admin_or_editor?
+    return true if task.participant?(current_user) # participant
+
+    flash[:error] = _("Only participant can see this page")
+    redirect_to "/"
+    return false
+  end
   def task
     @task ||= association_chain.last
   end

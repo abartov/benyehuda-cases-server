@@ -77,6 +77,15 @@ class TasksController < InheritedResources::Base
   end
 
 protected
+  def require_task_participant_or_editor
+    return false unless require_user
+    return true if current_user.admin_or_editor?
+    return true if resource.participant?(current_user) # participant
+
+    flash[:error] = _("Only participant can see this page")
+    redirect_to "/"
+    return false
+  end
 
   def _event_with_comment(event)
     unless resource.event_with_comment(event, params[:task])
