@@ -192,7 +192,7 @@ module Task::States
     new_task = Task.new(opts)
     new_task.editor = new_task.creator = actor
     new_task.parent_id = self.id
-    # TODO: copy over edition details
+    self.task_properties.each {|tp| new_task.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
     new_task
   end
 
