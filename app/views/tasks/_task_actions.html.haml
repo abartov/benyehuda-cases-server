@@ -3,7 +3,7 @@
 
 / - if task.editor?(current_user)
 /  = render(:partial => "tasks/editor_simple_actions", :locals => {:task => task})
-- if current_user.editor?
+- if current_user.is_editor?
   = render(:partial => "tasks/editor_simple_actions", :locals => {:task => task})
 
 - if current_user.admin_or_editor?
