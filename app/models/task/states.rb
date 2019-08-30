@@ -232,8 +232,8 @@ module Task::States
 
   def allow_event_for?(event, user)
     return false if event.blank?
-    return true if user.is_admin?
-    return false unless participant?(user) or user.is_editor?
+    return true if user.is_editor?
+    return false unless participant?(user)
     return false unless Task.aasm_events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
 
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
