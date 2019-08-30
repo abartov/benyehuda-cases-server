@@ -192,6 +192,7 @@ module Task::States
     new_task = Task.new(opts)
     new_task.editor = new_task.creator = actor
     new_task.parent_id = self.id
+    # TODO: copy over edition details
     new_task
   end
 
