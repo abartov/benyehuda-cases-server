@@ -76,14 +76,14 @@ module Task::States
 
       # assignee finished the work
       aasm_event :finish do
-        transitions :from => [:assigned, :stuck, :partial, :rejected], :to => :waits_for_editor
+        transitions :from => [:assigned, :stuck, :partial, :rejected, :stuck], :to => :waits_for_editor
       end
 
       # editor approves the work
       aasm_event :approve do
         transitions :from => :waits_for_editor, :to => :approved
       end
-      
+
       # editor marks for technical editing
       aasm_event :to_techedit do
         transitions from: :approved, to: :techedit
@@ -233,12 +233,12 @@ module Task::States
   def allow_event_for?(event, user)
     return false if event.blank?
     return true if user.is_admin?
-    return false unless participant?(user)
+    return false unless participant?(user) or user.is_editor?
     return false unless Task.aasm_events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
-    
+
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)
 
     false
-  end  
+  end
 end
