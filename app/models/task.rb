@@ -97,7 +97,7 @@ class Task < ActiveRecord::Base
   scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
 
   after_save :update_assignments_history
-  def update_assignments_history    
+  def update_assignments_history
     assignee.assignment_histories.create(:task_id => self.id, :role => "assignee") if assignee_id_changed? && !assignee.blank?
 
     editor.assignment_histories.create(:task_id => self.id, :role => "editor") if editor_id_changed? && !editor.blank?
@@ -121,7 +121,7 @@ class Task < ActiveRecord::Base
     search_opts = {:conditions => {}, :with => {}}
     unless opts[:state].blank?
       if opts[:invert_state].blank? or opts[:invert_state] == "false"
-        search_opts[:conditions][:state] = opts[:state] 
+        search_opts[:conditions][:state] = opts[:state]
       else
         states = Task.aasm_states.collect(&:name).collect(&:to_s)
         states.delete(opts[:state]) # all states except the specified one
@@ -164,7 +164,7 @@ class Task < ActiveRecord::Base
     doc.user_id = uploader.id
     doc
   end
-  
+
   def files_todo
     todo = self.documents_by_extensions(['pdf', 'jpg'])
     return todo.length
@@ -223,6 +223,7 @@ class Task < ActiveRecord::Base
   def self.fixed_Riddle_escape(s)
     # Riddle.escape was incorrectly escaping minus signs, used as 'makaf' in Hebrew concatenated words.
     #string.gsub(/[\(\)\|\-!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
-    s.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
+    ret = s.gsub(/[\(\)\|!@~\/"\/\^\$\\><&=]/) { |match| "\\#{match}" }
+    ret.gsub(' -'," \\-") # allow to search for "something - something else" without escaping *every* minus used as a hyphen
   end
 end
