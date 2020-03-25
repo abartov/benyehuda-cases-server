@@ -80,7 +80,7 @@ class Task < ActiveRecord::Base
   attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
-  has_many :comments, :order => "comments.task_id, comments.created_at"
+  has_many :comments, ->{order("comments.task_id, comments.created_at")}
   accepts_nested_attributes_for :comments, :allow_destroy => false, :reject_if => proc {|c| c["message"].blank?}
   # validates_associated :comments, :on => :create
 
@@ -88,7 +88,7 @@ class Task < ActiveRecord::Base
   default_attribute :kind_id, TaskKind.find_by_name("typing").try(:id)
   default_attribute :difficulty, "normal"
 
-  has_many :documents, :dependent => :destroy, :conditions => "documents.deleted_at IS NULL"
+  has_many :documents, ->{where("documents.deleted_at IS NULL")}, :dependent => :destroy
 
   scope :order_by_state, proc { |dir|
     joins("left join task_states on tasks.state = task_states.name").joins("left join translation_keys on translation_keys.key = task_states.value").joins("left join translation_texts on translation_keys.id = translation_texts.translation_key_id").where("translation_texts.locale = '#{FastGettext.locale}'").order("translation_texts.text #{dir}")

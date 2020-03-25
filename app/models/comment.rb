@@ -1,10 +1,10 @@
 class Comment < ActiveRecord::Base
   belongs_to :task
   belongs_to :user
-  
+
   include ActsAsAuditable
-  acts_as_auditable :message, 
-    :name => :message, 
+  acts_as_auditable :message,
+    :name => :message,
     :auditable_title => proc {|c| s_("comment audit|Comment %{message}") % {:message => c.message}},
     :audit_source => proc {|c| s_("comment audit| by %{user_name}") % {:user_name => c.user.try(:name)}},
     :default_title => N_("auditable|Comment")
@@ -16,7 +16,7 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :message, :editor_eyes_only
 
-  scope :public, where(:editor_eyes_only => false)
+  scope :public, ->{where(:editor_eyes_only => false)}
   scope :with_user, includes(:user)
 
   after_create :delayed_notify_comment_created

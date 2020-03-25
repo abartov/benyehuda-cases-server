@@ -38,23 +38,23 @@ class User < ActiveRecord::Base
 
   validates :name, :presence => true
 
-  scope :volunteers, where("is_volunteer = 1 AND activated_at IS NOT NULL AND disabled_at IS NULL")
-  scope :all_volunteers, where("(users.is_volunteer = 1 OR is_editor = 1 OR is_admin = 1) AND activated_at IS NOT NULL AND disabled_at IS NULL")
+  scope :volunteers, -> {where("is_volunteer = 1 AND activated_at IS NOT NULL AND disabled_at IS NULL")}
+  scope :all_volunteers, -> {where("(users.is_volunteer = 1 OR is_editor = 1 OR is_admin = 1) AND activated_at IS NOT NULL AND disabled_at IS NULL")}
 
-  scope :editors, where("is_editor = 1 AND activated_at IS NOT NULL AND disabled_at IS NULL")
-  scope :all_editors, where("(is_editor = 1 OR is_admin = 1) AND activated_at IS NOT NULL AND disabled_at IS NULL")
+  scope :editors, -> {where("is_editor = 1 AND activated_at IS NOT NULL AND disabled_at IS NULL")}
+  scope :all_editors, -> {where("(is_editor = 1 OR is_admin = 1) AND activated_at IS NOT NULL AND disabled_at IS NULL")}
 
-  scope :admins, where(:is_admin => true)
+  scope :admins, -> {where(:is_admin => true)}
 
-  scope :enabled, where("users.disabled_at IS NULL")
-  scope :not_on_break, where("users.is_volunteer = 1 AND users.on_break = 0 AND users.disabled_at IS NULL")
-  scope :active, where("users.activated_at IS NOT NULL")
-  scope :not_activated, where("users.activated_at is NULL")
-  scope :active_first, order("users.current_login_at DESC")
-  scope :by_id, order("users.id")
-  scope :by_last_login, order("users.current_login_at DESC")
+  scope :enabled, -> {where("users.disabled_at IS NULL")}
+  scope :not_on_break, -> {where("users.is_volunteer = 1 AND users.on_break = 0 AND users.disabled_at IS NULL")}
+  scope :active, -> {where("users.activated_at IS NOT NULL")}
+  scope :not_activated, -> {where("users.activated_at is NULL")}
+  scope :active_first, -> {order("users.current_login_at DESC")}
+  scope :by_id, -> {order("users.id")}
+  scope :by_last_login, -> {order("users.current_login_at DESC")}
 
-  scope :waiting_for_tasks, {:conditions => "users.task_requested_at IS NOT NULL", :order => "users.task_requested_at DESC"}
+  scope :waiting_for_tasks, ->{where("users.task_requested_at IS NOT NULL").order('users.task_requested_at DESC')}
 
   has_one :volunteer_request
   has_many :confirmed_volunteer_requests, :class_name => "VolunteerRequest", :foreign_key => :approver_id
@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
   has_many_custom_properties :editor #editor_properties
 
   has_many :created_tasks, :class_name => "Task", :foreign_key => "creator_id"
-  has_many :editing_tasks, :class_name => "Task", :foreign_key => "editor_id", :order => "tasks.updated_at desc"
+  has_many :editing_tasks, ->{order("tasks.updated_at desc")}, :class_name => "Task", :foreign_key => "editor_id"
   has_many :assigned_tasks, :class_name => "Task", :foreign_key => "assignee_id" #, :order => "tasks.updated_at"
 
   has_many :comments

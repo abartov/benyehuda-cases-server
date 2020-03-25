@@ -10,8 +10,7 @@ module CustomProperties
 
       association_name = (association_name || "#{parent_name}_properties").to_sym
 
-      has_many association_name, :class_name => "CustomProperty", :as => :proprietary,
-        :include => :property, :conditions => "properties.parent_type = '#{parent_name.capitalize}'", :validate => false do
+      has_many association_name, ->{ includes(:property).where("properties.parent_type = '#{parent_name.capitalize}'") }, :class_name => "CustomProperty", :as => :proprietary, :validate => false do
         def indexed_by_id
           @indexed_by_id ||= index_by(&:property_id)
         end

@@ -9,8 +9,8 @@ class VolunteerRequest < ActiveRecord::Base
 
   attr_accessible :preferences , :user_attributes
 
-  scope :pending, where("volunteer_requests.approved_at is NULL")
-  scope :by_request_time, order("volunteer_requests.created_at")
+  scope :pending, ->{where("volunteer_requests.approved_at is NULL")}
+  scope :by_request_time, ->{order("volunteer_requests.created_at")}
   scope :with_user, includes(:user)
 
   include CustomProperties

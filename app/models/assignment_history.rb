@@ -8,7 +8,7 @@ class AssignmentHistory < ActiveRecord::Base
 
   scope :recent, lambda { |l| limit(l) }
   scope :with_task, includes(:task)
-  scope :reverse_order, order("id DESC")
+  scope :reverse_order, ->{order("id DESC")}
 
   ROLES = {
     "assignee" => N_("Assignee"),

@@ -1,12 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~>3.2'
+gem 'rails', '~>4.2'
 gem 'rake'
 gem 'rack'
 gem "builder"
 gem "json"
-#gem "json", '>=1.7.7'
-gem "mysql2", '~> 0.3.10' # Rails 3.x can't deal with 0.4.x
+gem 'rails-i18n'
+gem 'activerecord-session_store'
+gem "mysql2", '~> 0.4' # Rails 3.x can't deal with 0.4.x
 gem 'scrypt', '2.1.1'
 gem 'authlogic'
 gem 'whenever'
@@ -16,11 +17,16 @@ gem "tzinfo"
 gem 'formtastic'
 gem 'sass'
 gem 'haml'
-gem 'fast_gettext'
-gem 'rails_legacy_mapper' # for backward compatibility with 3.0.x routing
-#gem 'protected_attributes' # for Rails 4.x
+# upgrade to Rails 4.x # gem 'fast_gettext'
+gem 'gettext_i18n_rails'
+
+#gem 'rails_legacy_mapper' # for backward compatibility with 3.0.x routing
+gem 'protected_attributes' # for Rails 4.x
+gem 'activerecord-deprecated_finders' # legacy for Rails 4.x
+
 gem 'ruby_parser', :require => false
-gem "aasm", '3.0.16'
+gem "aasm", '~>3.4'
+#gem "aasm", '3.0.16'
 gem 'mime-types', :require => 'mime/types'
 gem "fastercsv"
 gem 'airbrake'
@@ -43,7 +49,6 @@ gem 'aws-sdk', '~> 1'
 #gem 'aws-s3', :require => "aws/s3"
 #gem 'paperclip'
 gem 'paperclip', '~>2.8'  # upgrading to 3.x would take some changes, around the removed to_file method
-#gem 'paperclip', '~>2.4.5'  # XXX until we're in the 1.9 land
 gem 'cocaine' ,'0.4.0' # paperclip 2.8 works with this version; Paperclip 3.x works with latest
 #gem 'paperclip', :git => "git://github.com/jeanmartin/paperclip.git", :branch => "master"
 
@@ -59,10 +64,6 @@ gem 'astrails-safe'
 # TODO sort this out
 gem 'ZenTest', '4.0.0'
 gem 'test-unit', '1.2.3'
-
-#group :production do
-#  gem "passenger"
-#end
 
 group :test, :development do
   gem 'rspec-rails'

@@ -18,7 +18,7 @@ class GlobalPreference < ActiveRecord::Base
     # return cache if exists and still valid
     return value if expires && expires > Time.now
 
-    pref = find_or_initialize_by_name(variable)
+    pref = find_or_initialize_by(name: variable)
     if pref.new_record?
       # create the record in the db for easy editing
       pref.ttl = DEFAULT_TTL
@@ -31,7 +31,7 @@ class GlobalPreference < ActiveRecord::Base
 
   def self.set!(variable, value, ttl = DEFAULT_TTL)
     variable = variable.to_s
-    pref = find_or_initialize_by_name(variable)
+    pref = find_or_initialize_by(name: variable)
     pref.value = value
     pref.ttl = ttl
     pref.save!

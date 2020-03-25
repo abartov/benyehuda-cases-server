@@ -107,7 +107,7 @@ module Task::States
       before_validation(:pre_process_parent_task, :on => :create)
       after_create :post_process_parent_task
 
-      scope :visible_in_my_tasks, where("tasks.state NOT IN ('ready_to_publish', 'other_task_creat')")
+      scope :visible_in_my_tasks, ->{where("tasks.state NOT IN ('ready_to_publish', 'other_task_creat')")}
 
       has_reason_comment :_reject, :rejection, :editor, N_("Task rejected")
       has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
