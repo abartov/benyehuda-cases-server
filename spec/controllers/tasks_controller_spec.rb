@@ -179,7 +179,7 @@ describe TasksController do
   end
 
   describe "update" do
-    describe "assignee" do      
+    describe "assignee" do
       before(:each) do
         @task = Factory.create(:assigned_task)
         UserSession.create(@task.assignee)
@@ -245,7 +245,7 @@ describe TasksController do
         @user = @task.send(u)
         UserSession.create(@user)
         if :assignee == u
-          @comments.should_receive(:public)
+          @comments.should_receive(:public_comments)
         else
           @comments.should_receive(:all)
         end

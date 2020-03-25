@@ -57,8 +57,8 @@ class TasksController < InheritedResources::Base
   end
 
   def show
-    @task = Task.find(params[:id], :include => {:documents => :user})
-    @comments = @task.comments.with_user.send(current_user.admin_or_editor? ? :all : :public)
+    @task = Task.eager_load(documents: :user).find(params[:id])
+    @comments = @task.comments.with_user.send(current_user.admin_or_editor? ? :all : :public_comments)
     show!
   end
 

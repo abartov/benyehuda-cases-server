@@ -16,8 +16,8 @@ class Comment < ActiveRecord::Base
 
   attr_accessible :message, :editor_eyes_only
 
-  scope :public, ->{where(:editor_eyes_only => false)}
-  scope :with_user, includes(:user)
+  scope :public_comments, ->{where(:editor_eyes_only => false)}
+  scope :with_user, ->{includes(:user)}
 
   after_create :delayed_notify_comment_created
 

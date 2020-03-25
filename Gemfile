@@ -19,7 +19,7 @@ gem 'sass'
 gem 'haml'
 # upgrade to Rails 4.x # gem 'fast_gettext'
 gem 'gettext_i18n_rails'
-
+gem 'memoist' # replacement for ActionSupport::Memoizable
 #gem 'rails_legacy_mapper' # for backward compatibility with 3.0.x routing
 gem 'protected_attributes' # for Rails 4.x
 gem 'activerecord-deprecated_finders' # legacy for Rails 4.x

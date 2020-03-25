@@ -1,16 +1,16 @@
 class Audit < ActiveRecord::Base
-  extend ActiveSupport::Memoizable
+  extend Memoist
 
   belongs_to :auditable, :polymorphic => true
   belongs_to :task
   belongs_to :user
-  
+
   attr_accessible :hidden, :changed_attrs, :note, :action, :task_id, :user_id
-  
+
   serialize :changed_attrs
-  
+
   ACTIONS = { :add => 1, :remove => 2, :update => 3 }
-  
+
   EXCLUDE_ATTRS = [:message, :file_file_name]
 
   def long_messages
@@ -63,15 +63,15 @@ class Audit < ActiveRecord::Base
   def escape_blanks(v)
     v ? v : "<empty>"
   end
-  
+
   def action_string
     ACTIONS.index(action).to_s
   end
-  
+
 private
   def convert_attribute_name(attr)
     au_class = auditable ? auditable.class : auditable_type.constantize
-    
+
     return nil unless au_class.audit_conversions.respond_to?(:[]) && au_class.audit_conversions[:attributes]
     au_class.audit_conversions[:attributes].call(attr)
   end

@@ -16,7 +16,7 @@ describe Comment do
 
   describe "named scopes" do
     it "should have public" do
-      Comment.public.to_sql.should match /`comments`.`editor_eyes_only` = 0/
+      Comment.public_comments.to_sql.should match /`comments`.`editor_eyes_only` = 0/
     end
 
     #it "should have with_user" do

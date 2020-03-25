@@ -1,7 +1,7 @@
 = _("")
 = semantic_form_for(@comment ||= Comment.new, :live_validations => false, :url => task_comments_path(@task), :remote => true) do |f|
   = f.inputs do
-    != f.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => _("Message"), :style => "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;width: 100%;" 
+    != f.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => _("Message"), :style => "-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;width: 100%;"
     - when_editor_or_admin do
       != f.input :editor_eyes_only, :label => _("Editor eyes only")
   %div{ :align => :left }

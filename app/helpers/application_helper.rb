@@ -22,7 +22,7 @@ module ApplicationHelper
 
         haml_tag(:li, opts) do
           haml_tag(:a, :href => tab[:path]) do
-            haml_tag :span, s_(tab[:title]) 
+            haml_tag :span, s_(tab[:title])
           end
         end
       end
@@ -38,4 +38,9 @@ module ApplicationHelper
   def boolean_property(value)
     value ? "&#8730;" : ""
   end
+  # replacement for Rails 3.x function
+  def link_to_function(name, function, html_options={})
+    content_tag(:a, name, {:href => 'javascript:void(0);', :onclick => "#{function}; return false;"}.merge(html_options))
+  end
+
 end
