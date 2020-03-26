@@ -6,7 +6,7 @@
   - @ordered_changes.each do |chg|
     - task_id = chg
     - changes = @changes[chg]
-    %tr 
+    %tr
       - t = Task.find_by_id(task_id)
       - if t.nil?
         - tname = "ERROR"
@@ -20,10 +20,14 @@
           %th= _('Last Updated')
           %th= _('Volunteer')
           %th= _('Changes')
-        - changes.each do |c|  
+        - changes.each do |c|
           %tr
             %td= time_ago_in_words(c.updated_at)
-            %td= link_to(h(c.user.name), user_path(c.user))
+            - if c.user
+              - u = "#{c.user.name}"
+              %td= link_to(h(u), user_path(c.user))
+            - else
+              %td= '?'
             %td= c.long_messages.join("; ")
     %tr
       %td{:colspan => 3}
