@@ -18,7 +18,7 @@ class Property < ActiveRecord::Base
 
       conditions.first << " AND properties.is_public = 1" unless user.admin_or_editor?
 
-      {:conditions => conditions}
+      where(conditions)
     }
   end
 

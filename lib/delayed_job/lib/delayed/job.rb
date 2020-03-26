@@ -10,9 +10,9 @@ module Delayed
   class Job < ActiveRecord::Base
     @@max_attempts = 25
     @@max_run_time = 4.hours
-    
+
     cattr_accessor :max_attempts, :max_run_time
-    
+
     set_table_name :delayed_jobs
 
     # By default failed jobs are destroyed after too many attempts.
@@ -22,7 +22,7 @@ module Delayed
     self.destroy_failed_jobs = true
 
     scope :ready_to_run, lambda {|worker_name, max_run_time|
-      {:conditions => ['(run_at <= ? AND (locked_at IS NULL OR locked_at < ?) OR locked_by = ?) AND failed_at IS NULL', db_time_now, db_time_now - max_run_time, worker_name]}
+      {where('(run_at <= ? AND (locked_at IS NULL OR locked_at < ?) OR locked_by = ?) AND failed_at IS NULL', db_time_now, db_time_now - max_run_time, worker_name)}
     }
     scope :by_priority, :order => 'priority DESC, run_at ASC'
 
@@ -113,7 +113,7 @@ module Delayed
       unless object.respond_to?(:perform) || block_given?
         raise ArgumentError, 'Cannot enqueue items which do not respond to perform'
       end
-    
+
       priority = args.first || 0
       run_at   = args[1]
 
@@ -123,9 +123,9 @@ module Delayed
     # Find a few candidate jobs to run (in case some immediately get locked by others).
     def self.find_available(worker_name, limit = 5, max_run_time = max_run_time)
       scope = self.ready_to_run(worker_name, max_run_time)
-      scope = scope.scoped(:conditions => ['priority >= ?', min_priority]) if min_priority
-      scope = scope.scoped(:conditions => ['priority <= ?', max_priority]) if max_priority
-      
+      scope = scope.scoped(where('priority >= ?', min_priority)) if min_priority
+      scope = scope.scoped(where('priority <= ?', max_priority)) if max_priority
+
       ActiveRecord::Base.silence do
         scope.by_priority.all(:limit => limit)
       end
