@@ -11,7 +11,7 @@ class VolunteerRequest < ActiveRecord::Base
 
   scope :pending, ->{where("volunteer_requests.approved_at is NULL")}
   scope :by_request_time, ->{order("volunteer_requests.created_at")}
-  scope :with_user, includes(:user)
+  scope :with_user, ->{includes(:user)}
 
   include CustomProperties
   has_many_custom_properties :request # task_properties
