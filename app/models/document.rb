@@ -12,6 +12,7 @@ class Document < ActiveRecord::Base
     :name => :file_file_name,
     :auditable_title => proc {|d| s_("document audit|Document %{file_name}") % {:file_name => d.file_file_name}},
     :audit_source => proc {|d| s_("document audit| by %{user_name}") % {:user_name => d.user.try(:name)}},
+    :auditable_user_id => proc {|d| d.user.try(:id)},
     :default_title => N_("auditable|Document")
 
 

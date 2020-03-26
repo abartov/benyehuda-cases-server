@@ -79,7 +79,9 @@ private
     if self.is_a?(User)
       self.id
     else
-      self.class.auditable_user_id.call(self) || nil
+      unless self.class.auditable_user_id.nil?
+        self.class.auditable_user_id.call(self) || nil
+      end
     end
   end
 end
