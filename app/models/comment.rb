@@ -7,6 +7,7 @@ class Comment < ActiveRecord::Base
     :name => :message,
     :auditable_title => proc {|c| s_("comment audit|Comment %{message}") % {:message => c.message}},
     :audit_source => proc {|c| s_("comment audit| by %{user_name}") % {:user_name => c.user.try(:name)}},
+    :auditable_user_id => proc {|c| c.user.try(:id)},
     :default_title => N_("auditable|Comment")
 
   validates :message, :length => {:in => 2..4096}, :allow_nil => false, :allow_blank => false

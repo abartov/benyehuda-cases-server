@@ -15,11 +15,11 @@ module Task::Notifications
     if state_changed? || comment
       state_changed_for = [editor, assignee]
       state_changed_by << comment.user if comment.try(:user)
-      state_changed_by << current_controller.current_user if current_controller && current_controller.current_user
+      # disabled moving to Rails 4.x # state_changed_by << current_controller.current_user if current_controller && current_controller.current_user
     elsif editor_id_changed? || assignee_id_changed?
       state_changed_for << editor if editor_id_changed?
       state_changed_for << assignee if assignee_id_changed?
-      state_changed_by << current_controller.current_user if current_controller && current_controller.current_user
+      # disabled moving to Rails 4.x # state_changed_by << current_controller.current_user if current_controller && current_controller.current_user
     else
       return nil
     end

@@ -25,7 +25,7 @@ class GlobalPreference < ActiveRecord::Base
       pref.save!
     end
 
-    @@cache[variable] = [pref.value, pref.ttl.from_now]
+    @@cache[variable] = [pref.value, pref.ttl.seconds.from_now]
     pref.value
   end
 
