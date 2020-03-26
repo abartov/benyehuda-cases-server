@@ -7,7 +7,7 @@ class AssignmentHistory < ActiveRecord::Base
   attr_accessible :user_id, :task_id, :role
 
   scope :recent, lambda { |l| limit(l) }
-  scope :with_task, includes(:task)
+  scope :with_task, ->{includes(:task)}
   scope :reverse_order, ->{order("id DESC")}
 
   ROLES = {
