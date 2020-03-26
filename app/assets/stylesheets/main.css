@@ -105,7 +105,7 @@ div.finished_reason {
 }
 
 #simplemodal-container a.modalCloseImg {
-  background:url(/assets/x.png) no-repeat; /* adjust url as required */
+  background:url(x.png) no-repeat; /* adjust url as required */
   width:25px;
   height:29px;
   display:inline;
