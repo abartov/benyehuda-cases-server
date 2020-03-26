@@ -11,8 +11,9 @@ CasesServer::Application.config.session_store :active_record_store, :key => '_ca
 # (create the session table with "rails generate session_migration")
 # CasesServer::Application.config.session_store :active_record_store
 
-Rails.application.config.middleware.insert_before(
-  Rails.application.config.session_store,
-  FlashSessionCookieMiddleware,
-  Rails.application.config.session_options[:key]
-)
+## old stuff needed for inserting the session cookie into Flash requests
+#Rails.application.config.middleware.insert_before(
+#  Rails.application.config.session_store,
+#  FlashSessionCookieMiddleware,
+#  Rails.application.config.session_options[:key]
+#)
