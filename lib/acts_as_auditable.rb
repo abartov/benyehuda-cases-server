@@ -6,7 +6,7 @@ module ActsAsAuditable
   module ClassMethods
     def auditable_attrs; @auditable_attrs; end
     def default_title; @default_title; end
-    attr_accessor :auditable_name, :audit_conversions, :auditable_title, :audit_source, :default_title
+    attr_accessor :auditable_name, :audit_conversions, :auditable_title, :audit_source, :default_title, :auditable_user_id
 
     def acts_as_auditable *attrs
       has_many :audits, :as => :auditable
@@ -79,7 +79,7 @@ private
     if self.is_a?(User)
       self.id
     else
-      @auditable_user_id || nil
+      self.class.auditable_user_id.call(self) || nil
     end
   end
 end
