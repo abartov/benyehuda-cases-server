@@ -21,6 +21,7 @@ class UsersController < InheritedResources::Base
   end
 
   def create
+    params = params.require[:user].permit(:avatar, :name, :email, :password)
     user = build_resource
     user.email = params[:user] && params[:user][:email] || user.email
     user.is_admin = true if User.count.zero?

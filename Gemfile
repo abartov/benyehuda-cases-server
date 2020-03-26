@@ -47,9 +47,10 @@ gem 'hoe', '2.8.0'
 
 gem 'aws-sdk', '~> 1'
 #gem 'aws-s3', :require => "aws/s3"
-#gem 'paperclip'
-gem 'paperclip', '~>2.8'  # upgrading to 3.x would take some changes, around the removed to_file method
-gem 'cocaine' ,'0.4.0' # paperclip 2.8 works with this version; Paperclip 3.x works with latest
+gem 'paperclip', '~>3.0'
+#gem 'paperclip', '~>2.8'  # upgrading to 3.x would take some changes, around the removed to_file method
+gem 'cocaine'
+#gem 'cocaine' ,'0.4.0' # paperclip 2.8 works with this version; Paperclip 3.x works with latest
 #gem 'paperclip', :git => "git://github.com/jeanmartin/paperclip.git", :branch => "master"
 
 #gem 'jquery-rails', '>= 1.0.12'
