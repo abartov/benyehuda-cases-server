@@ -49,4 +49,6 @@ Rails.application.routes.draw do
 
   resources :task_requests
   resources :site_notices
+  match "/restart", :controller => "restart", :action => "restart", :via => :post
+
 end
