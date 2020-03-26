@@ -160,7 +160,8 @@ class Task < ActiveRecord::Base
   end
 
   def prepare_document(uploader, opts)
-    doc = self.documents.build(opts)
+    doc = self.documents.build
+    doc.file = opts['file'].tempfile
     doc.user_id = uploader.id
     doc
   end
