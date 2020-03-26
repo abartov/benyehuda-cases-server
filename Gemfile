@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 
+gem 'sassc-rails'
 gem 'rails', '~>4.2'
 gem 'rake'
 gem 'rack'
@@ -15,7 +16,6 @@ gem 'will_paginate', :require => 'will_paginate'
 gem 'rails_autolink'
 gem "tzinfo"
 gem 'formtastic'
-gem 'sass'
 gem 'haml'
 # upgrade to Rails 4.x # gem 'fast_gettext'
 gem 'gettext_i18n_rails'
