@@ -25,10 +25,10 @@ class Document < ActiveRecord::Base
       :secret_access_key => GlobalPreference.get(:s3_secret),
     },
     :url => ':s3_domain_url'
-  attr_accessible :file, :done
+  # attr_accessible :file, :done
   validates_attachment_presence :file
   validates_attachment_size :file, :less_than => 10.megabytes
-
+  do_not_validate_attachment_file_type :file
   validates :user_id, :task_id, :presence => true
 
   scope :uploaded_by, lambda {|user| where("documents.user_id = ?", user.id)}

@@ -13,7 +13,6 @@ class DocumentsController < InheritedResources::Base
   end
   # create
   def create
-    byebug
     @document = task.prepare_document(current_user, params.permit(document: :file)['document'])
 
     create! do |success, failure|
