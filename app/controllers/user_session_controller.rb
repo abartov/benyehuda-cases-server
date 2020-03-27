@@ -30,9 +30,8 @@ class UserSessionController < InheritedResources::Base
   end
 
   def destroy
-    destroy! do |wants|
-      wants.html {redirect_to login_path}
-    end
+    current_user_session.destroy unless current_user_session.nil?
+    redirect_to login_path
   end
 
   private
