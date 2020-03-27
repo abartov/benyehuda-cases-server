@@ -8,7 +8,8 @@ gem "builder"
 gem "json"
 gem 'rails-i18n'
 gem 'activerecord-session_store'
-gem "mysql2", '~> 0.4' # Rails 3.x can't deal with 0.4.x
+#gem "mysql2", '0.4.9' # Sphinx can't deal with >0.4.9
+gem "mysql2", '~> 0.4' 
 gem 'scrypt', '2.1.1'
 gem 'authlogic'
 gem 'whenever'

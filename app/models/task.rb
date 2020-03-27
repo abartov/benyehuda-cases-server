@@ -97,6 +97,8 @@ class Task < ActiveRecord::Base
   scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
 
   after_save :update_assignments_history
+  @@index_name = ENV['is_staging'] == 'true' ? 'staging_task' : 'task'
+
   def update_assignments_history
     assignee.assignment_histories.create(:task_id => self.id, :role => "assignee") if assignee_id_changed? && !assignee.blank?
 
@@ -138,7 +140,7 @@ class Task < ActiveRecord::Base
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
       search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
-      ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(sql: SEARCH_INCLUDES).merge(:order => 'updated_at DESC', :page => opts[:page], :per_page => opts[:per_page])
+      ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(sql: SEARCH_INCLUDES).merge(:order => 'updated_at DESC', :page => opts[:page], :per_page => opts[:per_page]).merge(indices: [@@index_name])
     end
   end
 
