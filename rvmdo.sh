@@ -1,6 +1,12 @@
 #!/bin/bash --login
 . ~/.profile
 rvm use 2.6
+pwd=`pwd`
+if [[ $pwd =~ "staging" ]]
+then
+  echo Staging detected! Setting is_staging=true...
+  export is_staging=true
+fi
 echo 'rvmdo.sh using RAILS_ENV=production (!!) and Ruby 2.6'
 export RAILS_ENV=production
 $1 $2 $3 $4 $5

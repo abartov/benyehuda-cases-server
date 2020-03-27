@@ -1,5 +1,6 @@
+index_name = ENV['is_staging'] == 'true' ? 'staging_task' : 'task'
 
-ThinkingSphinx::Index.define :task, :with => :active_record do
+ThinkingSphinx::Index.define :task, name: index_name, with: :active_record do
   indexes name, :sortable => true
 
   has created_at, updated_at

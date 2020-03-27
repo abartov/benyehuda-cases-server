@@ -1,3 +1,4 @@
+index_name = ENV['is_staging'] == 'true' ? 'staging_user' : 'user'
 
 ThinkingSphinx::Index.define :user, :with => :active_record do
   indexes :name, :sortable => true
