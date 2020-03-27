@@ -12,7 +12,7 @@ set(:revision) {`git rev-parse HEAD`.strip}
 
 # command to run a rake task in $current_path
 def rake(target)
-  res = "cd #{current_release} && ./rvmdo.sh '#{rake_cmd} RAILS_ENV=#{rails_env} #{target}'"
+  res = "cd #{current_release} && ./rvmdo.sh #{rake_cmd} RAILS_ENV=#{rails_env} #{target}"
   puts res
   res
 end
@@ -25,9 +25,7 @@ namespace :mod_rails do
   end
 end
 
-
 namespace :vlad do
-
   # directories to create inside $shared_path
   set :mkdir_shared, []
 
