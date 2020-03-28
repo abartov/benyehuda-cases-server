@@ -214,6 +214,19 @@ class Task < ActiveRecord::Base
   def self.textify_state(state)
     s_(TaskState.find_by_name(state.to_s).value)
   end
+  def estimate_hours
+    kindname = self.kind.try(:name)
+
+    factor = case kindname
+    when 'הקלדה' then 0.5
+    when 'הגהה' then 0.5
+    when 'עריכה טכנית' then 0.2
+    when 'חיפוש ביבליוגרפי' then 1
+    when 'סריקה' then 0.05
+    else 0.5
+    end
+    return (self.documents.count * factor).round
+  end
   protected
   def documents_by_extensions(exts)
     ret = []

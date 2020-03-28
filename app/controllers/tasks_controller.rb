@@ -5,11 +5,13 @@ class TasksController < InheritedResources::Base
 
   EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
 
-  # finishing tasks
+  # this action is called when a volunteer clicks "finish" on a task.
   def edit
     return unless _allow_event?(resource, :finish, current_user)
     @no_docs_uploaded = resource.documents.uploaded_by(current_user).count.zero?
+    resource.hours = resource.estimate_hours unless resource.hours.present?
   end
+
   def make_comments_editor_only
     @task = Task.find(params[:id])
     @task.comments.each {|c|
@@ -67,7 +69,6 @@ class TasksController < InheritedResources::Base
 
     # all security verifications passed in allow_event_for?
     return _event_with_comment(params[:event]) if resource.commentable_event?(params[:event])
-
     resource.send(params[:event])
     resource.save
 
@@ -88,6 +89,8 @@ protected
   end
 
   def _event_with_comment(event)
+    resource.hours = params[:task][:hours].to_i if params[:task][:hours].present?
+
     unless resource.event_with_comment(event, params[:task])
       respond_to do |format|
         format.html

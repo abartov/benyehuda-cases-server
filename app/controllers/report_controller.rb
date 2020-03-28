@@ -1,11 +1,17 @@
 class ReportController < InheritedResources::Base
   before_filter :require_editor_or_admin #, :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
-  actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify
+  actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
 
   def index
   end
   def stalled
     @tasks = Task.assigned.where(:updated_at => 20.years.ago..6.months.ago)
+  end
+
+  def hours
+    @year = Date.today.year-1
+    @completed_tasks = Task.where('state = "ready_to_publish" and updated_at > ? and updated_at < ?', Date.new(@year, 1,1), Date.new(Date.today.year,1,1))
+    @hours_total = @completed_tasks.pluck(:hours).reject{|x| x.nil?}.sum
   end
 
   def inactive
@@ -28,7 +34,7 @@ class ReportController < InheritedResources::Base
       @users << t.assignee unless @users.include?(t.assignee)
     }
     emails = @users.map {|u| u.email}
-    @emails = emails.join(', ')   
+    @emails = emails.join(', ')
     session["vols_to_notify"] = @users
   end
   def do_notify

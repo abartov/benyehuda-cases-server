@@ -48,6 +48,8 @@
 != render(:partial => "comments/index", :locals => {:comments => @comments})
 %hr
 - if @task.editor?(current_user) or current_user.is_editor?
+  %h3= _("Hours spent")
+  %p= @task.hours
   != render(:partial => "editor_events")
 %br
 %br

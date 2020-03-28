@@ -9,6 +9,7 @@
   = f.input :difficulty, :as => :select, :collection => task_difficulties_for_select, :required => true, :label => _("Difficulty")
   = f.input :priority, :as => :select, :collection => task_priorities_for_select, :required => true, :label => _("Priority")
   = f.input :full_nikkud, :as => :boolean, :label => _("Full Nikkud")
+  = f.input :hours, :label => _("Hours spent")+' '
 
 :javascript
   var index_html = '#{escape_javascript(render(:template => "admin/task_kinds/index"))}';
