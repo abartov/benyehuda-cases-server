@@ -8,6 +8,8 @@ class UsersController < InheritedResources::Base
 
   respond_to :html, :js
 
+  actions :create, :update, :index, :destroy, :cancel_task_request
+
   @@index_name = ENV['is_staging'] == 'true' ? 'staging_user' : 'user'
 
   def index
@@ -23,7 +25,7 @@ class UsersController < InheritedResources::Base
   end
 
   def create
-    params = params.require[:user].permit(:avatar, :name, :email, :password)
+    pps = params.require(:user).permit(:avatar, :name, :email, :password)
     user = build_resource
     user.email = params[:user] && params[:user][:email] || user.email
     user.is_admin = true if User.count.zero?
