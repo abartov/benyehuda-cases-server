@@ -26,11 +26,11 @@ class UsersController < InheritedResources::Base
 
   def create
     pps = params.require(:user).permit(:avatar, :name, :email, :password)
-    user = build_resource
-    user.email = params[:user] && params[:user][:email] || user.email
-    user.is_admin = true if User.count.zero?
-    if user.save_without_session_maintenance
-      user.deliver_activation_instructions!
+    @user = build_resource
+    @user.email = params[:user] && params[:user][:email] || @user.email
+    @user.is_admin = true if User.count.zero?
+    if @user.save_without_session_maintenance
+      @user.deliver_activation_instructions!
       flash[:notice] = s_("Your account has been created. Please check your e-mail for your account activation instructions!")
       redirect_to "/"
     else
