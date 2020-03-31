@@ -15,14 +15,14 @@ desc "production server"
 task :prod do
   set :application, "tasks.benyehuda.org"
 #  set :domain, "bybe@52.20.112.68"
-  set :domain, "bybe@tasks.benyehuda.org"
+  set :domain, "editor@benyehuda.org"
 end
 
 desc "stage server"
 task :staging do
-  set :application, "staging.benyehuda.org"
+  set :application, "staging.tasks.benyehuda.org"
   #set :domain, "bybe@52.20.112.68"
-  set :domain, "bybe@tasks.benyehuda.org"
+  set :domain, "editor@benyehuda.org"
 end
 
 # desc "beta server"
@@ -30,7 +30,7 @@ end
 #   set :application, "benyehuda.org"
 #   set :domain, "astrails@benyehuda.astrails.com"
 # end
-# 
+#
 # desc "ui server"
 # task :ui do
 #   set :application, "benyehuda-ui.astrails.com"
