@@ -15,14 +15,14 @@ desc "production server"
 task :prod do
   set :application, "tasks.benyehuda.org"
 #  set :domain, "bybe@52.20.112.68"
-  set :domain, "editor@benyehuda.org"
+  set :domain, "bybe@benyehuda.org"
 end
 
 desc "stage server"
 task :staging do
   set :application, "staging.tasks.benyehuda.org"
   #set :domain, "bybe@52.20.112.68"
-  set :domain, "editor@benyehuda.org"
+  set :domain, "bybe@benyehuda.org"
 end
 
 # desc "beta server"
