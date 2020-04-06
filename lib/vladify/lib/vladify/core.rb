@@ -81,6 +81,7 @@ namespace :deploy do
   # stuff to do just before restarting.
   #task :prepare => %w/vlad:migrate/
   task :prepare => %w/vlad:dbmigrate/
+  task :assetsprep => %w/vlad:assets_precompile/
   # restart all the services
   task :restart => %w/vlad:restart_thin/
   #task :restart => %w/mod_rails:restart/
