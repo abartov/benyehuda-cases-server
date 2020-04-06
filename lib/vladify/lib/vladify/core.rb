@@ -57,6 +57,9 @@ namespace :vlad do
   remote_task :dbmigrate, :roles => :app do
     run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake db:migrate'"
   end
+  remote_task :assets_precompile, :roles => :app do
+    run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake assets:precompile'"
+  end
   remote_task :restart_thin do
     run ". ~/.profile && rvm use 2.6 && cd ~/tasks && ./stop.sh && ./start.sh"
   end
