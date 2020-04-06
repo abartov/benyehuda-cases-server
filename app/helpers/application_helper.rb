@@ -42,5 +42,23 @@ module ApplicationHelper
   def link_to_function(name, function, html_options={})
     content_tag(:a, name, {:href => 'javascript:void(0);', :onclick => "#{function}; return false;"}.merge(html_options))
   end
+  def password_edit_title
+    if logged_in?
+      _("Change Password")
+    elsif @user.active?
+      _("Password Reset")
+    else
+      _("Activate Account")
+    end
+  end
 
+  def password_edit_submit
+    if logged_in?
+      _("Change")
+    elsif @user.active?
+      _("Reset")
+    else
+      _("Activate")
+    end
+  end
 end
