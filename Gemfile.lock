@@ -260,7 +260,7 @@ GEM
     vlad (1.4.0)
       open4
       rake (>= 0.8.1)
-    whenever (0.9.7)
+    whenever (1.0.0)
       chronic (>= 0.6.3)
     will_paginate (3.1.5)
     xml-simple (1.1.5)
