@@ -2,7 +2,7 @@
 #
 # It's helpful, but not entirely necessary to understand cron before proceeding.
 # http://en.wikipedia.org/wiki/Cron
-job_type :rake, "cd :path && :environment_variable=:environment :bundle_command rake :task :output -vs"
+job_type :rake, "cd :path && :environment_variable=:environment :bundle_command rake :task :output -vs > /dev/null 2>&1"
 
 every 5.minutes do
   rake "ts:index"
