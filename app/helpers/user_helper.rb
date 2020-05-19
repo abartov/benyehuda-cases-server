@@ -58,7 +58,7 @@ module UserHelper
   end
 
   def avatar_for(user, style = :thumb)
-    user.avatar? ? user.avatar.url(style) : user.gravatar_url(:size => User.style_to_size(style))
+    user.avatar? ? user.avatar.url(style) : user.gravatar_url(:size => User.style_to_size(style), :secure => true)
   end
 
   def user_css_class(user)
