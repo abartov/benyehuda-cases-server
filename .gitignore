@@ -22,3 +22,7 @@ var
 tags
 .powrc
 .powenv
+.byebug_history
+c
+m
+v

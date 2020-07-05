@@ -1,1 +1,1 @@
-$('<%= event %>_task').html('<%= render(:partial => "tasks/#{event}") %>');
+$('<%= event %>_task').html('<%= j(render(:partial => "tasks/#{event}")) %>');

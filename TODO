@@ -1,0 +1,62 @@
+Massive upgrade of Ruby (to 2.6) and Rails (to 4.2)
+==============================
+Flows to check:
+* non-admin non-editor user
+** login
+** dashboard
+** task view
+** task actions - finish
+** task actions - need help
+** task actions - abandon
+** add comment to task
+** user profile
+** edit user profile
+** go on break
+** return from break
+** request new task
+** password reminder
+** signout
+** e-mail on new comment
+** e-mail on task status change
+
+* editor user
+** all non-editor flows
+** assign tasks to waiting volunteers
+** review pending volunteer requests
+** disable users
+** re-enable users
+** task actions - approve
+** task actions - reject
+** task actions - mark as done
+** task actions - clone
+** e-mail on new comment
+** e-mail on task status change
+** task querying - params
+** task querying - free text
+** task querying - params and free text
+** task querying - pagination
+
+* admin user
+
+Still not working post-upgrade:
+
+* ...
+
+Lateral changes:
+* find() calls with includes
+* from_now calls
+*
+
+Seems to work:
+* login
+* show user
+* show task
+* upload attachment
+* re-assign task by editor
+* editing task details
+* adding a comment
+* deleting a comment
+** reports
+** sitenotice
+* editing user as admin
+* assignment histories as admin
