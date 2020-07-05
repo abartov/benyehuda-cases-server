@@ -11,9 +11,6 @@ Flows to check:
 ** add comment to task
 ** user profile
 ** edit user profile
-** go on break
-** return from break
-** request new task
 ** password reminder
 ** signout
 ** e-mail on new comment
@@ -60,3 +57,6 @@ Seems to work:
 ** sitenotice
 * editing user as admin
 * assignment histories as admin
+** go on break
+** return from break
+** request new task
