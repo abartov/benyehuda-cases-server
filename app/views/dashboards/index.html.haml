@@ -17,7 +17,7 @@
     - when_volunteer do
       %li
         #task_request
-          - if current_user.task_requested_at.nil?
+          - if current_user.task_requested_at.nil? || current_user.on_break
             %a.link1.edit{ :href => task_requests_path, "data-method" => :post, "data-remote" => :true }
               %span
                 %em

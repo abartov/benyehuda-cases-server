@@ -12,6 +12,10 @@
   = @task.source
   %br
   %b
+    = _("Original language")+': '
+  = @task.orig_lang
+  %br
+  %b
     = _("Rashi")+": "
   = textify_rashi(@task)
   %br

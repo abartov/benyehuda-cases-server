@@ -1,6 +1,7 @@
 
 class Task < ActiveRecord::Base
   PROP_SOURCE = 131
+  PROP_ORIGLANG = 132 # horrible hard-coding against production DB values!
   PROP_RASHI = 121
   PROP_INSTRUCTIONS = 61
   include ActsAsAuditable
@@ -186,6 +187,12 @@ class Task < ActiveRecord::Base
     return (files_done.to_f / files_todo * 100).round
   end
   # convenience method for custom prop
+  def orig_lang
+    self.task_properties.each {|p|
+      return p.custom_value if p.property_id == PROP_ORIGLANG
+    }
+    return ""
+  end
   def source
     self.task_properties.each {|p|
       return p.custom_value if p.property_id == PROP_SOURCE
