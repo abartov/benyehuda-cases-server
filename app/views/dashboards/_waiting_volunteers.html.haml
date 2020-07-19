@@ -29,9 +29,9 @@
                     %a.delete{ :href => user_path(v)+"/cancel_task_request"}
                       %span
                         = _("cancel_request")
+  #assign_now{ :title => _("Assign a Task")}
   :javascript
-    jQuery(function(){
-      jQuery('#assign_now').dialog({draggable:true, modal: true, resizable:true, autoOpen: false, position: ['top', 20], width: 950,buttons: {"#{_("Cancel")}": function() { $(this).dialog("hide"); } } });
+    jQuery(window).ready(function() {
+      jQuery('#assign_now').dialog({draggable:true, modal: true, resizable:true, autoOpen: false, position: ['top', 20], width: 950,buttons: {"#{_("Cancel")}": function() { $(this).dialog("close"); } } });
     });
-  #assign_now{:title => _("Assign a Task")}
 
