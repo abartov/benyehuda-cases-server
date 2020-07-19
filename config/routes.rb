@@ -16,8 +16,8 @@ Rails.application.routes.draw do
   match '/password' => 'passwords#update', :as => :password_update, :via => :put
   match '/password' => 'passwords#edit', :as => :password_edit, :via => :get
   resources :passwords, :only => [:new, :create, :edit, :update]
-  match '/login' => 'user_session#new', :as => :login, via: [:get, :post]
-  resource :user_session, :controller => "user_session"
+  match '/login' => 'user_sessions#new', :as => :login, via: [:get, :post]
+  resource :user_sessions, :controller => "user_sessions"
   match '/signup' => 'users#new', :as => :signup, :controller => "users", via: [:get, :post]
   resources :users do
     resources :activation_instructions

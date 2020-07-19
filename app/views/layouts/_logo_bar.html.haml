@@ -11,7 +11,7 @@
         != link_to h(current_user.name), edit_user_path(current_user)
       %li
         [
-        != link_to _("logout"), user_session_path, :method => :delete
+        != link_to _("logout"), user_sessions_path, :method => :delete
         ]
     - else
       %li

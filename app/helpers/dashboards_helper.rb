@@ -15,7 +15,7 @@ module DashboardsHelper
 
   def link_to_assign_a_task(user)
     link_to tasks_path(:assignee_id => user.id, :per_page => 10, :kind => 'הקלדה').html_safe, :class => "ico", :method => :get,
-      :onclick => "jQuery('#assign_now').html(#{_("Loading, please wait...").to_json}).dialog('open');", :remote => true do
+      :onclick => "jQuery('#assign_now').html(#{_("Loading, please wait...").to_json}).modal('show');", :remote => true do
         haml_tag(:span, _("Assign a Task..."))
     end
   end

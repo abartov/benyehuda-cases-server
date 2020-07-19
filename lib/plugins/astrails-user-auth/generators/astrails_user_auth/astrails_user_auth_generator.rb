@@ -21,8 +21,8 @@ class AstrailsUserAuthGenerator < Rails::Generator::Base
       m.route_resources ':users'
       m.route_name :signup, '"/signup", :controller => "users", :action => "new"'
 
-      m.route_resource ':user_session, :controller => "user_session"'
-      m.route_name :login, '"/login", :controller => "user_session", :action => "new"'
+      m.route_resource ':user_sessions, :controller => "user_sessions"'
+      m.route_name :login, '"/login", :controller => "user_sessions", :action => "new"'
 
       m.route_resources ':passwords, :only => [:new, :create, :edit, :update]'
       m.route_name :password_edit, "'/password', :controller => 'passwords', :action => 'edit', :conditions => { :method => :get }"

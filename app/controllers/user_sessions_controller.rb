@@ -1,4 +1,4 @@
-class UserSessionController < InheritedResources::Base
+class UserSessionsController < InheritedResources::Base
   unloadable
   actions :new, :create, :destroy
   before_filter :require_user, :only => :destroy
