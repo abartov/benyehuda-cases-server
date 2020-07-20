@@ -9,7 +9,7 @@ gem "json"
 gem 'rails-i18n'
 gem 'activerecord-session_store'
 #gem "mysql2", '0.4.9' # Sphinx can't deal with >0.4.9
-gem "mysql2", '~> 0.4' 
+gem "mysql2", '~> 0.4'
 gem 'scrypt', '2.1.1'
 gem 'authlogic'
 gem 'whenever'
@@ -32,7 +32,7 @@ gem 'mime-types', :require => 'mime/types'
 gem "fastercsv"
 gem 'airbrake'
 gem 'thinking-sphinx'
-
+gem 'httparty' # for downloading task attachments as one PDF
 #gem 'thinking-sphinx', '~>2', :require => 'thinking_sphinx'
 gem 'gravtastic', "2.2.0"
 #gem 'vlad', :require => false

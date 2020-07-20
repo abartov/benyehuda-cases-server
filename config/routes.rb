@@ -25,6 +25,7 @@ Rails.application.routes.draw do
   end
   get '/users/:id/cancel_task_request', :controller => 'users', :action => 'cancel_task_request'
   get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
+  get '/tasks/:id/download_pdf', :controller => 'tasks', :action => 'download_pdf', as: 'task_download_pdf'
   match '/tick_file/:id' => 'documents#tick_file', :via => :get
 
   resource :profile, :controller => "users"

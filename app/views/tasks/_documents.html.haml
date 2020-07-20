@@ -1,8 +1,14 @@
 #documents
+
   %table
     %tr
       %td.vtop
         %h4= _("Attached documents")
       %td
+        %a.purple-button.gradient{ href: task_download_pdf_path(@task.id) }
+          %span
+            = _("Download as single PDF")
+        %br
+        %br
         %ol#ol_documents
           != render(:partial => "documents/document", :collection => documents, :as => :document)

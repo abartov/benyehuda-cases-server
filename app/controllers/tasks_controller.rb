@@ -1,5 +1,7 @@
+require 'httparty'
+
 class TasksController < InheritedResources::Base
-  before_filter :require_task_participant_or_editor, :only => [:show, :update, :edit]
+  before_filter :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
   before_filter :require_editor_or_admin, :only => [:index, :create]
   actions :index, :show, :update, :create
 
@@ -10,6 +12,41 @@ class TasksController < InheritedResources::Base
     return unless _allow_event?(resource, :finish, current_user)
     @no_docs_uploaded = resource.documents.uploaded_by(current_user).count.zero?
     resource.hours = resource.estimate_hours unless resource.hours.present?
+  end
+
+  def download_pdf
+    @task = Task.find(params[:id])
+    unless @task
+      redirect_to '/'
+    else
+      tmpfile = Tempfile.new(['dl_task_pdf__','.pdf'])
+      begin
+        jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|TIF|PNG|png|PDF|pdf)$/}
+        tmpjpegs = []
+        jpegs.each do |jpeg|
+          jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
+          tmpjpeg = Tempfile.new(['dl_task_jpg__',jpegext], binmode: true)
+          tmpjpegpath = tmpjpeg.path
+          tmpjpegs << tmpjpeg
+          response = HTTParty.get(jpeg.file.url)
+          tmpjpeg.write(response.body)
+          tmpjpeg.flush
+        end
+        tmpfilename = tmpfile.path
+        # run the conversion
+        byebug
+        # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
+        `convert #{tmpjpegs.map{|tj| tj.path}.join(' ')} #{tmpfilename}`
+        byebug
+        pdf = File.read(tmpfilename)
+        send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
+        File.delete(tmpfilename) # delete temporary generated PDF
+      rescue
+        redirect_to '/'
+      ensure
+        tmpfile.close
+      end
+    end
   end
 
   def make_comments_editor_only
