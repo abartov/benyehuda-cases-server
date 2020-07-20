@@ -22,9 +22,11 @@ class UsersController < InheritedResources::Base
 
   def take_break
     @user = User.find(params[:id])
-    @user.on_break = true
-    flash[:notice] = s_("You're now on break! Request a new task to come out of break.")
-    @user.save!
+    if @user.is_volunteer?
+      @user.on_break = true
+      flash[:notice] = s_("You're now on break! Request a new task to come out of break.")
+      @user.save!
+    end
     redirect_to :action => :show
   end
 
