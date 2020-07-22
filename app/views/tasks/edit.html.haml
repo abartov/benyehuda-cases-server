@@ -13,3 +13,9 @@
 
 
 - commentable_event_form("finish")
+
+:javascript
+  $(document).ready(function() {
+    e = $('#actual_finish_button');
+    window.scrollTo(0, e.offset().top);
+  });

@@ -1,9 +1,15 @@
 -#!= render(:partial => "tasks/assignee_simple_actions", :locals => {:task => @task})
 - if @task.can_be_finished?
   .float-right
-    %a.purple-button.gradient{ :href => edit_task_path(@task) }
+    .purple-button.gradient
       %span
-        != textify_event("finish")
+        = link_to "סיימתי", edit_task_path(@task), {style:'color:white', id: 'initiate_finish', disable_with: _("Loading, please wait...")}
 .float-right
   - commentable_event_form("abandon")
 
+:javascript
+  $(document).ready(function() {
+    $('#initiate_finish').click(function(){
+      $(this).text("#{_('Please wait...')}");
+    });
+  });
