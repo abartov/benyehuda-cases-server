@@ -55,7 +55,9 @@ class UsersController < InheritedResources::Base
       @user.is_editor = params[:user].delete(:is_editor)
       @user.email = params[:user][:email] || @user.email
     end
-    update!
+
+    update_resource(resource, resource_params)
+    render action: :show
   end
 
   def destroy

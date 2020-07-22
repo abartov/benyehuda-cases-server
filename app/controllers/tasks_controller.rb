@@ -34,10 +34,8 @@ class TasksController < InheritedResources::Base
         end
         tmpfilename = tmpfile.path
         # run the conversion
-        byebug
         # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
         `convert #{tmpjpegs.map{|tj| tj.path}.join(' ')} #{tmpfilename}`
-        byebug
         pdf = File.read(tmpfilename)
         send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         File.delete(tmpfilename) # delete temporary generated PDF
