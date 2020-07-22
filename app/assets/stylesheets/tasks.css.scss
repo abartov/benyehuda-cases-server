@@ -633,3 +633,15 @@ div.finished_reason {
 div.ajaxed {
   background-color: #72C49E;
 }
+.finish_task_button{
+  padding-right:5px;
+  border-radius: 10px;
+  cursor: pointer;
+	height: 33px;
+	margin-bottom: 5px;
+	margin-left:15px;
+	padding-left: 15px;
+	padding-right: 15px;
+	font-weight: bold;
+	font-size:120%;
+}

@@ -6,7 +6,7 @@
     %p
     %p= _('Below is an estimated calculation of hours it was likely to spend on this task, based on its number of files.  We have to collect this for our reporting to our grantmakers.  Please correct the estimate if you have a better estimate, or kept track yourself.')
     != f.input :hours, label: _("Hours spent")+' '
-  != f.submit _("Finish")
+  != f.submit _("Finish"), class: 'purple-button gradient finish_task_button'
   .gray-button
     %span
       != link_to _("cancel"), task_path(@task), :style => "color:#565253"
