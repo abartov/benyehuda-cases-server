@@ -177,8 +177,9 @@ module Task::States
       #d = doc.clone # deprecated and removed in Rails 3.1; silently does EXACTLY what you don't want it to do!
       d = doc.dup
       d.task_id = self.id
-      #d.file = Paperclip.io_adapters.for(doc.file)
-      d.file = doc.file.to_file # to_file deprecated in Paperclip 3.0.1
+      d.file = Paperclip.io_adapters.for(doc.file)
+      #byebug
+      #d.file = doc.file.dup # to_file deprecated in Paperclip 3.0.1
       d.save
     end
   end
