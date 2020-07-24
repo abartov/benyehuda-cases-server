@@ -1,4 +1,14 @@
-%h1= "#{_('Volunteer hours report')}: #{@year}"
-%h2= "#{_('Total')}: #{@hours_total}"
-%h3= "#{_('Tasks')}: #{@completed_tasks.count}"
-
+.hours_report{style:'direction:rtl;text-align:right'}
+  = form_tag(report_hours_path) do
+    = date_field_tag(:fromdate, (params[:fromdate] || Date.new(Date.today.year, 1,1)))
+    = date_field_tag(:todate, (params[:todate] || Date.new(Date.today.year, 12, 31)))
+    = submit_tag 'סנן לפי תאריכים אלו'
+  %h1= "דו\"ח שעות מתנדבים: #{@fromdate.to_s}–#{@todate.to_s}"
+  %h2= "סך הכל שעות: #{@total_hours}"
+  %h3= "סך הכל משימות: #{@total_tasks}"
+  %hr
+  %h1 פירוט לפי סוג
+  - @hours_by_kind.keys.each do |kind_id|
+    - next if kind_id.nil? or kind_id == 0
+    %h2= _(TaskKind.find(kind_id).name)
+    %h3= "שעות: #{@hours_by_kind[kind_id]}; משימות: #{@count_by_kind[kind_id]}"

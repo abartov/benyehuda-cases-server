@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   get "report/stalled"
-  get 'report/hours'
+  match 'report/hours', via: [:get, :post]
   get "report/inactive"
   get "report/active"
   get "report/newvols"

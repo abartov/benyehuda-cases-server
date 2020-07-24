@@ -9,9 +9,12 @@ class ReportController < InheritedResources::Base
   end
 
   def hours
-    @year = Date.today.year-1
-    @completed_tasks = Task.where('state = "ready_to_publish" and updated_at > ? and updated_at < ?', Date.new(@year, 1,1), Date.new(Date.today.year,1,1))
-    @hours_total = @completed_tasks.pluck(:hours).reject{|x| x.nil?}.sum
+    @fromdate = params[:fromdate].present? ? Date.parse(params[:fromdate]) : Date.new(Date.today.year, 1, 1) # default to Jan 1st of current year
+    @todate = params[:todate].present? ? Date.parse(params[:todate]) : Date.new(Date.today.year, 12,31) # default to end of current year
+    @hours_by_kind = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:kind_id).sum(:hours)
+    @count_by_kind = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:kind_id).count
+    @total_hours = @hours_by_kind.values.sum
+    @total_tasks = @count_by_kind.values.sum
   end
 
   def inactive
