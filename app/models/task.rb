@@ -232,7 +232,7 @@ class Task < ActiveRecord::Base
     when 'סריקה' then 0.05
     else 0.5
     end
-    return (self.documents.count * factor).round
+    return (self.documents.count * factor + self.documents.count * 0.05).round
   end
   protected
   def documents_by_extensions(exts)
