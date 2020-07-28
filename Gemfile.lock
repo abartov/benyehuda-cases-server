@@ -89,7 +89,7 @@ GEM
       railties (>= 3.0.0)
     fast_gettext (2.0.2)
     fastercsv (1.5.5)
-    ffi (1.9.18)
+    ffi (1.13.1)
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
