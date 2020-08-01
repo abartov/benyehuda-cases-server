@@ -42,7 +42,7 @@ gem 'has_scope'
 gem 'hoe', '2.8.0'
 
 gem 'aws-sdk', '~> 1'
-gem 'paperclip', '~>4.0'
+gem 'paperclip', '~>5.2'
 gem 'cocaine'
 
 gem 'image_science', :require => false
