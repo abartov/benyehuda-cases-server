@@ -21,6 +21,7 @@ class Document < ActiveRecord::Base
     :bucket         => GlobalPreference.get(:s3_bucket),
     :path =>        "documents/:id/:filename",
     :default_url   => "",
+    :s3_protocol => :https,
     :s3_credentials => {
       :access_key_id     => GlobalPreference.get(:s3_key),
       :secret_access_key => GlobalPreference.get(:s3_secret),
