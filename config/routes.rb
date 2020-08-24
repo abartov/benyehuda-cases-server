@@ -9,7 +9,7 @@ Rails.application.routes.draw do
   get "report/index"
   match '/report' => 'report#index', via: [:get, :post]
   match '/users' => 'users#index', via: [:get]
-
+  match '/get_last_source' => 'tasks#get_last_source', via: [:get, :post]
   match '/activate/:id' => 'passwords#edit', :as => :activate, via: [:get, :post]
   get '/users/:id/take_break', :controller => 'users', :action => 'take_break', :as => :users_take_break, :via => :get
   get '/passwords/:id/reset_password_by_editor' => 'passwords#reset_password_by_editor'
