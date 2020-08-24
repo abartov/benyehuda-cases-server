@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200721135352) do
+ActiveRecord::Schema.define(version: 20200824170704) do
 
   create_table "assignment_histories", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -169,6 +169,9 @@ ActiveRecord::Schema.define(version: 20200721135352) do
     t.integer  "kind_id",         limit: 4
     t.string   "priority",        limit: 255
     t.integer  "hours",           limit: 4
+    t.integer  "genre",           limit: 4
+    t.boolean  "independent"
+    t.boolean  "include_images"
   end
 
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
