@@ -4,6 +4,18 @@
   = @task.kind.try(:name)
   %br
   %b
+    = 'סוגה: '
+  = @task.try(:genre)
+  != "&nbsp;&nbsp;&nbsp;"
+  %b
+    = 'אפשר להעלות בנפרד? '
+  = @task.independent? ? 'כן' : 'לא'
+  != "&nbsp;&nbsp;&nbsp;"
+  %b
+    = 'מותר להעלות תמונות? '
+  = @task.include_images? ? 'כן' : 'לא'
+  %br
+  %b
     = _("Nikud")+": "
   = textify_full_nikud(@task)
   %br

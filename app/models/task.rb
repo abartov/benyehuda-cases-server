@@ -1,5 +1,6 @@
 
 class Task < ActiveRecord::Base
+  enum genre: %i(שירה פרוזה מחזות משלים מאמרים זכרונות מכתבים עיון מעורב)
   PROP_SOURCE = 131
   PROP_ORIGLANG = 132 # horrible hard-coding against production DB values!
   PROP_RASHI = 121
@@ -78,7 +79,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes
+  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, ->{order("comments.task_id, comments.created_at")}
