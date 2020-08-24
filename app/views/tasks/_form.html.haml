@@ -32,4 +32,8 @@
       return false;
     });
   });
-
+  $(document).ready(function() {
+    if($('#task_kind_id').val() == '') {
+      $('#task_kind_id').val('1'); // default to typing
+    }
+  });

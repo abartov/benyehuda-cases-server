@@ -2,7 +2,7 @@ require 'httparty'
 
 class TasksController < InheritedResources::Base
   before_filter :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
-  before_filter :require_editor_or_admin, :only => [:index, :create]
+  before_filter :require_editor_or_admin, :only => [:index, :create, :make_comments_editor_only, :get_last_source]
   actions :index, :show, :update, :create
 
   EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
@@ -44,6 +44,13 @@ class TasksController < InheritedResources::Base
       ensure
         tmpfile.close
       end
+    end
+  end
+
+  def get_last_source
+    @task = Task.last
+    respond_to do |format|
+      format.js
     end
   end
 
