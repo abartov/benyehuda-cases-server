@@ -19,6 +19,13 @@
         = label_tag :priority, _("Priority")
         = select_tag :priority, options_for_select([""] + task_priorities_for_select, params[:priority])
         %br
+        = label_tag :genre, 'סוגה'
+        = select_tag :genre, options_for_select([""] + Task.genres.keys.map{|x| [x,x]}, params[:genre])
+        = label_tag :independent, 'אפשר להעלות בנפרד?'
+        = check_box_tag :independent, 'true', 'true' == params[:independent]
+        = label_tag :include_images, 'מותר להעלות תמונות?'
+        = check_box_tag :include_images, 'true', 'true' == params[:include_images]
+        %br
         = label_tag :query, _("Query")
         = text_field_tag :query, params[:query]
         = submit_tag _("Filter")

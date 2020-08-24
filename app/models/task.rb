@@ -114,12 +114,12 @@ class Task < ActiveRecord::Base
   }
 
   TASK_LENGTH = {
-    "short" => 0..7,
-    "medium" => 8..24,
+    "short" => 0..9,
+    "medium" => 10..45,
   }
-  TASK_LENGTH.default = 25..100000
+  TASK_LENGTH.default = 46..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority"]
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre']
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -133,7 +133,10 @@ class Task < ActiveRecord::Base
       end
     end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
+    search_opts[:conditions][:genre] = opts[:genre] unless opts[:genre].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
+    search_opts[:with][:independent] = ("true" == opts[:independent]) unless opts[:independent].blank?
+    search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
