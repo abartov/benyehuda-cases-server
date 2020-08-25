@@ -133,7 +133,7 @@ class Task < ActiveRecord::Base
       end
     end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
-    search_opts[:conditions][:genre] = opts[:genre] unless opts[:genre].blank?
+    search_opts[:with][:genre] = Task.genres[opts[:genre]] unless opts[:genre].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
     search_opts[:with][:independent] = ("true" == opts[:independent]) unless opts[:independent].blank?
     search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
