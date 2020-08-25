@@ -7,6 +7,7 @@
   = f.input :genre, :as => :select, :collection => Task.genres.keys.map{|g| [g, g]}, :label => 'סוגה'
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
+  = f.input :source, :label => 'פרטי מהדורה (מהדורה [אם יש], עיר: מו"ל, שנה)', :input_html => {:class => 'span-13'}
   /= f.input :difficulty, :as => :select, :collection => task_difficulties_for_select, :required => true, :label => _("Difficulty")
   /= f.input :priority, :as => :select, :collection => task_priorities_for_select, :required => true, :label => _("Priority")
   = f.input :full_nikkud, :as => :boolean, :label => _("Full Nikkud")

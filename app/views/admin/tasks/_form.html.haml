@@ -12,7 +12,7 @@
 
 :javascript
   $(document).ready(function() {
-    $("<span> </span> <a class=\"purple-button gradient\" id=\"copy_source\" href=\"#\"> <span>העתק מהמשימה האחרונה</span></a>").insertAfter('#task_task_properties_131__custom_value'); // horrible hard-coding, to avoid dealing with the custom properties code
+    $("<span> </span> <a class=\"purple-button gradient\" id=\"copy_source\" href=\"#\"> <span>העתק מהמשימה האחרונה</span></a>").insertAfter('#task_source');
     $('#copy_source').click(function(e){
       e.preventDefault();
       $.get('/get_last_source');

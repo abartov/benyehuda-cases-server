@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200824170704) do
+ActiveRecord::Schema.define(version: 20200825200318) do
 
   create_table "assignment_histories", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -161,17 +161,18 @@ ActiveRecord::Schema.define(version: 20200824170704) do
     t.string   "name",            limit: 255
     t.string   "state",           limit: 16
     t.string   "difficulty",      limit: 16
-    t.boolean  "full_nikkud",                 default: false
+    t.boolean  "full_nikkud",                  default: false
     t.integer  "parent_id",       limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "documents_count", limit: 4,   default: 0
+    t.integer  "documents_count", limit: 4,    default: 0
     t.integer  "kind_id",         limit: 4
     t.string   "priority",        limit: 255
     t.integer  "hours",           limit: 4
     t.integer  "genre",           limit: 4
     t.boolean  "independent"
     t.boolean  "include_images"
+    t.string   "source",          limit: 2048
   end
 
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree

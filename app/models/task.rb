@@ -79,7 +79,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre
+  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, ->{order("comments.task_id, comments.created_at")}
@@ -119,7 +119,7 @@ class Task < ActiveRecord::Base
   }
   TASK_LENGTH.default = 46..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre']
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source']
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -197,7 +197,7 @@ class Task < ActiveRecord::Base
     }
     return ""
   end
-  def source
+  def legacy_source
     self.task_properties.each {|p|
       return p.custom_value if p.property_id == PROP_SOURCE
     }

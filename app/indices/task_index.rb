@@ -7,6 +7,7 @@ ThinkingSphinx::Index.define :task, name: index_name, with: :active_record do
   has :full_nikkud, :type => :boolean
   has :independent, :type => :boolean
   has :include_images, :type => :boolean
+  indexes :source
   indexes :difficulty, :sortable => true
   indexes :priority, :sortable => true
   indexes kind.name, :sortable => true, :as => :kind

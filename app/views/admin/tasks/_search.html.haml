@@ -26,7 +26,7 @@
         = label_tag :include_images, 'מותר להעלות תמונות?'
         = check_box_tag :include_images, 'true', 'true' == params[:include_images]
         %br
-        = label_tag :query, _("Query")
+        = label_tag :query, 'שאילתה (כותרת משימה ו/או שם הוצאה)'
         = text_field_tag :query, params[:query]
         = submit_tag _("Filter")
         = link_to _("All"), admin_tasks_path(:all => true)
