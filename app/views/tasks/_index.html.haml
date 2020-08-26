@@ -6,8 +6,6 @@
         %h2
           = title
           = "#{_('total')} (#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
-          - if editing
-            = " / #{total.to_s}"
           = ")"
   .container
     .t
@@ -53,4 +51,5 @@
       %span.l
         %span.c
 - if tasks.respond_to?(:total_entries)
-  != will_paginate(tasks)
+  - pname = defined?(param_name) ? param_name : :page
+  != will_paginate(tasks, param_name: pname)

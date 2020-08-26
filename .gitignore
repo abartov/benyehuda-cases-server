@@ -33,3 +33,4 @@ old_rails_upgrade.diff
 old_locale.zip
 stats.diff
 tasks.code-workspace
+run.sh
