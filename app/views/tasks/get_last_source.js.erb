@@ -1,1 +1,1 @@
-$('#task_source').val("<%= @task.source %>");
+$('#task_source').val("<%= j(raw @task.source) %>");
