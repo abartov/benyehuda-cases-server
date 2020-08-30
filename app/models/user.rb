@@ -48,7 +48,7 @@ class User < ActiveRecord::Base
   scope :admins, -> {where(:is_admin => true)}
 
   scope :enabled, -> {where("users.disabled_at IS NULL")}
-  scope :not_on_break, -> {where("users.is_volunteer = 1 AND users.on_break = 0 AND users.disabled_at IS NULL")}
+  scope :not_on_break, -> {where("users.is_volunteer = 1 AND users.on_break = 0 AND users.disabled_at IS NULL AND users.activated_at IS NOT NULL")}
   scope :active, -> {where("users.activated_at IS NOT NULL")}
   scope :not_activated, -> {where("users.activated_at is NULL")}
   scope :active_first, -> {order("users.current_login_at DESC")}
