@@ -1,4 +1,3 @@
-
 class Task < ActiveRecord::Base
   enum genre: %i(שירה פרוזה מחזות משלים מאמרים זכרונות מכתבים עיון מעורב)
   PROP_SOURCE = 131
@@ -224,6 +223,17 @@ class Task < ActiveRecord::Base
 
   def self.textify_state(state)
     s_(TaskState.find_by_name(state.to_s).value)
+  end
+  def possibly_related_tasks
+    ret = []
+    self.children.each {|c| ret << c}
+    ret << self.parent unless self.parent.nil?
+    slashpos = self.name.index('/')
+    unless slashpos.nil? or slashpos < 5
+      possibly = Task.where("name like '#{self.name[0..5]}%#{self.name[slashpos..-1]}'")
+      possibly.each{|t| ret << t}
+    end
+    return ret
   end
   def estimate_hours
     kindname = self.kind.try(:name)
