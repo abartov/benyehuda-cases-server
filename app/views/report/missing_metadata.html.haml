@@ -1,0 +1,60 @@
+%h1= "דו\"ח משימות עם חוסרים במטא-דאטה"
+.bar
+  / add-nav
+  %ul.add-nav
+    %li
+      %a.link1{ :href => dashboard_path }
+        %span
+          %em
+            != _("back to dashboard")
+.metadata_dialog
+  .metadata_panel
+.block
+  .head
+    .l
+      .c
+        %h2= "סה\"כ: #{@tasks.respond_to?(:total_entries) ? @tasks.total_entries : @tasks.size}"
+  .container
+    .t
+      %span.l
+        %span.c
+    .m
+      .l
+        .holder
+          - if @tasks.blank?
+            = _("No Tasks found")
+          - else
+            %table.data-table
+              %tbody
+                %tr
+                  %th.first.style4= _("Name")
+                  %th.style12= _("Kind")
+                  %th.style7= _("State")
+                  %th.style12= _("Files")
+                  %th.first.style11
+                    \&nbsp;
+                - @tasks.each do |t|
+                  %tr{:class => cycle("odd", "even")}
+                    %td.first.style4!= link_to h(t.name), task_path(t)
+                    %td.style12= t.kind.try(:name)
+                    %td.style7= Task.textify_state(t.state)
+                    %td.style12= t.documents_count
+                    %td.first.style11
+                      %a.purple-button.gradient.uncollapse_metadata{'data-id' => t.id, style:'cursor:pointer'}
+                        %span= 'פתח מסך טיפול'
+    .b
+      %span.l
+        %span.c
+- if @tasks.respond_to?(:total_entries)
+  - pname = defined?(param_name) ? param_name : :page
+  != will_paginate(@tasks, param_name: pname)
+
+:javascript
+  $(document).ready(function(){
+    $('.metadata_dialog').dialog({autoOpen: false, modal: true, position: {my: 'center top', at:'center top', of: window}, width: 800 });
+    $('.uncollapse_metadata').click(function(){
+      var url = "/report/missing_metadata_panel/"+$(this).attr('data-id');
+      $('.metadata_panel').load(url);
+      $('.metadata_dialog').dialog('open');
+    });
+  });

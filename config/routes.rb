@@ -1,6 +1,9 @@
 Rails.application.routes.draw do
   get "report/stalled"
+  get 'report/missing_metadata'
+  get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
   match 'report/hours', via: [:get, :post]
+  post 'report/update_metadata'
   get "report/inactive"
   get "report/active"
   get "report/newvols"

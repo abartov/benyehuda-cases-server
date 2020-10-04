@@ -231,7 +231,7 @@ class Task < ActiveRecord::Base
     slashpos = self.name.index('/')
     unless slashpos.nil? or slashpos < 5
       possibly = Task.where("name like '#{self.name[0..5]}%#{self.name[slashpos..-1]}'")
-      possibly.each{|t| ret << t}
+      possibly.each{|t| ret << t unless t.id == self.id}
     end
     return ret
   end

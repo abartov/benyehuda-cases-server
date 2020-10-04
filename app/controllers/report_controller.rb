@@ -3,12 +3,15 @@ class ReportController < InheritedResources::Base
   actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
 
   def index
+    @current_tab = :reports
   end
   def stalled
+    @current_tab = :reports
     @tasks = Task.assigned.where(:updated_at => 20.years.ago..6.months.ago)
   end
 
   def hours
+    @current_tab = :reports
     @fromdate = params[:fromdate].present? ? Date.parse(params[:fromdate]) : Date.new(Date.today.year, 1, 1) # default to Jan 1st of current year
     @todate = params[:todate].present? ? Date.parse(params[:todate]) : Date.new(Date.today.year, 12,31) # default to end of current year
     @hours_by_kind = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:kind_id).sum(:hours)
@@ -18,19 +21,54 @@ class ReportController < InheritedResources::Base
   end
 
   def inactive
+    @current_tab = :reports
     @total = User.vols_inactive_in_last_n_months(6).count
     @users = User.vols_inactive_in_last_n_months(6).paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
   def active
+    @current_tab = :reports
     @total = User.vols_active_in_last_n_months(6).count
     @users = User.vols_active_in_last_n_months(6).paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
+  def missing_metadata
+    @current_tab = :reports
+    @tasks = Task.where("include_images is null or independent is null or genre is null").paginate(:page => params[:page], :per_page => params[:per_page])
+  end
+  def missing_metadata_panel
+    @task = Task.find(params[:id])
+    unless @task
+      render :nothing => true
+    else
+      @possibly_related = @task.possibly_related_tasks
+      render :layout => false
+    end
+  end
+  def update_metadata
+    @task = Task.find(params[:task_id])
+    unless @task
+      render :nothing => true
+    else
+      tasks_to_update = [@task]
+      params.keys.each{|p| tasks_to_update << Task.find(p[4..-1]) if p =~ /task\d+/}
+      indep = params[:independent].nil? ? false : true
+      images = params[:include_images].nil? ? false : true
+      tasks_to_update.each do |t|
+        t.genre = params[:genre]
+        t.independent = indep
+        t.include_images = images
+        t.save!
+      end
+      render :js => "$('.metadata_dialog').dialog('close');"
+    end
+  end
   def newvols
+    @current_tab = :reports
     @users = User.vols_newer_than(4.months.ago).paginate(:page => params[:page], :per_page => params[:per_page])
   end
   def vols_notify
+    @current_tab = :reports
     newly_published_tasks = Task.ready_to_publish.where(:updated_at => 1.month.ago..Date.today)
     @users = []
     newly_published_tasks.each {|t|

@@ -1,0 +1,24 @@
+%div{style:'align:right;direction:rtl'}
+  %h1= @task.name
+  = form_tag 'update_metadata', remote: true do
+    = hidden_field_tag :task_id, @task.id
+    = label_tag 'סוגה'
+    = select_tag :genre, options_for_select(['']+Task.genres.keys.map{|g| [g, g]})
+    = label_tag 'אפשר להעלות בנפרד?'
+    = check_box_tag :independent
+    = label_tag 'מותר להעלות תמונות?'
+    = check_box_tag :include_images
+    %p
+    %h2= 'משימות עם שם דומה'
+    = check_box_tag 'toggle'
+    %ol
+      - @possibly_related.each do |t|
+        %li
+          = check_box_tag 'task'+t.id.to_s, '1', false, class: 'tbox'
+          = "#{t.name} (#{t.kind.name})"
+    = button_tag 'שמירת מטא-דאטה במשימה ובמשימות המסומנות', id: 'apply_btn', style:'font-weight: bold'
+
+:javascript
+  $('#toggle').click(function(){
+    $('.tbox').prop('checked', $(this).prop('checked'));
+  });
