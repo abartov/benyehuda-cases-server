@@ -58,7 +58,7 @@ class Task < ActiveRecord::Base
   include Task::States
   include Task::Notifications
 
-  belongs_to :kind, :class_name => 'TaskKind'
+    belongs_to :kind, :class_name => 'TaskKind'
 
   DIFFICULTIES = {
     "easy" => N_("task difficulty|easy"),
@@ -228,7 +228,7 @@ class Task < ActiveRecord::Base
     ret = []
     self.children.each {|c| ret << c}
     ret << self.parent unless self.parent.nil?
-    slashpos = self.name.index('/')
+    slashpos = self.name.index(' /')
     unless slashpos.nil? or slashpos < 5
       possibly = Task.where('name like ?', self.name[0..5]+'%'+self.name[slashpos..-1])
       possibly.each{|t| ret << t unless t.id == self.id}
