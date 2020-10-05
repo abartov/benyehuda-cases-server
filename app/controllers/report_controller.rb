@@ -34,7 +34,7 @@ class ReportController < InheritedResources::Base
 
   def missing_metadata
     @current_tab = :reports
-    @tasks = Task.where("state = 'ready_to_publish' AND (include_images is null or independent is null or genre is null)").paginate(:page => params[:page], :per_page => params[:per_page])
+    @tasks = Task.where("state <> 'ready_to_publish' AND (include_images is null or independent is null or genre is null)").paginate(:page => params[:page], :per_page => params[:per_page])
   end
   def missing_metadata_panel
     @task = Task.find(params[:id])
