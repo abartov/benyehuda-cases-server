@@ -9,7 +9,6 @@ class UserSessionsController < InheritedResources::Base
   end
 
   def create
-    byebug
     @user_session = UserSession.create(email: params[:user_session][:email], password: params[:user_session][:password], remember_me: params[:user_session][:remember_me])
     do_create(@user_session) do |success, failure|
       success.html do
