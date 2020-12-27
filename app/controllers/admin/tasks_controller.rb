@@ -1,7 +1,7 @@
 class Admin::TasksController < InheritedResources::Base
-  before_filter :require_admin, :only => [:create, :update, :changes]
+  before_filter :require_admin, :only => [:create, :update, :changes, :split_task]
   before_filter :require_editor_or_admin, :only => :index
-  actions :index, :new, :create, :edit, :update, :destroy, :changes
+  actions :index, :new, :create, :edit, :update, :destroy, :changes, :split_task
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
   respond_to :js
@@ -51,6 +51,23 @@ class Admin::TasksController < InheritedResources::Base
       @changes[c.task_id] << c
     }
   end
+
+  def split_task
+    @task = Task.find(params[:id])
+    if @task.nil?
+      flash[:error] = 'אין משימה כזו'
+      redirect_to '/'
+    else
+      @jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/}
+      if @jpegs.empty?
+        flash[:error] = 'אין סריקות במשימה הזו!'
+        redirect_to task_path(@task)
+      end
+      # jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
+      # jpeg.file.url
+    end
+  end
+
   protected
   def collection
     @tasks ||= apply_scopes(Task).filter(params)

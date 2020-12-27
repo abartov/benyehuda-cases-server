@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     resources :assignment_histories
   end
   get '/users/:id/cancel_task_request', :controller => 'users', :action => 'cancel_task_request'
+  get '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task'
   get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
   get '/tasks/:id/download_pdf', :controller => 'tasks', :action => 'download_pdf', as: 'task_download_pdf'
   match '/tick_file/:id' => 'documents#tick_file', :via => :get

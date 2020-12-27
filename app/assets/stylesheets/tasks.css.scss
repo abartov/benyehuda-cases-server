@@ -646,3 +646,30 @@ div.ajaxed {
 	font-weight: bold;
 	font-size:120%;
 }
+
+.thumbs_container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+.thumb {
+	width: 400px;
+	border: 2px;
+	border-style: solid;
+	padding:10px;
+}
+.cb_start_split{
+	height: 40px;
+	width: 40px;
+}
+.start_split {
+	font-size: 20px;
+}
+.cb_skip_doc{
+	height: 40px;
+	width: 40px;
+}
+.skip_doc {
+	font-size: 20px;
+}

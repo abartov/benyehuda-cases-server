@@ -21,7 +21,7 @@ class TasksController < InheritedResources::Base
     else
       tmpfile = Tempfile.new(['dl_task_pdf__','.pdf'])
       begin
-        jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|TIF|PNG|png|PDF|pdf)$/}
+        jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/}
         tmpjpegs = []
         jpegs.each do |jpeg|
           jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
