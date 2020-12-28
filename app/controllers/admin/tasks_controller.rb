@@ -62,9 +62,47 @@ class Admin::TasksController < InheritedResources::Base
       if @jpegs.empty?
         flash[:error] = 'אין סריקות במשימה הזו!'
         redirect_to task_path(@task)
+      else
+        if params[:commit].present? # process filled out form
+          @new_tasks = []
+          @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
+          @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
+          @total_parts = @starter_ids.count
+          if @total_parts < 2
+            flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
+            redirect_to task_path(@task)
+          else
+            partno = 1
+            next_task = prepare_cloned_task(@task, partno, @total_parts)
+            docs = []
+            @jpegs.each do |jpeg|
+              next if @skip_ids.include?(jpeg.id)
+              if @starter_ids.include?(jpeg.id)
+                unless docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
+                  @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
+                  docs = []
+                  partno += 1
+                  next_task = prepare_cloned_task(@task, partno, @total_parts)
+                end
+              end
+              docs << jpeg
+            end
+            @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0 # finish last split task, if any docs are left
+            # prepare new cloned tasks with all metadata copied and ordinal number incremented
+              # iterate through scans until next split marker or end
+                # (if final set equals the document set of the task, report and do nothing)
+              # clone attachments to cloned task
+            # change master task type to 'scan' and status to 'עלה לאתר'
+            @task.kind_id = 31 # TODO: un-hardcode?
+            @task.editor_id = current_user.id
+            @task.assignee_id = current_user.id
+            @task.state = :ready_to_publish
+            @task.save!
+            flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
+            redirect_to task_path(@task)
+          end
+        end # else render splitting view
       end
-      # jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
-      # jpeg.file.url
     end
   end
 
@@ -75,5 +113,30 @@ class Admin::TasksController < InheritedResources::Base
 
   def interpolation_options
     { :task_name => @task.name }
+  end
+  def prepare_cloned_task(task, partno, total_parts)
+    t = task.dup # duplicate attributes from parent task
+    pos = t.name.index('/') || -1
+    newname = t.name[0..pos]+" קבוצה #{partno} מתוך #{total_parts}"
+    newname += t.name[pos+1..-1] unless pos == -1
+    t.name = newname
+    t.documents_count = 0
+    t.creator_id = current_user.id
+    # t.parent_id = task.id # setting the parent_id before save would trigger Task.clone_parent_documents, which we *don't* want here.
+    task.task_properties.each {|tp| t.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
+    return t
+  end
+  def finalize_split_task(task, docs, parent_id)
+    task.save! # actually create the task, also triggering the post-create hook!
+    # now that the post-create hook has run, we can safely populate the parent id
+    task.parent_id = parent_id
+    docs.each do |doc|
+      d = doc.dup
+      d.task_id = task.id
+      d.file = Paperclip.io_adapters.for(doc.file)
+      d.save
+    end
+    task.save!
+    return task
   end
 end

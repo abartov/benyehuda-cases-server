@@ -206,7 +206,7 @@ class Task < ActiveRecord::Base
     self.task_properties.each{|p|
       return p.custom_value if p.property_id == PROP_RASHI
     }
-    return ""
+    return false
   end
   def instructions
     self.task_properties.each{|p|

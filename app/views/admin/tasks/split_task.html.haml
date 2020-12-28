@@ -34,7 +34,9 @@
               %br
               = check_box_tag "skip_#{jpeg.id}", '', false, {class: 'cb_skip_doc'}
               %span.skip_doc= 'לדלג'
-        = submit_tag 'בצע חלוקה!'
+        %p
+        .center
+          = submit_tag 'בצע חלוקה!', {style: 'font-size:30px;'}
 :javascript
   $(document).ready(function(){
     $('.cb_start_split').click(function(){
