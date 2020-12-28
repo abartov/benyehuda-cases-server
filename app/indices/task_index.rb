@@ -15,4 +15,3 @@ ThinkingSphinx::Index.define :task, name: index_name, with: :active_record do
   has :documents_count, :type => :integer
 
 end
-
