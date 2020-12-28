@@ -42,14 +42,18 @@
     $('.cb_start_split').click(function(){
       if($(this).prop('checked')) {
         $(this).next().css('color', 'green');
-        $(this).parent().find('.cb_skip_doc').first().prop('checked', false);
+        other = $(this).parent().find('.cb_skip_doc').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
       } else {
         $(this).next().css('color','unset');
       }
     });
     $('.cb_skip_doc').click(function(){
       if($(this).prop('checked')) {
-        $(this).parent().find('.cb_start_split').first().prop('checked', false);
+        other = $(this).parent().find('.cb_start_split').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
         $(this).next().css('color', 'red');
       } else {
         $(this).next().css('color','unset');
