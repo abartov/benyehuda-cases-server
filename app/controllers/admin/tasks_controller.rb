@@ -93,7 +93,7 @@ class Admin::TasksController < InheritedResources::Base
                 # (if final set equals the document set of the task, report and do nothing)
               # clone attachments to cloned task
             # change master task type to 'scan' and status to 'עלה לאתר'
-            @task.kind_id = 31 # TODO: un-hardcode?
+            @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
             @task.editor_id = current_user.id
             @task.assignee_id = current_user.id
             @task.state = :ready_to_publish
@@ -116,10 +116,10 @@ class Admin::TasksController < InheritedResources::Base
   end
   def prepare_cloned_task(task, partno, total_parts)
     t = task.dup # duplicate attributes from parent task
-    pos = t.name.index('/') || -1
-    newname = t.name[0..pos]+" קבוצה #{partno} מתוך #{total_parts}"
-    newname += t.name[pos+1..-1] unless pos == -1
-    t.name = newname
+    pos = t.name.index('/') || 0
+    newname = t.name[0..pos-1]+" קבוצה #{partno} מתוך #{total_parts}"
+    newname += t.name[pos..-1] unless pos == 0
+    t.name = newname.gsub('  ',' ')
     t.documents_count = 0
     t.creator_id = current_user.id
     # t.parent_id = task.id # setting the parent_id before save would trigger Task.clone_parent_documents, which we *don't* want here.
