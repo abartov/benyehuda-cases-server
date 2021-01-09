@@ -29,7 +29,7 @@ class Document < ActiveRecord::Base
     :url => ':s3_domain_url'
   # attr_accessible :file, :done
   validates_attachment_presence :file
-  validates_attachment_size :file, :less_than => 10.megabytes
+  validates_attachment_size :file, :less_than => 50.megabytes
   do_not_validate_attachment_file_type :file
   validates :user_id, :task_id, :presence => true
 
