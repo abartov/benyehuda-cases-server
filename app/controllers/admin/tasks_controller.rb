@@ -64,42 +64,49 @@ class Admin::TasksController < InheritedResources::Base
         redirect_to task_path(@task)
       else
         if params[:commit].present? # process filled out form
-          @new_tasks = []
-          @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
-          @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
-          @total_parts = @starter_ids.count
-          if @total_parts < 2
-            flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
-            redirect_to task_path(@task)
-          else
-            partno = 1
-            next_task = prepare_cloned_task(@task, partno, @total_parts)
-            docs = []
-            @jpegs.each do |jpeg|
-              next if @skip_ids.include?(jpeg.id)
-              if @starter_ids.include?(jpeg.id)
-                unless docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
-                  @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
-                  docs = []
-                  partno += 1
-                  next_task = prepare_cloned_task(@task, partno, @total_parts)
+          Task.transction do
+            begin
+              @task.lock!('FOR UPDATE NOWAIT')
+              @new_tasks = []
+              @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
+              @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
+              @total_parts = @starter_ids.count
+              if @total_parts < 2
+                flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
+                redirect_to task_path(@task)
+              else
+                partno = 1
+                next_task = prepare_cloned_task(@task, partno, @total_parts)
+                docs = []
+                @jpegs.each do |jpeg|
+                  next if @skip_ids.include?(jpeg.id)
+                  if @starter_ids.include?(jpeg.id)
+                    unless docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
+                      @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
+                      docs = []
+                      partno += 1
+                      next_task = prepare_cloned_task(@task, partno, @total_parts)
+                    end
+                  end
+                  docs << jpeg
                 end
+                @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0 # finish last split task, if any docs are left
+                # prepare new cloned tasks with all metadata copied and ordinal number incremented
+                  # iterate through scans until next split marker or end
+                    # (if final set equals the document set of the task, report and do nothing)
+                  # clone attachments to cloned task
+                # change master task type to 'scan' and status to 'עלה לאתר'
+                @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
+                @task.editor_id = current_user.id
+                @task.assignee_id = current_user.id
+                @task.state = :ready_to_publish
+                @task.save!
+                flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
+                redirect_to task_path(@task)
               end
-              docs << jpeg
+            rescue
+              head :ok # weirdly, split requests that take a while seem to trigger a second request that starts processing in parallel
             end
-            @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0 # finish last split task, if any docs are left
-            # prepare new cloned tasks with all metadata copied and ordinal number incremented
-              # iterate through scans until next split marker or end
-                # (if final set equals the document set of the task, report and do nothing)
-              # clone attachments to cloned task
-            # change master task type to 'scan' and status to 'עלה לאתר'
-            @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
-            @task.editor_id = current_user.id
-            @task.assignee_id = current_user.id
-            @task.state = :ready_to_publish
-            @task.save!
-            flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
-            redirect_to task_path(@task)
           end
         end # else render splitting view
       end
