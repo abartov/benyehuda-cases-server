@@ -8,7 +8,6 @@
   - else
     %td.style7= Task.textify_state(task.state)
   / %td!= link_to h(task.name), task_path(task)
-  / %td= task.kind.try(:name)
   / %td!= person_link(task.editor)
   %td.style12= task.documents_count
   %td.style7= "#{task.percent_done}%"
