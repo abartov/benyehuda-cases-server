@@ -64,7 +64,7 @@ class Admin::TasksController < InheritedResources::Base
         redirect_to task_path(@task)
       else
         if params[:commit].present? # process filled out form
-          Task.transction do
+          Task.transaction do
             begin
               @task.lock!('FOR UPDATE NOWAIT')
               @new_tasks = []
