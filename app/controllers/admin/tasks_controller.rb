@@ -64,9 +64,13 @@ class Admin::TasksController < InheritedResources::Base
         redirect_to task_path(@task)
       else
         if params[:commit].present? # process filled out form
-          Task.transaction do
-            begin
-              @task.lock!('FOR UPDATE NOWAIT')
+          if @task.priority == 'being_split'
+            head :ok # weirdly, split requests that take a while seem to trigger a second request that starts processing in parallel
+          else
+            Task.transaction do
+              old_priority = @task.priority
+              @task.priority = 'being_split' # hacky lock because pessimistic locking didn't work for me on the Amazon RDS server
+              @task.save!
               @new_tasks = []
               @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
               @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
@@ -100,12 +104,11 @@ class Admin::TasksController < InheritedResources::Base
                 @task.editor_id = current_user.id
                 @task.assignee_id = current_user.id
                 @task.state = :ready_to_publish
+                @task.priority = old_priority
                 @task.save!
                 flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
                 redirect_to task_path(@task)
               end
-            rescue
-              head :ok # weirdly, split requests that take a while seem to trigger a second request that starts processing in parallel
             end
           end
         end # else render splitting view
