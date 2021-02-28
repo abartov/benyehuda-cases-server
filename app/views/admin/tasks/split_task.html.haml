@@ -20,7 +20,7 @@
       %h2= 'יש לסמן את תיבת הסימון מימין לכל סריקה שצריכה לפתוח משימה.'
       %p= 'סריקות עוקבות תצורפנה לאותה משימה, עד לסריקה המסומנת הבאה.'
       %br
-      %form{method: 'POST'}
+      %form{action: split_task_path(@task), method: 'POST'}
         .thumbs_container
           = hidden_field_tag :id, @task.id
           - @jpegs.each do |jpeg|
