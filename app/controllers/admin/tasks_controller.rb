@@ -67,48 +67,46 @@ class Admin::TasksController < InheritedResources::Base
           if @task.priority == 'being_split'
             head :ok # weirdly, split requests that take a while seem to trigger a second request that starts processing in parallel
           else
-            Task.transaction do
-              old_priority = @task.priority
-              @task.priority = 'being_split' # hacky lock because pessimistic locking didn't work for me on the Amazon RDS server
-              @task.save!
-              @new_tasks = []
-              @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
-              @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
-              @total_parts = @starter_ids.count
-              if @total_parts < 2
-                flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
-                redirect_to task_path(@task)
-              else
-                partno = 1
-                next_task = prepare_cloned_task(@task, partno, @total_parts)
-                docs = []
-                @jpegs.each do |jpeg|
-                  next if @skip_ids.include?(jpeg.id)
-                  if @starter_ids.include?(jpeg.id)
-                    unless docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
-                      @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
-                      docs = []
-                      partno += 1
-                      next_task = prepare_cloned_task(@task, partno, @total_parts)
-                    end
+            old_priority = @task.priority
+            @task.priority = 'being_split' # hacky lock because pessimistic locking didn't work for me on the Amazon RDS server
+            @task.save!
+            @new_tasks = []
+            @starter_ids = params.keys.grep(/doc_/) {|x| x[x.index('_')+1..-1].to_i}
+            @skip_ids = params.keys.grep(/skip_/) {|x| x[x.index('_')+1..-1].to_i}
+            @total_parts = @starter_ids.count
+            if @total_parts < 2
+              flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
+              redirect_to task_path(@task)
+            else
+              partno = 1
+              next_task = prepare_cloned_task(@task, partno, @total_parts)
+              docs = []
+              @jpegs.each do |jpeg|
+                next if @skip_ids.include?(jpeg.id)
+                if @starter_ids.include?(jpeg.id)
+                  unless docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
+                    @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
+                    docs = []
+                    partno += 1
+                    next_task = prepare_cloned_task(@task, partno, @total_parts)
                   end
-                  docs << jpeg
                 end
-                @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0 # finish last split task, if any docs are left
-                # prepare new cloned tasks with all metadata copied and ordinal number incremented
-                  # iterate through scans until next split marker or end
-                    # (if final set equals the document set of the task, report and do nothing)
-                  # clone attachments to cloned task
-                # change master task type to 'scan' and status to 'עלה לאתר'
-                @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
-                @task.editor_id = current_user.id
-                @task.assignee_id = current_user.id
-                @task.state = :ready_to_publish
-                @task.priority = old_priority
-                @task.save!
-                flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
-                redirect_to task_path(@task)
+                docs << jpeg
               end
+              @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0 # finish last split task, if any docs are left
+              # prepare new cloned tasks with all metadata copied and ordinal number incremented
+                # iterate through scans until next split marker or end
+                  # (if final set equals the document set of the task, report and do nothing)
+                # clone attachments to cloned task
+              # change master task type to 'scan' and status to 'עלה לאתר'
+              @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
+              @task.editor_id = current_user.id
+              @task.assignee_id = current_user.id
+              @task.state = :ready_to_publish
+              @task.priority = old_priority
+              @task.save!
+              flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
+              redirect_to task_path(@task)
             end
           end
         end # else render splitting view
@@ -131,6 +129,7 @@ class Admin::TasksController < InheritedResources::Base
     newname += t.name[pos..-1] unless pos == 0
     t.name = newname.gsub('  ',' ')
     t.documents_count = 0
+    t.priority = ''
     t.creator_id = current_user.id
     # t.parent_id = task.id # setting the parent_id before save would trigger Task.clone_parent_documents, which we *don't* want here.
     task.task_properties.each {|tp| t.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
