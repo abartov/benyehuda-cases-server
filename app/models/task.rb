@@ -43,7 +43,7 @@ class Task < ActiveRecord::Base
   belongs_to :creator, :class_name => "User"
   belongs_to :editor, :class_name => "User"
   belongs_to :assignee, :class_name => "User"
-
+  belongs_to :project
   belongs_to :parent, :class_name => "Task"
   has_many   :children, :class_name => "Task", :foreign_key => "parent_id"
 
@@ -78,7 +78,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source
+  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source, :project_id, :hours
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, ->{order("comments.task_id, comments.created_at")}
@@ -137,6 +137,8 @@ class Task < ActiveRecord::Base
     search_opts[:with][:independent] = ("true" == opts[:independent]) unless opts[:independent].blank?
     search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
+    search_opts[:conditions][:project] = opts[:project] unless opts[:project].blank?
+    
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?

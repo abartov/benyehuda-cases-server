@@ -4,6 +4,10 @@
   = @task.kind.try(:name)
   %br
   %b
+    = 'מיזם: '
+  = @task.project.try(:name)
+  %br
+  %b
     = 'סוגה: '
   = @task.try(:genre)
   != "&nbsp;&nbsp;&nbsp;"

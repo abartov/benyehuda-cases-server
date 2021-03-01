@@ -1,4 +1,9 @@
 Rails.application.routes.draw do
+  resources :projects
+  resources :projects
+  resources :projects
+  resources :projects
+  resources :projects
   get "report/stalled"
   get 'report/missing_metadata'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'

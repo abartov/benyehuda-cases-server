@@ -19,6 +19,7 @@ gem 'rails_autolink'
 gem "tzinfo"
 gem 'formtastic'
 gem 'haml'
+gem 'haml-rails'
 # upgrade to Rails 4.x # gem 'fast_gettext'
 gem 'gettext_i18n_rails'
 gem 'memoist' # replacement for ActionSupport::Memoizable

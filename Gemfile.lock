@@ -103,12 +103,23 @@ GEM
     haml (5.1.2)
       temple (>= 0.8.0)
       tilt
+    haml-rails (1.0.0)
+      actionpack (>= 4.0.1)
+      activesupport (>= 4.0.1)
+      haml (>= 4.0.6, < 6.0)
+      html2haml (>= 1.0.1)
+      railties (>= 4.0.1)
     has_scope (0.7.2)
       actionpack (>= 4.1)
       activesupport (>= 4.1)
     high_voltage (1.2.1)
     hoe (2.8.0)
       rake (>= 0.8.7)
+    html2haml (2.2.0)
+      erubis (~> 2.7.0)
+      haml (>= 4.0, < 6)
+      nokogiri (>= 1.6.0)
+      ruby_parser (~> 3.5)
     httparty (0.18.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
@@ -295,6 +306,7 @@ DEPENDENCIES
   gettext_i18n_rails
   gravtastic (= 2.2.0)
   haml
+  haml-rails
   has_scope
   high_voltage (= 1.2.1)
   hoe (= 2.8.0)
