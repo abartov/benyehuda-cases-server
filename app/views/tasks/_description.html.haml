@@ -79,8 +79,9 @@
     .boxbody
       %b
         = _("Chained tasks")+": "
-      - @task.children.each do |c|
-        != link_to(h(c.name), task_path(c))
+      %ol
+        - @task.children.each do |c|
+          %li!= link_to(h(c.name), task_path(c))
   - if @task.parent
     .midtitle
       .boxbody
