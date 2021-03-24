@@ -8,6 +8,10 @@ class VolunteerRequestsController < InheritedResources::Base
 
   def create
     @volunteer_request = current_user.create_volunteer_request(params[:volunteer_request])
+    if params[:zehut].present?
+      current_user.zehut = params[:zehut]
+      current_user.save!
+    end
     if @volunteer_request.new_record?
       render :action => "new"
       return

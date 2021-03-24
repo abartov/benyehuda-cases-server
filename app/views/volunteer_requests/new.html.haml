@@ -1,17 +1,20 @@
-- @page_title = _("New Volunteer Request")
+- @page_title = 'הצטרפות כמתנדב/ת'
 - render_page_title
 
 = semantic_form_for(@volunteer_request, :live_validations => true) do |f|
   = f.inputs do
     = f.semantic_errors
     = f.input :preferences, :as => :text, :label => _("Preferences"), :hint => _("State your preferred material (author, genre, etc.), and make any other comment you wish to communicate to the editors")
-  -# XXX temporarily f.inputs do
-    = f.fields_for(:user, current_user) do |uf|
+    = label_tag 'מספר תעודת זהות (לא חובה)'
+    = text_field_tag :zehut
+    %br
+    = '(דיווח של מספרי הזהות של המתנדבים הפועלים במסגרת הפרויקט נדרש על ידי רשם העמותות, ומאפשר לנו הכרה כמוסד ללא כוונת רווח. לעולם לא נחלוק את מספר הזהות שלכם עם שום גורם אחר, ונודה לכם מאוד אם תיאותו למלאו כאן.)'
+    -#= f.fields_for(:user, current_user) do |uf|
       - uf.input :kind, :as => :select, :collection => VolunteerKind.all, :include_blank => false, :label => _("Volunteer Kind")
   = f.inputs do
     - custom_properties_fields(f, "request")
   = f.inputs do
-    = f.submit _("Request")
+    = f.submit 'הצטרפות'
     .gray-button
       %span
         = link_to _("cancel"), dashboard_path, :style => "color:#565253"

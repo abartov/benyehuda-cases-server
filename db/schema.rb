@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20210228225506) do
+ActiveRecord::Schema.define(version: 20210322211523) do
 
   create_table "assignment_histories", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -247,6 +247,7 @@ ActiveRecord::Schema.define(version: 20210228225506) do
     t.integer  "volunteer_kind_id",        limit: 4
     t.boolean  "on_break"
     t.date     "last_reminder"
+    t.string   "zehut",                    limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
