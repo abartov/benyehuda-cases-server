@@ -12,3 +12,8 @@
     - next if kind_id.nil? or kind_id == 0
     %h2= _(TaskKind.find(kind_id).name)
     %h3= "שעות: #{@hours_by_kind[kind_id]}; משימות: #{@count_by_kind[kind_id]}"
+  %h1= 'פירוט לפי מתנדב/ת'
+  %ul
+    - @hours_by_volunteer.each do |vol_id, hours|
+      - vol = User.find(vol_id)
+      %li= "#{vol.name} – #{vol.zehut} – #{hours} שעות"

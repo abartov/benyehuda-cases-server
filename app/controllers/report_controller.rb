@@ -16,6 +16,7 @@ class ReportController < InheritedResources::Base
     @todate = params[:todate].present? ? Date.parse(params[:todate]) : Date.new(Date.today.year, 12,31) # default to end of current year
     @hours_by_kind = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:kind_id).sum(:hours)
     @count_by_kind = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:kind_id).count
+    @hours_by_volunteer = Task.where("state in ('ready_to_publish', 'approved', 'other_task_creat') and updated_at > ? and updated_at < ?", @fromdate, @todate).group(:assignee_id).sum(:hours)
     @total_hours = @hours_by_kind.values.sum
     @total_tasks = @count_by_kind.values.sum
   end
