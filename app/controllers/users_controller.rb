@@ -1,10 +1,10 @@
 class UsersController < InheritedResources::Base
-  before_filter :require_admin, :only => [:index, :destroy]
-  before_filter :require_no_user, :only => [:new, :create]
-  before_filter :require_owner, :only => [:edit, :update]
-  before_filter :require_owner, :only => [:edit, :update, :take_break]
-  before_filter :require_owner_or_public_profile, :only => :show
-  before_filter :set_default_domain, :only => :create
+  before_action :require_admin, :only => [:index, :destroy]
+  before_action :require_no_user, :only => [:new, :create]
+  before_action :require_owner, :only => [:edit, :update]
+  before_action :require_owner, :only => [:edit, :update, :take_break]
+  before_action :require_owner_or_public_profile, :only => :show
+  before_action :set_default_domain, :only => :create
 
   respond_to :html, :js
 
@@ -32,6 +32,7 @@ class UsersController < InheritedResources::Base
 
   def create
     pps = params.require(:user).permit(:avatar, :name, :email, :password)
+    params = user_params
     @user = build_resource
     @user.email = params[:user] && params[:user][:email] || @user.email
     @user.is_admin = true if User.count.zero?
@@ -47,7 +48,7 @@ class UsersController < InheritedResources::Base
   def update
     @user = User.find(params[:id])
     return _remove_avatar if "true" == params[:remove_avatar]
-
+    params = user_params
     # manual update protected attributes
     if current_user.is_admin?
       @user.is_admin = params[:user].delete(:is_admin)
@@ -148,4 +149,8 @@ class UsersController < InheritedResources::Base
     @user.save
     redirect_to user_path(@user)
   end
+  def user_params
+    params.require(:user).permit(:name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :email, :zehut, :avatar)
+  end
+
 end

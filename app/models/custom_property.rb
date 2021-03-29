@@ -6,7 +6,7 @@ class CustomProperty < ActiveRecord::Base
 
   validates :property_id, :uniqueness => { :scope => [:proprietary_id, :proprietary_type] }
 
-  attr_accessible :property_id, :custom_value
+#  attr_accessible :property_id, :custom_value
 
   scope :visible_for, lambda { |user|
     user.admin_or_editor? ? where("") : where("properties.is_public = 1")

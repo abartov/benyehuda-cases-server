@@ -65,11 +65,13 @@ module TasksHelper
   end
 
   def has_rejection_errors?
-    @task.rejection_comment && !@task.rejection_comment.errors.blank?
+    !@task.valid?
+    #@task.rejection_comment && !@task.rejection_comment.errors.blank?
   end
 
   def has_abandoning_errors?
-    @task.abandoning_comment && !@task.abandoning_comment.errors.blank?
+    return false
+    #@task.abandoning_comment && !@task.abandoning_comment.errors.blank?
   end
 
   def link_to_task_participant_email(task, role, text)

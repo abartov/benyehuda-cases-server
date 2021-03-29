@@ -1,8 +1,8 @@
 require 'httparty'
 
 class TasksController < InheritedResources::Base
-  before_filter :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
-  before_filter :require_editor_or_admin, :only => [:index, :create, :make_comments_editor_only, :get_last_source]
+  before_action :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
+  before_action :require_editor_or_admin, :only => [:index, :create, :make_comments_editor_only, :get_last_source]
   actions :index, :show, :update, :create
 
   EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
@@ -64,6 +64,7 @@ class TasksController < InheritedResources::Base
   end
 
   def create
+    params = task_params
     @task = Task.find(params[:id])
 
     return unless _allow_event?(@task, :create_other_task, current_user)
@@ -108,6 +109,7 @@ class TasksController < InheritedResources::Base
 
   def update
     return unless _allow_event?(resource, params[:event], current_user)
+    params = task_params
 
     # all security verifications passed in allow_event_for?
     return _event_with_comment(params[:event]) if resource.commentable_event?(params[:event])
@@ -162,5 +164,8 @@ protected
     end
 
     false
+  end
+  def task_params
+    params.permit!
   end
 end

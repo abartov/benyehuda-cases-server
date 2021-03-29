@@ -3,7 +3,7 @@ class TaskKind < ActiveRecord::Base
   validates :name, :presence => true, :uniqueness => true
   before_destroy :validate_task_existance, :on => :destroy
 
-  attr_accessible :name
+#  attr_accessible :name
 
   protected
 

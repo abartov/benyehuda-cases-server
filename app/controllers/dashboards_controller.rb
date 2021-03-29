@@ -1,5 +1,5 @@
 class DashboardsController < InheritedResources::Base
-  before_filter :require_user
+  before_action :require_user
   defaults :resource_class => 'Task', :collection_name => 'tasks', :instance_name => 'task'
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]

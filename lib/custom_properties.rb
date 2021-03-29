@@ -16,7 +16,7 @@ module CustomProperties
         end
       end
 
-      attr_accessible association_name
+#      attr_accessible association_name
 
       define_method "#{association_name}=" do |opts|
         opts.each do |property_id, attrs|
@@ -32,7 +32,8 @@ module CustomProperties
         end
       end
 
-      after_save "save_#{association_name}"
+      cbsym = "save_#{association_name}".to_sym
+      after_save cbsym
     end
   end
 end

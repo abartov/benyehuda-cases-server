@@ -1,10 +1,11 @@
 class UsersController < InheritedResources::Base
-  before_filter :require_admin, :only => [:index, :destroy]
-  before_filter :require_no_user, :only => [:new, :create]
-  before_filter :require_owner, :except => [:new, :create, :index]
-  before_filter :set_default_domain, :only => :create
+  before_action :require_admin, :only => [:index, :destroy]
+  before_action :require_no_user, :only => [:new, :create]
+  before_action :require_owner, :except => [:new, :create, :index]
+  before_action :set_default_domain, :only => :create
 
   def create
+    params = user_params
     user = build_resource
     user.is_admin = true if User.count.zero?
     if user.save_without_session_maintenance
@@ -54,5 +55,8 @@ class UsersController < InheritedResources::Base
     if GlobalPreference.get(:domain).blank?
       GlobalPreference.set!(:domain, request.host_with_port)
     end
+  end
+  def user_params
+    params.require(:user).permit(:name, :password, :password_confirmation)
   end
 end

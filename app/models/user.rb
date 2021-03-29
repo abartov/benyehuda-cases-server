@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
     c.crypto_provider = Authlogic::CryptoProviders::Sha512 # addressing a breaking change in Authlogic 3.4.0, sigh (June 2015)
   end
   include Astrails::Auth::Model
-  attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :email, :zehut
+#  attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :email, :zehut, :avatar
 
   has_gravatar
   has_attached_file :avatar, :styles => { :thumb => "50x50>", :medium => "100x100>" },
@@ -23,7 +23,6 @@ class User < ActiveRecord::Base
       :access_key_id     => GlobalPreference.get(:s3_key) || "junk",
       :secret_access_key => GlobalPreference.get(:s3_secret) || "junk",
     }
-  attr_accessible :avatar
   def self.style_to_size(style)
     case style
     when :thumb
@@ -130,7 +129,9 @@ class User < ActiveRecord::Base
     update_attribute(:activation_email_sent_at, Time.now.utc)
     deliver_activation_instructions_without_db_update!
   end
-  alias_method_chain :deliver_activation_instructions!, :db_update
+  alias_method :deliver_activation_instructions_without_db_update!, :deliver_activation_instructions!
+  alias_method :deliver_activation_instructions!, :deliver_activation_instructions_with_db_update!
+  #alias_method_chain :deliver_activation_instructions!, :db_update
 
   def admin_or_editor?
     try(:is_admin?) || try(:is_editor?)

@@ -1,5 +1,5 @@
 class SiteNotice < ActiveRecord::Base
-  attr_accessible :start_displaying_at, :end_displaying_at, :html
+#  attr_accessible :start_displaying_at, :end_displaying_at, :html
 
   validates :html, :presence => true
 

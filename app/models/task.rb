@@ -78,7 +78,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source, :project_id, :hours
+#  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source, :project_id, :hours
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, ->{order("comments.task_id, comments.created_at")}

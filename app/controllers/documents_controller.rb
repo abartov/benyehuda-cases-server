@@ -1,7 +1,7 @@
 class DocumentsController < InheritedResources::Base
   belongs_to :task
-  before_filter :require_task_participant_or_editor, :only => [:new, :create, :show]
-  before_filter :require_owner, :only => :destroy
+  before_action :require_task_participant_or_editor, :only => [:new, :create, :show]
+  before_action :require_owner, :only => :destroy
   actions :new, :create, :destroy, :show
   layout nil
 

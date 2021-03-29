@@ -5,7 +5,7 @@ end
 module CurrentController
   def self.included(base)
     base.class_eval do
-      before_filter :set_current_controller
+      before_action :set_current_controller
     end
   end
 

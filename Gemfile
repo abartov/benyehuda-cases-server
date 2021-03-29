@@ -1,12 +1,13 @@
 source 'http://rubygems.org'
 
 gem 'sassc-rails'
-gem 'rails', '~>4.2'
+gem 'rails', '~>5.0'
 gem 'rake'
-gem 'rack' # once we upgrade to Rails 5.x, set '>=2.1.4' to avoid vuln
+gem 'rack','>=2.1.4' # once we upgrade to Rails 5.x, set '>=2.1.4' to avoid vuln
 gem "builder"
 gem "json"
-gem 'rails-i18n'
+gem 'marcel', '~>1'
+gem 'rails-i18n', '~> 5.1' # 6.0 for Rails 6.x
 gem 'activerecord-session_store'
 #gem "mysql2", '0.4.9' # Sphinx can't deal with >0.4.9
 gem "mysql2", '~> 0.4'
@@ -20,12 +21,11 @@ gem "tzinfo"
 gem 'formtastic'
 gem 'haml'
 gem 'haml-rails'
-# upgrade to Rails 4.x # gem 'fast_gettext'
 gem 'gettext_i18n_rails'
 gem 'memoist' # replacement for ActionSupport::Memoizable
-gem 'protected_attributes' # for Rails 4.x
-gem 'activerecord-deprecated_finders' # legacy for Rails 4.x
-
+#gem 'protected_attributes' # for Rails 4.x
+#gem 'activerecord-deprecated_finders' # legacy for Rails 4.x
+gem 'bootsnap'
 gem 'ruby_parser', :require => false
 gem "aasm", '~>3.4'
 gem 'mime-types', :require => 'mime/types'
@@ -44,8 +44,11 @@ gem 'has_scope'
 gem 'hoe', '2.8.0'
 
 gem 'aws-sdk', '~> 1'
-gem 'paperclip', '~>4.0'
-gem 'cocaine'
+gem 'aws-sdk-s3'
+#gem 'paperclip', '~>4.0'
+gem 'paperclip'
+
+#gem 'cocaine'
 
 gem 'image_science', :require => false
 #gem 'rmagick', '~>2.0' # upgrade safe once we move to Ruby 2.3+
@@ -55,16 +58,19 @@ gem 'nokogiri'
 gem 'astrails-safe'
 
 # TODO sort this out
-gem 'ZenTest', '4.0.0'
-gem 'test-unit', '1.2.3'
 
 group :test, :development do
+gem 'ZenTest', '4.0.0'
+gem 'test-unit', '1.2.3'
   gem 'rspec-rails'
   gem 'rspec'
   gem 'mocha'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
-  gem 'query_trace', :require => 'query_trace'
+#  gem 'query_trace', :require => 'query_trace'
   gem 'thin'
+  gem 'listen'
+  gem 'byebug'
+  gem 'web-console'
 end
 
 group :test do
@@ -73,4 +79,3 @@ group :test do
   gem 'rspec2-rails-views-matchers'
 end
 
-gem 'byebug'

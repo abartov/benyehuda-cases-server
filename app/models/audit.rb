@@ -5,7 +5,7 @@ class Audit < ActiveRecord::Base
   belongs_to :task
   belongs_to :user
 
-  attr_accessible :hidden, :changed_attrs, :note, :action, :task_id, :user_id
+#  attr_accessible :hidden, :changed_attrs, :note, :action, :task_id, :user_id
 
   serialize :changed_attrs
 

@@ -15,7 +15,7 @@ class Comment < ActiveRecord::Base
   # indeed hard to google for
   validates :user_id, :presence => true
 
-  attr_accessible :message, :editor_eyes_only
+#  attr_accessible :message, :editor_eyes_only
 
   scope :public_comments, ->{where(:editor_eyes_only => false)}
   scope :with_user, ->{includes(:user)}
