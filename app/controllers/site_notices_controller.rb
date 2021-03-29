@@ -11,6 +11,7 @@ class SiteNoticesController < InheritedResources::Base
 
   def create
     params = sitenotice_params
+    remove_extra_params
     create! do |success, failure|
       success.html {redirect_to(site_notices_path)}
       failure.html
@@ -19,6 +20,7 @@ class SiteNoticesController < InheritedResources::Base
 
   def update
     params = sitenotice_params
+    remove_extra_params
     update! do |success, failure|
       success.html {redirect_to(site_notices_path)}
       failure.html
@@ -30,6 +32,9 @@ protected
     @collection ||= SiteNotice.send(params[:all] ? :all : :active).paginate(:page => params[:page], :per_page => params[:per_page])
   end
   def sitenotice_params
-    params.require(:site_notice).permit(:start_displaying_at, :end_displaying_at, :html)
+    params.permit!
+  end
+  def remove_extra_params
+    ['controller','action','task','utf8','_method','authenticity_token','commit'].each{|key| params.delete(key)}
   end
 end
