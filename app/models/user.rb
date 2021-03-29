@@ -1,12 +1,12 @@
 include ThinkingSphinx::Scopes
 class User < ActiveRecord::Base
   acts_as_authentic do |c|
-    c.merge_validates_format_of_email_field_options :live_validator =>
-      /^[A-Z0-9_\.%\+\-]+@(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)$/i
-    c.validates_length_of_password_field_options =
-      {:on => :update, :minimum => 4, :if => :has_no_credentials?}
-    c.validates_length_of_password_confirmation_field_options =
-      {:on => :update, :minimum => 4, :if => :has_no_credentials?}
+    #c.validate_email_field = false
+    #c.validate_login_field = false
+    #c.validate_password_field = false
+    # c.merge_validates_format_of_email_field_options :live_validator => /^[A-Z0-9_\.%\+\-]+@(?:[A-Z0-9\-]+\.)+(?:[A-Z]{2,4}|museum|travel)$/i
+    #c.validates_length_of_password_field_options =       {:on => :update, :minimum => 4, :if => :has_no_credentials?}
+    # c.validates_length_of_password_confirmation_field_options =   {:on => :update, :minimum => 4, :if => :has_no_credentials?}
     c.perishable_token_valid_for = 2.weeks
     c.crypto_provider = Authlogic::CryptoProviders::Sha512 # addressing a breaking change in Authlogic 3.4.0, sigh (June 2015)
   end

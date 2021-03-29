@@ -1,50 +1,50 @@
 # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 # BEWARE! currently implicitly seeded for i18n'ed task ordering through db/seeds.rb
 #
-module Task::States
+module States
 
   def self.included(base)
     base.class_eval do
       include AASM
 
-      aasm_column :state
+      #aasm_column :state
 
       # somebody has to start working on it
-      aasm_state          :unassigned
+      aasm.state          :unassigned
 
       # assigned to assignee and edtior
-      aasm_state          :assigned
+      aasm.state          :assigned
 
       # assignee is stuck and need editor's help
-      aasm_state          :stuck
+      aasm.state          :stuck
 
       # assignee work in progress, and partially ready
       # NOTE: As of Nov 2012, this state is not used.
-      aasm_state          :partial
+      aasm.state          :partial
 
       # assignee complete the work
-      aasm_state          :waits_for_editor
+      aasm.state          :waits_for_editor
 
       # editor rejects the task, assignee should fix whatever is done wrong
-      aasm_state          :rejected
+      aasm.state          :rejected
 
       # editor confirms that task is completed by assignee
-      aasm_state          :approved
+      aasm.state          :approved
 
       # editor marks for technical editing
-      aasm_state          :techedit
+      aasm.state          :techedit
 
       # editor confirms that task is ready to be published
-      aasm_state          :ready_to_publish
+      aasm.state          :ready_to_publish
 
       # editor confirms that a child task created (proofing or other task)
-      aasm_state          :other_task_creat
+      aasm.state          :other_task_creat
 
       validates :state, :presence => true
       validates :assignee, :editor, :presence => true, :if => :should_have_assigned_peers?, :on => :update
 
       # assign a task to new assignee
-      aasm_event :_assign do
+      aasm.event :_assign do
         transitions :from => [:unassigned, :assigned], :to => :assigned
         transitions :from => :waits_for_editor, :to => :waits_for_editor
         transitions :from => :confirmed, :to => :confirmed
@@ -59,48 +59,48 @@ module Task::States
       protected :_assign, :_assign!
 
       # reject assignment
-      aasm_event :_abandon do
+      aasm.event :_abandon do
         transitions :from => [:assigned, :stuck, :partial, :rejected, :confirmed], :to => :unassigned
       end
       protected :_abandon, :_abandon!
 
       # assignee needs editor's help
-      aasm_event :help_required do
+      aasm.event :help_required do
         transitions :from => [:assigned, :partial, :rejected], :to => :stuck
       end
 
       # assignee finished partially her work
-      aasm_event :finish_partially do
+      aasm.event :finish_partially do
         transitions :from => [:assigned, :stuck, :partial, :rejected], :to => :partial
       end
 
       # assignee finished the work
-      aasm_event :finish do
+      aasm.event :finish do
         transitions :from => [:assigned, :stuck, :partial, :rejected, :stuck], :to => :waits_for_editor
       end
 
       # editor approves the work
-      aasm_event :approve do
+      aasm.event :approve do
         transitions :from => :waits_for_editor, :to => :approved
       end
 
       # editor marks for technical editing
-      aasm_event :to_techedit do
+      aasm.event :to_techedit do
         transitions from: :approved, to: :techedit
       end
 
       # editor rejects the work
-      aasm_event :_reject do
+      aasm.event :_reject do
         transitions :from => :waits_for_editor, :to => :rejected
       end
       protected :_reject, :_reject!
 
       # edtior, admin marks as ready to publish
-      aasm_event :complete do
+      aasm.event :complete do
         transitions :from => [:approved, :other_task_creat, :techedit], :to => :ready_to_publish
       end
 
-      aasm_event :create_other_task do
+      aasm.event :create_other_task do
         transitions :from => [:approved, :ready_to_publish, :other_task_creat], :to => :other_task_creat
       end
 
@@ -195,27 +195,27 @@ module Task::States
   end
 
   def simple_assignee_events
-    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["help_required", "finish_partialy"]
+    aasm.events_for_current_state.collect(&:task_event_cleanup) & ["help_required", "finish_partialy"]
   end
 
   def can_be_finished?
-    aasm_events_for_current_state.member?(:finish)
+    aasm.events_for_current_state.member?(:finish)
   end
 
   def simple_editor_events
-    aasm_events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
+    aasm.events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
   end
 
   def can_be_rejected?
-    aasm_events_for_current_state.member?(:_reject)
+    aasm.events_for_current_state.member?(:_reject)
   end
 
   def can_be_abandoned?
-    aasm_events_for_current_state.member?(:_abandon)
+    aasm.events_for_current_state.member?(:_abandon)
   end
 
   def can_create_new_task?
-    aasm_events_for_current_state.member?(:create_other_task)
+    aasm.events_for_current_state.member?(:create_other_task)
   end
 
   def admin_state
@@ -233,7 +233,7 @@ module Task::States
     return false if event.blank?
     return true if user.is_editor?
     return false unless participant?(user)
-    return false unless Task.aasm_events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
+    return false unless Task.aasm.events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
 
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)

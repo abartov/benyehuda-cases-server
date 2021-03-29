@@ -26,7 +26,7 @@ gem 'gettext_i18n_rails'
 gem 'memoist' # replacement for ActionSupport::Memoizable
 gem 'bootsnap'
 gem 'ruby_parser', :require => false
-gem "aasm", '~>3.4'
+gem "aasm", '~> 4' #, '~>3.4'
 gem 'mime-types', :require => 'mime/types'
 gem "fastercsv"
 gem 'airbrake'

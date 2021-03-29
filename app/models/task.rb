@@ -55,8 +55,8 @@ class Task < ActiveRecord::Base
   has_many_custom_properties :task # task_properties
 
   include CommentWithReason
-  include Task::States
-  include Task::Notifications
+  include States
+  include TaskNotifications
 
     belongs_to :kind, :class_name => 'TaskKind'
 
