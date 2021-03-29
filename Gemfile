@@ -5,7 +5,8 @@ gem 'rails', '~>5.0'
 gem 'rake'
 gem 'rack','>=2.1.4' # once we upgrade to Rails 5.x, set '>=2.1.4' to avoid vuln
 gem "builder"
-gem "json"
+gem 'rexml' # required by xml-simple but not yet listed as a dependency in 1.18
+gem "json", '~>2'
 gem 'marcel', '~>1'
 gem 'rails-i18n', '~> 5.1' # 6.0 for Rails 6.x
 gem 'activerecord-session_store'
@@ -43,8 +44,8 @@ gem 'inherited_resources'
 gem 'has_scope'
 gem 'hoe', '2.8.0'
 
-gem 'aws-sdk', '~> 1'
-gem 'aws-sdk-s3'
+#gem 'aws-sdk' , '~> 2'
+gem 'aws-sdk-s3', '~> 1'
 #gem 'paperclip', '~>4.0'
 gem 'paperclip'
 
@@ -55,9 +56,9 @@ gem 'image_science', :require => false
 gem 'mini_magick'
 gem 'nokogiri'
 
-gem 'astrails-safe'
+# gem 'astrails-safe' # depends on obsolete aws-s3
 
-# TODO sort this out
+gem 'scanf' # no longer stdlib in Ruby 2.7+
 
 group :test, :development do
 gem 'ZenTest', '4.0.0'
