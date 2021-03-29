@@ -3,7 +3,7 @@
     = _("Search/Filter")
   .boxcontainer
     .boxbody
-      = form_tag(url_for(params), :method => :get) do
+      = form_tag(url_for(params.permit!), :method => :get) do
         = label_tag :invert_state, _("invert state?")
         = check_box_tag :invert_state, "true", "true" == params[:invert_state]
         = label_tag :state, _("State")
