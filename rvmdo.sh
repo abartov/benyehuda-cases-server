@@ -1,6 +1,6 @@
 #!/bin/bash --login
 . ~/.profile
-rvm use 2.6
+rvm use 3.0
 pwd=`pwd`
 if [[ $pwd =~ "staging" ]]
 then
