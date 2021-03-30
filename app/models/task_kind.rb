@@ -1,7 +1,7 @@
 class TaskKind < ActiveRecord::Base
   has_many :tasks, :dependent => :destroy, :foreign_key => 'kind_id'
   validates :name, :presence => true, :uniqueness => true
-  before_destroy :validate_task_existance, :on => :destroy
+  before_destroy :validate_task_existance #, :on => :destroy
 
 #  attr_accessible :name
 

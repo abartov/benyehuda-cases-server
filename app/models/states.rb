@@ -6,118 +6,118 @@ module States
   def self.included(base)
     base.class_eval do
       include AASM
-
-      #aasm_column :state
-
-      # somebody has to start working on it
-      aasm.state          :unassigned
-
-      # assigned to assignee and edtior
-      aasm.state          :assigned
-
-      # assignee is stuck and need editor's help
-      aasm.state          :stuck
-
-      # assignee work in progress, and partially ready
-      # NOTE: As of Nov 2012, this state is not used.
-      aasm.state          :partial
-
-      # assignee complete the work
-      aasm.state          :waits_for_editor
-
-      # editor rejects the task, assignee should fix whatever is done wrong
-      aasm.state          :rejected
-
-      # editor confirms that task is completed by assignee
-      aasm.state          :approved
-
-      # editor marks for technical editing
-      aasm.state          :techedit
-
-      # editor confirms that task is ready to be published
-      aasm.state          :ready_to_publish
-
-      # editor confirms that a child task created (proofing or other task)
-      aasm.state          :other_task_creat
-
+      aasm.attribute_name('state')
       validates :state, :presence => true
       validates :assignee, :editor, :presence => true, :if => :should_have_assigned_peers?, :on => :update
 
-      # assign a task to new assignee
-      aasm.event :_assign do
-        transitions :from => [:unassigned, :assigned], :to => :assigned
-        transitions :from => :waits_for_editor, :to => :waits_for_editor
-        transitions :from => :confirmed, :to => :confirmed
-        transitions :from => :other_task_creat, :to => :other_task_creat
-        transitions :from => :approved, :to => :approved
-        transitions :from => :approved, :to => :techedit
-        transitions :from => :ready_to_publish, :to => :ready_to_publish
-        transitions :from => :stuck, :to => :stuck
-        transitions :from => :partial, :to => :partial
-        transitions :from => :rejected, :to => :rejected
+      aasm column: :state do
+        # somebody has to start working on it
+        state          :unassigned
+
+        # assigned to assignee and edtior
+        state          :assigned
+
+        # assignee is stuck and need editor's help
+        state          :stuck
+
+        # assignee work in progress, and partially ready
+        # NOTE: As of Nov 2012, this state is not used.
+        state          :partial
+
+        # assignee complete the work
+        state          :waits_for_editor
+
+        # editor rejects the task, assignee should fix whatever is done wrong
+        state          :rejected
+
+        # editor confirms that task is completed by assignee
+        state          :approved
+
+        # editor marks for technical editing
+        state          :techedit
+
+        # editor confirms that task is ready to be published
+        state          :ready_to_publish
+
+        # editor confirms that a child task created (proofing or other task)
+        state          :other_task_creat
+
       end
+        # assign a task to new assignee
+        aasm.event :_assign do
+          transitions :from => [:unassigned, :assigned], :to => :assigned
+          transitions :from => :waits_for_editor, :to => :waits_for_editor
+          transitions :from => :confirmed, :to => :confirmed
+          transitions :from => :other_task_creat, :to => :other_task_creat
+          transitions :from => :approved, :to => :approved
+          transitions :from => :approved, :to => :techedit
+          transitions :from => :ready_to_publish, :to => :ready_to_publish
+          transitions :from => :stuck, :to => :stuck
+          transitions :from => :partial, :to => :partial
+          transitions :from => :rejected, :to => :rejected
+        end
       protected :_assign, :_assign!
 
-      # reject assignment
-      aasm.event :_abandon do
-        transitions :from => [:assigned, :stuck, :partial, :rejected, :confirmed], :to => :unassigned
+        # reject assignment
+        aasm.event :_abandon do
+          transitions :from => [:assigned, :stuck, :partial, :rejected, :confirmed], :to => :unassigned
+        end
+        protected :_abandon, :_abandon!
+
+        # assignee needs editor's help
+        aasm.event :help_required do
+          transitions :from => [:assigned, :partial, :rejected], :to => :stuck
+        end
+
+        # assignee finished partially her work
+        aasm.event :finish_partially do
+          transitions :from => [:assigned, :stuck, :partial, :rejected], :to => :partial
+        end
+
+        # assignee finished the work
+        aasm.event :finish do
+          transitions :from => [:assigned, :stuck, :partial, :rejected, :stuck], :to => :waits_for_editor
+        end
+
+        # editor approves the work
+        aasm.event :approve do
+          transitions :from => :waits_for_editor, :to => :approved
+        end
+
+        # editor marks for technical editing
+        aasm.event :to_techedit do
+          transitions from: :approved, to: :techedit
+        end
+
+        # editor rejects the work
+        aasm.event :_reject do
+          transitions :from => :waits_for_editor, :to => :rejected
+        end
+        protected :_reject, :_reject!
+
+        # edtior, admin marks as ready to publish
+        aasm.event :complete do
+          transitions :from => [:approved, :other_task_creat, :techedit], :to => :ready_to_publish
+        end
+
+        aasm.event :create_other_task do
+          transitions :from => [:approved, :ready_to_publish, :other_task_creat], :to => :other_task_creat
+        end
+
+        before_validation(:pre_process_parent_task, :on => :create)
+        after_create :post_process_parent_task
+
+        scope :visible_in_my_tasks, ->{where("tasks.state NOT IN ('ready_to_publish', 'other_task_creat')")}
+
+        has_reason_comment :_reject, :rejection, :editor, N_("Task rejected")
+        has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
+          task.assignee = nil
+        end
+
+        has_reason_comment(:finish, :finished, :assignee, N_("Task finished"), :allow_blank_messages => true) do |task, request_new_task|
+          task.assignee.set_task_requested.save! if request_new_task.to_bool
+        end
       end
-      protected :_abandon, :_abandon!
-
-      # assignee needs editor's help
-      aasm.event :help_required do
-        transitions :from => [:assigned, :partial, :rejected], :to => :stuck
-      end
-
-      # assignee finished partially her work
-      aasm.event :finish_partially do
-        transitions :from => [:assigned, :stuck, :partial, :rejected], :to => :partial
-      end
-
-      # assignee finished the work
-      aasm.event :finish do
-        transitions :from => [:assigned, :stuck, :partial, :rejected, :stuck], :to => :waits_for_editor
-      end
-
-      # editor approves the work
-      aasm.event :approve do
-        transitions :from => :waits_for_editor, :to => :approved
-      end
-
-      # editor marks for technical editing
-      aasm.event :to_techedit do
-        transitions from: :approved, to: :techedit
-      end
-
-      # editor rejects the work
-      aasm.event :_reject do
-        transitions :from => :waits_for_editor, :to => :rejected
-      end
-      protected :_reject, :_reject!
-
-      # edtior, admin marks as ready to publish
-      aasm.event :complete do
-        transitions :from => [:approved, :other_task_creat, :techedit], :to => :ready_to_publish
-      end
-
-      aasm.event :create_other_task do
-        transitions :from => [:approved, :ready_to_publish, :other_task_creat], :to => :other_task_creat
-      end
-
-      before_validation(:pre_process_parent_task, :on => :create)
-      after_create :post_process_parent_task
-
-      scope :visible_in_my_tasks, ->{where("tasks.state NOT IN ('ready_to_publish', 'other_task_creat')")}
-
-      has_reason_comment :_reject, :rejection, :editor, N_("Task rejected")
-      has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
-        task.assignee = nil
-      end
-
-      has_reason_comment(:finish, :finished, :assignee, N_("Task finished"), :allow_blank_messages => true) do |task, request_new_task|
-        task.assignee.set_task_requested.save! if request_new_task.to_bool
-      end
-    end
   end
 
   def request_new_task
@@ -193,29 +193,31 @@ module States
     self.task_properties.each {|tp| new_task.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
     new_task
   end
-
+  def events_for_current_state
+    self.aasm.events.map(&:name)
+  end
   def simple_assignee_events
-    aasm.events_for_current_state.collect(&:task_event_cleanup) & ["help_required", "finish_partialy"]
+    events_for_current_state.collect(&:task_event_cleanup) & ["help_required", "finish_partialy"]
   end
 
   def can_be_finished?
-    aasm.events_for_current_state.member?(:finish)
+    events_for_current_state.member?(:finish)
   end
 
   def simple_editor_events
-    aasm.events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
+    events_for_current_state.collect(&:task_event_cleanup) & ["approve", "to_techedit", "complete"]
   end
 
   def can_be_rejected?
-    aasm.events_for_current_state.member?(:_reject)
+    events_for_current_state.member?(:_reject)
   end
 
   def can_be_abandoned?
-    aasm.events_for_current_state.member?(:_abandon)
+    events_for_current_state.member?(:_abandon)
   end
 
   def can_create_new_task?
-    aasm.events_for_current_state.member?(:create_other_task)
+    events_for_current_state.member?(:create_other_task)
   end
 
   def admin_state
@@ -233,7 +235,7 @@ module States
     return false if event.blank?
     return true if user.is_editor?
     return false unless participant?(user)
-    return false unless Task.aasm.events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
+    return false unless Task.events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
 
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)
