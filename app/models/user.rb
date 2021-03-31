@@ -19,6 +19,7 @@ class User < ActiveRecord::Base
     :bucket         => GlobalPreference.get(:s3_bucket),
     :path =>        "users/:id/avatars/:style/:filename",
     :s3_protocol => :https,
+    s3_region: 'us-east-1',
     :s3_credentials => {
       :access_key_id     => GlobalPreference.get(:s3_key) || "junk",
       :secret_access_key => GlobalPreference.get(:s3_secret) || "junk",

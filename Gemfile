@@ -44,8 +44,8 @@ gem 'hoe', '2.8.0'
 
 #gem 'aws-sdk' , '~> 2'
 gem 'aws-sdk-s3', '~> 1'
-#gem 'paperclip', '~>4.0'
-gem 'paperclip'
+#gem 'paperclip'
+gem 'kt-paperclip' # the maintained version of paperclip
 
 #gem 'cocaine'
 
