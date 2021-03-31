@@ -90,7 +90,7 @@ module TasksHelper
   end
 
   def task_states_for_select
-    Task.aasm_states.collect(&:name).collect(&:to_s).map{|s| [Task.textify_state(s), s]}
+    Task.aasm.states.collect(&:name).collect(&:to_s).map{|s| [Task.textify_state(s), s]}
   end
 
   def task_difficulties_for_select
