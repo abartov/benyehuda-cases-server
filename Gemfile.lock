@@ -110,6 +110,7 @@ GEM
     erubi (1.10.0)
     erubis (2.7.0)
     eventmachine (1.2.7)
+    execjs (2.7.0)
     factory_girl (2.3.2)
       activesupport
     factory_girl_rails (1.4.0)
@@ -313,6 +314,8 @@ GEM
     tilt (2.0.10)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
+    uglifier (4.2.0)
+      execjs (>= 0.3.0, < 3)
     vlad (1.4.0)
       open4
       rake (>= 0.8.1)
@@ -384,6 +387,7 @@ DEPENDENCIES
   thin
   thinking-sphinx
   tzinfo
+  uglifier
   vlad (= 1.4.0)
   web-console
   whenever
