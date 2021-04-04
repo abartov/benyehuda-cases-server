@@ -15,5 +15,6 @@
   %h1= 'פירוט לפי מתנדב/ת'
   %ul
     - @hours_by_volunteer.each do |vol_id, hours|
-      - vol = User.find(vol_id)
-      %li= "#{vol.name} – #{vol.zehut} – #{hours} שעות"
+      - if User.exists?(vol_id)
+        - vol = User.find(vol_id)
+        %li= "#{vol.name} – #{vol.zehut} – #{hours} שעות"
