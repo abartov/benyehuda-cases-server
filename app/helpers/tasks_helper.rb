@@ -26,7 +26,7 @@ module TasksHelper
     task.full_nikkud ? _("Full Nikkud") : _("No")
   end
   def textify_rashi(task)
-    task.rashi ? _("Yes") : _("No")
+    [true,1,'1'].include?(task.rashi) ? _("Yes") : _("No")
   end
   def upload_javascripts
     session_key = Rails.application.config.session_options[:key]
