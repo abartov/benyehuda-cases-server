@@ -33,12 +33,15 @@ class TasksController < InheritedResources::Base
           tmpjpeg.flush
         end
         tmpfilename = tmpfile.path
+        inputfiles = tmpfilename+'_input.txt'
+        File.open(inputfiles, 'w'){|f| f.write(tmpjpegs.map{|tj| tj.path}.join("\n"))}
         # run the conversion
         # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-        `convert #{tmpjpegs.map{|tj| tj.path}.join(' ')} #{tmpfilename}`
+        `convert @#{inputfiles} #{tmpfilename}`
         pdf = File.read(tmpfilename)
         send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         File.delete(tmpfilename) # delete temporary generated PDF
+        File.delete(inputfiles)
       rescue
         redirect_to '/'
       ensure
