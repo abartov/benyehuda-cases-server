@@ -1,10 +1,10 @@
 class AssignmentHistoriesController < InheritedResources::Base
   belongs_to :user
-  before_filter :require_user
+  before_action :require_user
   actions :index
 
 protected
   def collection
-    @collection ||= end_of_association_chain.reverse_order.with_task.all
+    @collection ||= end_of_association_chain.rev_order.with_task.all
   end
 end

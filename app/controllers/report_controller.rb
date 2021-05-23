@@ -1,5 +1,5 @@
 class ReportController < InheritedResources::Base
-  before_filter :require_editor_or_admin #, :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
+  before_action :require_editor_or_admin #, :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
   actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
 
   def index

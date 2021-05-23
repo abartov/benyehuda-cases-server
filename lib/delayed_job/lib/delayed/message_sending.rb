@@ -15,7 +15,11 @@ module Delayed
         define_method(with_method) do |*args|
           send_later(without_method, *args)
         end
-        alias_method_chain method, :send_later
+        # alias_method_chain method, :send_later
+        alias_method "#{method}_without_send_later".to_sym, method.to_sym
+        alias_method method.to_sym, "#{method}_with_send_later".to_sym
+#        alias_method method, :send_later
+#        alias_method method, :send_later
       end
     end
   end                               

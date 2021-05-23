@@ -1,16 +1,24 @@
 class Admin::TasksController < InheritedResources::Base
-  before_filter :require_admin, :only => [:create, :update, :changes, :split_task]
-  before_filter :require_editor_or_admin, :only => :index
+  include ActionController::Cookies  #include ActionController
+  before_action :load_authlogic
+  before_action :require_admin, :only => [:create, :update, :changes, :split_task]
+  before_action :require_editor_or_admin, :only => :index
   actions :index, :new, :create, :edit, :update, :destroy, :changes, :split_task
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
   respond_to :js
 
+  def new
+    remove_extra_params
+    super
+  end
   def create
+    params = task_params
     @task = current_user.created_tasks.build(params[:task])
     resource.admin_state = params[:task][:admin_state] || resource.admin_state
     resource.editor_id = params[:task][:editor_id] || resource.editor_id
     resource.assignee_id = params[:task][:assignee_id] || resource.assignee_id
+    remove_extra_params
     create! do |success, failure|
       success.html do
         redirect_to (params[:commit] == _("Save and New")) ? new_admin_task_path : task_path(@task)
@@ -19,9 +27,11 @@ class Admin::TasksController < InheritedResources::Base
   end
 
   def update
+    params = task_params
     resource.admin_state = params[:task][:admin_state] || resource.admin_state
     resource.editor_id = params[:task][:editor_id] || resource.editor_id
     resource.assignee_id = params[:task][:assignee_id] || resource.assignee_id
+    remove_extra_params
     update! do |success, failure|
       success.html {redirect_to task_path(resource)}
     end
@@ -148,5 +158,14 @@ class Admin::TasksController < InheritedResources::Base
     end
     task.save!
     return task
+  end
+  def task_params
+    params.permit!
+  end
+  def remove_extra_params
+    ['controller','action','task','utf8','_method','authenticity_token','commit'].each{|key| params.delete(key)}
+  end
+  def load_authlogic
+    Authlogic::Session::Base.controller = Authlogic::ControllerAdapters::RailsAdapter.new(self) if Authlogic::Session::Base.controller.nil?
   end
 end

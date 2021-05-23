@@ -1,4 +1,3 @@
-bin
 .bundle
 .rvmrc
 config/*.sphinx.conf
@@ -34,3 +33,5 @@ old_locale.zip
 stats.diff
 tasks.code-workspace
 run.sh
+
+/config/master.key

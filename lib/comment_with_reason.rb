@@ -21,13 +21,17 @@ module CommentWithReason
 
     def has_reason_comment(event, reason, actor, flash, options = {})
       comment_attribute = "#{reason}_comment"
-      attr_accessor comment_attribute
-      attr_accessible comment_attribute
+      define_method comment_attribute do
+        self.instance_variable_get('@'+comment_attribute)
+      end
+      define_method "#{comment_attribute}=" do |val|
+        self.instance_variable_set('@'+comment_attribute, val)
+      end
+#      attr_accessible comment_attribute
 
       human_event_name = event.to_sym.task_event_cleanup
       @event_completed_messages ||= {}
       @event_completed_messages[human_event_name] = flash
-
       define_method "#{event.to_sym.task_event_cleanup}_with_comment" do |message, opts|
         unless options[:allow_blank_messages] && message.blank?
           comment = self.comments.build(:message => message)

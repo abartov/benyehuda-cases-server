@@ -1,4 +1,4 @@
-module Task::Notifications
+module TaskNotifications
 
   SKIP_STATES = [:unassigned, :ready_to_publish, :other_task_creat]
 

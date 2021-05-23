@@ -22,6 +22,7 @@ class Document < ActiveRecord::Base
     :path =>        "documents/:id/:filename",
     :default_url   => "",
     :s3_protocol => :https,
+    s3_region: 'us-east-1',
     :s3_credentials => {
       :access_key_id     => GlobalPreference.get(:s3_key),
       :secret_access_key => GlobalPreference.get(:s3_secret),

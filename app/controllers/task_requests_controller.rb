@@ -1,5 +1,5 @@
 class TaskRequestsController < ApplicationController
-  before_filter :require_volunteer
+  before_action :require_volunteer
 
   def create
     current_user.set_task_requested.save!

@@ -7,7 +7,7 @@ class VolunteerRequest < ActiveRecord::Base
 
   accepts_nested_attributes_for :user, :allow_destroy => false
 
-  attr_accessible :preferences , :user_attributes
+#  attr_accessible :preferences , :user_attributes
 
   scope :pending, ->{where("volunteer_requests.approved_at is NULL")}
   scope :by_request_time, ->{order("volunteer_requests.created_at")}
