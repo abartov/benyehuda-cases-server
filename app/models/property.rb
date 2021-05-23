@@ -8,7 +8,7 @@ class Property < ActiveRecord::Base
   validates :property_type, :inclusion => { :in => TYPES }
   validates :title, :uniqueness => { :scope => :parent_type }
 
-  attr_accessible :title, :parent_type, :property_type, :is_public, :comment
+#  attr_accessible :title, :parent_type, :property_type, :is_public, :comment
 
   scope :by_parent_type_and_title, ->{order("properties.parent_type, properties.title")}
 

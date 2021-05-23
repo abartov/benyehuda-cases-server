@@ -4,8 +4,8 @@ class PasswordsController < InheritedResources::Base
 
   actions :new, :update, :edit
 
-  before_filter :require_no_user, :except => [:edit, :update, :reset_password_by_editor]
-  before_filter :require_editor, :only => [:reset_password_by_editor]
+  before_action :require_no_user, :except => [:edit, :update, :reset_password_by_editor]
+  before_action :require_editor, :only => [:reset_password_by_editor]
 
   # new! + new.html.haml
 

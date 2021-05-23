@@ -94,6 +94,7 @@ p{margin:0 0 18px;}
   font:1.5em/1.185 Arial, Helvetica, sans-serif;
 }
 .instructions{
+	font-size: 125%;
   background: #eaeefa;
   border-radius:10px;
 }
@@ -645,4 +646,34 @@ div.ajaxed {
 	padding-right: 15px;
 	font-weight: bold;
 	font-size:120%;
+}
+
+.thumbs_container{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-content: center;
+}
+.thumb {
+	width: 400px;
+	border: 2px;
+	border-style: solid;
+	padding:10px;
+}
+.cb_start_split{
+	height: 40px;
+	width: 40px;
+}
+.start_split {
+	font-size: 20px;
+}
+.cb_skip_doc{
+	height: 40px;
+	width: 40px;
+}
+.skip_doc {
+	font-size: 20px;
+}
+.center {
+	text-align: center;
 }

@@ -1,6 +1,7 @@
 %tr
   %td= unassigned_task.id
   %td= unassigned_task.name
+  %td= unassigned_task.try(:genre)
   %td= unassigned_task.kind.try(:name)
   %td= Task.textify_state(unassigned_task.state)
   %td= unassigned_task.documents_count

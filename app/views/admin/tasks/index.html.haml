@@ -14,6 +14,7 @@
         %th= link_to _("Creater"), admin_tasks_path(:order_by => {:includes => "creator", :property => "users.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
         %th= link_to _("Last Updated"), admin_tasks_path(:order_by => {:property => "tasks.updated_at", :dir => order_direction(params[:order_by].try(:[], :dir))})
         %th= link_to _("Name"), admin_tasks_path(:order_by => {:property => "tasks.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
+        %th= link_to 'סוגה', admin_tasks_path(:order_by => {property: "tasks.genre", dir: order_direction(params[:order_by].try(:[],:dir))})
         %th= link_to _("Kind"), admin_tasks_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
         %th= link_to _("Editor"), admin_tasks_path(:order_by => {:includes => "editor", :property => "users.name", :dir => order_direction(params[:order_by].try(:[], :dir))})
         %th= link_to _("Assignee"), admin_tasks_path(:order_by => {:includes => "assignee", :property => "users.name", :dir => order_direction(params[:order_by].try(:[], :dir))})

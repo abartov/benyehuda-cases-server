@@ -15,6 +15,7 @@
     %tr
       %th &nbsp;
       %th= _("Name")
+      %th= 'סוגה'
       %th= _("Kind")
       %th= _("State")
       %th= _("Files")
@@ -22,5 +23,4 @@
 
     != render(:partial => "unassigned_task", :collection => @tasks)
 
-  / != will_paginate(@tasks, :renderer => 'RemoteLinkRenderer')
-  != will_paginate(@tasks, params.merge(:renderer => RemoteLinkPaginationHelper::LinkRenderer))
+  != will_paginate(@tasks)

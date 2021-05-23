@@ -21,6 +21,8 @@ class Document < ActiveRecord::Base
     :bucket         => GlobalPreference.get(:s3_bucket),
     :path =>        "documents/:id/:filename",
     :default_url   => "",
+    :s3_protocol => :https,
+    s3_region: 'us-east-1',
     :s3_credentials => {
       :access_key_id     => GlobalPreference.get(:s3_key),
       :secret_access_key => GlobalPreference.get(:s3_secret),
@@ -28,7 +30,7 @@ class Document < ActiveRecord::Base
     :url => ':s3_domain_url'
   # attr_accessible :file, :done
   validates_attachment_presence :file
-  validates_attachment_size :file, :less_than => 10.megabytes
+  validates_attachment_size :file, :less_than => 50.megabytes
   do_not_validate_attachment_file_type :file
   validates :user_id, :task_id, :presence => true
 

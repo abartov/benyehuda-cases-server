@@ -1,0 +1,63 @@
+- set_tab :dashboard, false
+
+!= link_to _("back to dashboard"), dashboard_path
+
+.task-title
+  %b
+    = _("Task title")+": "
+  = @task.name
+.box
+  /.boxhead
+  /  %b
+  /    = _("Task details")
+  /.boxcontainer
+  /  != render(:partial => "tasks/description")
+  .boxhead
+    %b
+      = 'פיצול משימות'
+  .boxcontainer
+    .boxbody
+      %h2= 'יש לסמן את תיבת הסימון מימין לכל סריקה שצריכה לפתוח משימה.'
+      %p= 'סריקות עוקבות תצורפנה לאותה משימה, עד לסריקה המסומנת הבאה.'
+      %br
+      = form_tag(split_task_path(@task), method: 'POST') do
+        .thumbs_container
+          = hidden_field_tag :id, @task.id
+          - @jpegs.each do |jpeg|
+            .thumb
+              = check_box_tag "doc_#{jpeg.id}",'',false, {class: 'cb_start_split'}
+              %span.start_split= 'להתחיל משימה כאן'
+              %br
+              %a{href: jpeg.file.url, target: '_new'}= jpeg.file_file_name
+              %br
+              %img{src: jpeg.file.url, style:"width:120px"}
+              %br
+              = check_box_tag "skip_#{jpeg.id}", '', false, {class: 'cb_skip_doc'}
+              %span.skip_doc= 'לדלג'
+        %p
+        .center
+          = submit_tag 'בצע חלוקה!', {style: 'font-size:30px;'}
+:javascript
+  $(document).ready(function(){
+    $('.cb_start_split').click(function(){
+      if($(this).prop('checked')) {
+        $(this).next().css('color', 'green');
+        other = $(this).parent().find('.cb_skip_doc').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
+      } else {
+        $(this).next().css('color','unset');
+      }
+    });
+    $('.cb_skip_doc').click(function(){
+      if($(this).prop('checked')) {
+        other = $(this).parent().find('.cb_start_split').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
+        $(this).next().css('color', 'red');
+      } else {
+        $(this).next().css('color','unset');
+      }
+    });
+    $('.cb_start_split').first().click();
+  });

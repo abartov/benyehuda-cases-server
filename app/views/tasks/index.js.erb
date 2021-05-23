@@ -1,1 +1,2 @@
 $('#assign_now').html("<%= escape_javascript(render(:partial => 'tasks/unassigned_index')) %>"); 
+$('.pagination a').attr('data-remote', 'true');

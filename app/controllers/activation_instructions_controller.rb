@@ -1,5 +1,5 @@
 class ActivationInstructionsController < ApplicationController
-  before_filter :require_admin
+  before_action :require_admin
 
   def create
     user = User.find(params[:user_id])

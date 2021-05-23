@@ -37,7 +37,7 @@ Copy default locales you want from e.g.
 
     #application_controller
     class ApplicationController < ...
-      before_filter :set_gettext_locale
+      before_action :set_gettext_locale
       def set_gettext_locale
         FastGettext.text_domain = 'app'
         FastGettext.available_locales = ['en','de'] #all you want to allow

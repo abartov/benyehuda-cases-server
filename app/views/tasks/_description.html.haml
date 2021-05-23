@@ -4,6 +4,22 @@
   = @task.kind.try(:name)
   %br
   %b
+    = 'מיזם: '
+  = @task.project.try(:name)
+  %br
+  %b
+    = 'סוגה: '
+  = @task.try(:genre)
+  != "&nbsp;&nbsp;&nbsp;"
+  %b
+    = 'אפשר להעלות בנפרד? '
+  = @task.independent? ? 'כן' : 'לא'
+  != "&nbsp;&nbsp;&nbsp;"
+  %b
+    = 'מותר להעלות תמונות? '
+  = @task.include_images? ? 'כן' : 'לא'
+  %br
+  %b
     = _("Nikud")+": "
   = textify_full_nikud(@task)
   %br
@@ -63,8 +79,9 @@
     .boxbody
       %b
         = _("Chained tasks")+": "
-      - @task.children.each do |c|
-        != link_to(h(c.name), task_path(c))
+      %ol
+        - @task.children.each do |c|
+          %li!= link_to(h(c.name), task_path(c))
   - if @task.parent
     .midtitle
       .boxbody

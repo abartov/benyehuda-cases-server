@@ -9,3 +9,12 @@
 %br
 = f.inputs :name => s_("task section|Task Settings") do
   - custom_properties_fields(f, "task")
+
+:javascript
+  $(document).ready(function() {
+    $("<span> </span> <a class=\"purple-button gradient\" id=\"copy_source\" href=\"#\"> <span>העתק מהמשימה האחרונה</span></a>").insertAfter('#task_source');
+    $('#copy_source').click(function(e){
+      e.preventDefault();
+      $.get('/get_last_source');
+    });
+  })

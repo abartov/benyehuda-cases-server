@@ -3,7 +3,7 @@
     = _("Search/Filter")
   .boxcontainer
     .boxbody
-      = form_tag(url_for(params), :method => :get) do
+      = form_tag(url_for(params.permit!), :method => :get) do
         = label_tag :invert_state, _("invert state?")
         = check_box_tag :invert_state, "true", "true" == params[:invert_state]
         = label_tag :state, _("State")
@@ -19,7 +19,16 @@
         = label_tag :priority, _("Priority")
         = select_tag :priority, options_for_select([""] + task_priorities_for_select, params[:priority])
         %br
-        = label_tag :query, _("Query")
+        = label_tag :genre, 'סוגה'
+        = select_tag :genre, options_for_select([""] + Task.genres.keys.map{|x| [x,x]}, params[:genre])
+        = label_tag :project, 'מיזם'
+        = select_tag :project, options_for_select([""] + Project.all.map{|x| [x.name, x.id]}, params[:project])
+        = label_tag :independent, 'אפשר להעלות בנפרד?'
+        = check_box_tag :independent, 'true', 'true' == params[:independent]
+        = label_tag :include_images, 'מותר להעלות תמונות?'
+        = check_box_tag :include_images, 'true', 'true' == params[:include_images]
+        %br
+        = label_tag :query, 'שאילתה (כותרת משימה ו/או שם הוצאה)'
         = text_field_tag :query, params[:query]
         = submit_tag _("Filter")
         = link_to _("All"), admin_tasks_path(:all => true)

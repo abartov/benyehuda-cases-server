@@ -1,13 +1,17 @@
 class VolunteerRequestsController < InheritedResources::Base
-  before_filter :require_user
-  before_filter :require_editor_or_admin, :except => [:create, :new]
-  before_filter :check_volunteer_request, :only => [:create, :new]
+  before_action :require_user
+  before_action :require_editor_or_admin, :except => [:create, :new]
+  before_action :check_volunteer_request, :only => [:create, :new]
   actions :new, :create, :update, :index, :show
 
   # new
 
   def create
-    @volunteer_request = current_user.create_volunteer_request(params[:volunteer_request])
+    @volunteer_request = current_user.create_volunteer_request(params[:volunteer_request].permit(:preferences , :user_attributes))
+    if params[:zehut].present?
+      current_user.zehut = params[:zehut]
+      current_user.save!
+    end
     if @volunteer_request.new_record?
       render :action => "new"
       return

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200721135352) do
+ActiveRecord::Schema.define(version: 20210322211523) do
 
   create_table "assignment_histories", force: :cascade do |t|
     t.integer  "user_id",    limit: 4
@@ -101,6 +101,14 @@ ActiveRecord::Schema.define(version: 20200721135352) do
 
   add_index "global_preferences", ["name"], name: "index_global_preferences_on_name", unique: true, using: :btree
 
+  create_table "projects", force: :cascade do |t|
+    t.string   "name",        limit: 255
+    t.text     "description", limit: 65535
+    t.integer  "status",      limit: 4
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "properties", force: :cascade do |t|
     t.string   "title",         limit: 255
     t.string   "parent_type",   limit: 32
@@ -161,14 +169,19 @@ ActiveRecord::Schema.define(version: 20200721135352) do
     t.string   "name",            limit: 255
     t.string   "state",           limit: 16
     t.string   "difficulty",      limit: 16
-    t.boolean  "full_nikkud",                 default: false
+    t.boolean  "full_nikkud",                  default: false
     t.integer  "parent_id",       limit: 4
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "documents_count", limit: 4,   default: 0
+    t.integer  "documents_count", limit: 4,    default: 0
     t.integer  "kind_id",         limit: 4
     t.string   "priority",        limit: 255
     t.integer  "hours",           limit: 4
+    t.integer  "genre",           limit: 4
+    t.boolean  "independent"
+    t.boolean  "include_images"
+    t.string   "source",          limit: 2048
+    t.integer  "project_id",      limit: 4
   end
 
   add_index "tasks", ["assignee_id"], name: "index_tasks_on_assignee_id", using: :btree
@@ -234,6 +247,7 @@ ActiveRecord::Schema.define(version: 20200721135352) do
     t.integer  "volunteer_kind_id",        limit: 4
     t.boolean  "on_break"
     t.date     "last_reminder"
+    t.string   "zehut",                    limit: 255
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree

@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b שם:
+  = @project.name
+%p
+  %b תיאור:
+  = @project.description
+%p
+  %b מצב:
+  = @project.status
+
+= link_to 'עריכה', edit_project_path(@project)
+\|
+= link_to 'חזרה', projects_path

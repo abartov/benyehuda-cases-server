@@ -2,7 +2,7 @@ class GlobalPreference < ActiveRecord::Base
   validates_presence_of :name
   validates_uniqueness_of :name
 
-  attr_accessible :name, :value, :ttl
+#  attr_accessible :name, :value, :ttl
 
   DEFAULT_TTL = 10.minutes
   def ttl

@@ -1,5 +1,5 @@
 class AssignmentsController < ApplicationController
-  before_filter :require_editor_or_admin, :set_task
+  before_action :require_editor_or_admin, :set_task
 
   def create
     @task.assign_by_user_ids!(current_user.id, params[:assignee_id])

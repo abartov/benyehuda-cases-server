@@ -1,0 +1,25 @@
+%h1 ניהול מיזמים
+
+%table
+  %thead
+    %tr
+      %th שם
+      %th תיאור
+      %th מצב
+      %th
+      %th
+      %th
+
+  %tbody
+    - @projects.each do |project|
+      %tr
+        %td= project.name
+        %td= project.description
+        %td= project.status
+        %td= link_to 'הצגה', project
+        %td= link_to 'עריכה', edit_project_path(project)
+        %td= link_to 'מחיקה', project, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'מיזם חדש', new_project_path

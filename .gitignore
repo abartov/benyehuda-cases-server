@@ -1,4 +1,3 @@
-bin
 .bundle
 .rvmrc
 config/*.sphinx.conf
@@ -16,6 +15,8 @@ coverage
 public/javascripts/*_[0-9]*.js
 public/stylesheets/*_[0-9]*.css
 public/attachments
+public/assets/*
+stuff/
 attic/
 tmp
 var
@@ -26,3 +27,11 @@ tags
 c
 m
 v
+config/deploy.rb.benyehuda.org
+old_rails_upgrade.diff
+old_locale.zip
+stats.diff
+tasks.code-workspace
+run.sh
+
+/config/master.key

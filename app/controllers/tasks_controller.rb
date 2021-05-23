@@ -1,8 +1,8 @@
 require 'httparty'
 
 class TasksController < InheritedResources::Base
-  before_filter :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
-  before_filter :require_editor_or_admin, :only => [:index, :create]
+  before_action :require_task_participant_or_editor, :only => [:show, :update, :edit, :download_pdf]
+  before_action :require_editor_or_admin, :only => [:index, :create, :make_comments_editor_only, :get_last_source]
   actions :index, :show, :update, :create
 
   EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
@@ -21,7 +21,7 @@ class TasksController < InheritedResources::Base
     else
       tmpfile = Tempfile.new(['dl_task_pdf__','.pdf'])
       begin
-        jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|TIF|PNG|png|PDF|pdf)$/}
+        jpegs = @task.documents.select {|x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/}
         tmpjpegs = []
         jpegs.each do |jpeg|
           jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
@@ -33,17 +33,27 @@ class TasksController < InheritedResources::Base
           tmpjpeg.flush
         end
         tmpfilename = tmpfile.path
+        inputfiles = tmpfilename+'_input.txt'
+        File.open(inputfiles, 'w'){|f| f.write(tmpjpegs.map{|tj| tj.path}.join("\n"))}
         # run the conversion
         # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-        `convert #{tmpjpegs.map{|tj| tj.path}.join(' ')} #{tmpfilename}`
+        `convert @#{inputfiles} #{tmpfilename}`
         pdf = File.read(tmpfilename)
         send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         File.delete(tmpfilename) # delete temporary generated PDF
+        File.delete(inputfiles)
       rescue
         redirect_to '/'
       ensure
         tmpfile.close
       end
+    end
+  end
+
+  def get_last_source
+    @task = Task.last
+    respond_to do |format|
+      format.js
     end
   end
 
@@ -57,6 +67,7 @@ class TasksController < InheritedResources::Base
   end
 
   def create
+    params = task_params
     @task = Task.find(params[:id])
 
     return unless _allow_event?(@task, :create_other_task, current_user)
@@ -101,6 +112,7 @@ class TasksController < InheritedResources::Base
 
   def update
     return unless _allow_event?(resource, params[:event], current_user)
+    params = task_params
 
     # all security verifications passed in allow_event_for?
     return _event_with_comment(params[:event]) if resource.commentable_event?(params[:event])
@@ -155,5 +167,8 @@ protected
     end
 
     false
+  end
+  def task_params
+    params.permit!
   end
 end

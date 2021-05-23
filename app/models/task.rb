@@ -1,5 +1,5 @@
-
 class Task < ActiveRecord::Base
+  enum genre: %i(שירה פרוזה מחזות משלים מאמרים זכרונות מכתבים עיון מעורב)
   PROP_SOURCE = 131
   PROP_ORIGLANG = 132 # horrible hard-coding against production DB values!
   PROP_RASHI = 121
@@ -43,7 +43,7 @@ class Task < ActiveRecord::Base
   belongs_to :creator, :class_name => "User"
   belongs_to :editor, :class_name => "User"
   belongs_to :assignee, :class_name => "User"
-
+  belongs_to :project
   belongs_to :parent, :class_name => "Task"
   has_many   :children, :class_name => "Task", :foreign_key => "parent_id"
 
@@ -55,10 +55,10 @@ class Task < ActiveRecord::Base
   has_many_custom_properties :task # task_properties
 
   include CommentWithReason
-  include Task::States
-  include Task::Notifications
+  include States
+  include TaskNotifications
 
-  belongs_to :kind, :class_name => 'TaskKind'
+    belongs_to :kind, :class_name => 'TaskKind'
 
   DIFFICULTIES = {
     "easy" => N_("task difficulty|easy"),
@@ -78,7 +78,7 @@ class Task < ActiveRecord::Base
   validates :creator_id, :name, :kind_id, :difficulty, :presence => true
   validate :parent_task_updated
 
-  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes
+#  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source, :project_id, :hours
 
   #belongs_to :state, :class_name => "TaskState", :foreign_key => :
   has_many :comments, ->{order("comments.task_id, comments.created_at")}
@@ -113,12 +113,12 @@ class Task < ActiveRecord::Base
   }
 
   TASK_LENGTH = {
-    "short" => 0..7,
-    "medium" => 8..24,
+    "short" => 0..9,
+    "medium" => 10..45,
   }
-  TASK_LENGTH.default = 25..100000
+  TASK_LENGTH.default = 46..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority"]
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source']
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -132,8 +132,13 @@ class Task < ActiveRecord::Base
       end
     end
     search_opts[:conditions][:difficulty] = opts[:difficulty] unless opts[:difficulty].blank?
+    search_opts[:with][:genre] = Task.genres[opts[:genre]] unless opts[:genre].blank?
     search_opts[:with][:full_nikkud] = ("true" == opts[:full_nikkud]) unless opts[:full_nikkud].blank?
+    search_opts[:with][:independent] = ("true" == opts[:independent]) unless opts[:independent].blank?
+    search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
+    search_opts[:conditions][:project] = opts[:project] unless opts[:project].blank?
+    
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
@@ -193,7 +198,7 @@ class Task < ActiveRecord::Base
     }
     return ""
   end
-  def source
+  def legacy_source
     self.task_properties.each {|p|
       return p.custom_value if p.property_id == PROP_SOURCE
     }
@@ -203,7 +208,7 @@ class Task < ActiveRecord::Base
     self.task_properties.each{|p|
       return p.custom_value if p.property_id == PROP_RASHI
     }
-    return ""
+    return false
   end
   def instructions
     self.task_properties.each{|p|
@@ -220,6 +225,17 @@ class Task < ActiveRecord::Base
 
   def self.textify_state(state)
     s_(TaskState.find_by_name(state.to_s).value)
+  end
+  def possibly_related_tasks
+    ret = []
+    self.children.each {|c| ret << c}
+    ret << self.parent unless self.parent.nil?
+    slashpos = self.name.index(' /')
+    unless slashpos.nil? or slashpos < 5
+      possibly = Task.where('name like ?', self.name[0..5]+'%'+self.name[slashpos..-1])
+      possibly.each{|t| ret << t unless t.id == self.id}
+    end
+    return ret
   end
   def estimate_hours
     kindname = self.kind.try(:name)

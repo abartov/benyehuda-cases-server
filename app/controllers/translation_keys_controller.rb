@@ -1,6 +1,6 @@
 class TranslationKeysController < ApplicationController
-  before_filter :require_admin  # SEE BELOW?! :authenticate
-  before_filter :find_translation_key, :only=>%w[show edit update destroy]
+  before_action :require_admin  # SEE BELOW?! :authenticate
+  before_action :find_translation_key, :only=>%w[show edit update destroy]
 
   #use host layout/helpers
   helper :all

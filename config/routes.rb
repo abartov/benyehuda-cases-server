@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
+  resources :projects
+  resources :projects
+  resources :projects
+  resources :projects
+  resources :projects
   get "report/stalled"
+  get 'report/missing_metadata'
+  get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
   match 'report/hours', via: [:get, :post]
+  post 'report/update_metadata'
   get "report/inactive"
   get "report/active"
   get "report/newvols"
@@ -9,7 +17,7 @@ Rails.application.routes.draw do
   get "report/index"
   match '/report' => 'report#index', via: [:get, :post]
   match '/users' => 'users#index', via: [:get]
-
+  match '/get_last_source' => 'tasks#get_last_source', via: [:get, :post]
   match '/activate/:id' => 'passwords#edit', :as => :activate, via: [:get, :post]
   get '/users/:id/take_break', :controller => 'users', :action => 'take_break', :as => :users_take_break, :via => :get
   get '/passwords/:id/reset_password_by_editor' => 'passwords#reset_password_by_editor'
@@ -24,6 +32,7 @@ Rails.application.routes.draw do
     resources :assignment_histories
   end
   get '/users/:id/cancel_task_request', :controller => 'users', :action => 'cancel_task_request'
+  match '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task', via: [:get, :post]
   get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
   get '/tasks/:id/download_pdf', :controller => 'tasks', :action => 'download_pdf', as: 'task_download_pdf'
   match '/tick_file/:id' => 'documents#tick_file', :via => :get

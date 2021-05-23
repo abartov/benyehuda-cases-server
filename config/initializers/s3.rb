@@ -1,1 +1,1 @@
-require 'aws-sdk'
+require 'aws-sdk-s3'

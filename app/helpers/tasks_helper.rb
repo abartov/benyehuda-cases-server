@@ -26,7 +26,7 @@ module TasksHelper
     task.full_nikkud ? _("Full Nikkud") : _("No")
   end
   def textify_rashi(task)
-    task.rashi ? _("Yes") : _("No")
+    [true,1,'1'].include?(task.rashi) ? _("Yes") : _("No")
   end
   def upload_javascripts
     session_key = Rails.application.config.session_options[:key]
@@ -65,11 +65,13 @@ module TasksHelper
   end
 
   def has_rejection_errors?
-    @task.rejection_comment && !@task.rejection_comment.errors.blank?
+    !@task.valid?
+    #@task.rejection_comment && !@task.rejection_comment.errors.blank?
   end
 
   def has_abandoning_errors?
-    @task.abandoning_comment && !@task.abandoning_comment.errors.blank?
+    return false
+    #@task.abandoning_comment && !@task.abandoning_comment.errors.blank?
   end
 
   def link_to_task_participant_email(task, role, text)
@@ -88,7 +90,7 @@ module TasksHelper
   end
 
   def task_states_for_select
-    Task.aasm_states.collect(&:name).collect(&:to_s).map{|s| [Task.textify_state(s), s]}
+    Task.aasm.states.collect(&:name).collect(&:to_s).map{|s| [Task.textify_state(s), s]}
   end
 
   def task_difficulties_for_select

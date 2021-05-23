@@ -1,7 +1,7 @@
 class SearchSetting < ActiveRecord::Base
   belongs_to :user
 
-  attr_accessible :search_key, :search_value
+#  attr_accessible :search_key, :search_value
 
   def self.set_from_params!(params)
     delete_all
