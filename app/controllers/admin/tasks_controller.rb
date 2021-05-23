@@ -163,6 +163,7 @@ class Admin::TasksController < InheritedResources::Base
     params.permit!
   end
   def remove_extra_params
+    params[:task].each{|k, v| params[k] = v}
     ['controller','action','task','utf8','_method','authenticity_token','commit'].each{|key| params.delete(key)}
   end
   def load_authlogic
