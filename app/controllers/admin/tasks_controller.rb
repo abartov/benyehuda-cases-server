@@ -135,7 +135,7 @@ class Admin::TasksController < InheritedResources::Base
   def prepare_cloned_task(task, partno, total_parts)
     t = task.dup # duplicate attributes from parent task
     pos = t.name.index('/') || 0
-    newname = t.name[0..pos-1]+" קבוצה #{partno} מתוך #{total_parts} "
+    newname = t.name[0..pos-1]+" – קבוצה #{partno} מתוך #{total_parts} "
     newname += t.name[pos..-1] unless pos == 0
     t.name = newname.gsub('  ',' ')
     t.documents_count = 0
