@@ -235,7 +235,7 @@ module States
     return false if event.blank?
     return true if user.is_editor?
     return false unless participant?(user)
-    return false unless Task.events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
+    return false unless Task.aasm.events.collect(&:first).collect(&:task_event_cleanup).member?(event.to_s)
 
     return true if assignee?(user) && ASSIGNEE_EVENTS.member?(event.to_sym)
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)
