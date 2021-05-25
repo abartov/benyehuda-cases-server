@@ -42,7 +42,7 @@ class ReportController < InheritedResources::Base
   def missing_metadata_panel
     @task = Task.find(params[:id])
     unless @task
-      render :nothing => true
+      head :ok
     else
       @possibly_related = @task.possibly_related_tasks
       render :layout => false
@@ -51,7 +51,7 @@ class ReportController < InheritedResources::Base
   def update_metadata
     @task = Task.find(params[:task_id])
     unless @task
-      render :nothing => true
+      head :ok
     else
       tasks_to_update = [@task]
       params.keys.each{|p| tasks_to_update << Task.find(p[4..-1]) if p =~ /task\d+/}

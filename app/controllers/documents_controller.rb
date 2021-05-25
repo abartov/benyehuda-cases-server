@@ -45,7 +45,7 @@ class DocumentsController < InheritedResources::Base
     document = Document.find(params[:id])
     if (require_user && document.task.participant?(current_user)) || (require_user && current_user.try(:is_admin?))
       document.toggle! :done
-      render :nothing => true
+      head :ok
     else
       flash[:error] = _("Only participant can see this page")
       redirect_to task_path(task)
