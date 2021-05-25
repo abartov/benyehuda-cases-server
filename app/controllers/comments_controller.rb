@@ -9,7 +9,7 @@ class CommentsController < InheritedResources::Base
   # destroy
 
   def create
-    @comment = task.comments.build(comment_params[:comment])
+    @comment = task.comments.build(comment_params)
     @comment.user = current_user
     remove_extra_params
     create! do |success, failure|
