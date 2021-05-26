@@ -31,7 +31,7 @@ class PasswordsController < InheritedResources::Base
       resource.activated_at = Time.now
       @activated = true
     end
-
+    remove_extra_params
     update! do |success, failure|
       if resource.errors.empty?
         @user.send(@activated ? :deliver_activation_confirmation! : :deliver_password_reset_confirmation!)
@@ -46,6 +46,10 @@ class PasswordsController < InheritedResources::Base
   end
 
   private
+  def remove_extra_params
+    params[:user].each{|k, v| params[k] = v} if params[:user].present?
+    ['controller','action','user','utf8','_method','authenticity_token','commit'].each{|key| params.delete(key)}
+  end
 
   def do_create(by_editor)
     if @user
