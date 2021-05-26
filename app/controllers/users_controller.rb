@@ -48,13 +48,13 @@ class UsersController < InheritedResources::Base
   def update
     @user = User.find(params[:id])
     return _remove_avatar if "true" == params[:remove_avatar]
-    params = user_params
+    uparams = user_params
     # manual update protected attributes
     if current_user.is_admin?
-      @user.is_admin = params[:user].delete(:is_admin) if params[:user]
-      @user.is_volunteer = params[:user].delete(:is_volunteer) if params[:user]
-      @user.is_editor = params[:user].delete(:is_editor) if params[:user]
-      @user.email = params[:user][:email] || @user.email
+      @user.is_admin = uparams.delete(:is_admin) 
+      @user.is_volunteer = uparams.delete(:is_volunteer)
+      @user.is_editor = uparams.delete(:is_editor) 
+      @user.email = uparams[:email] || @user.email
     end
 
     update_resource(resource, resource_params)
@@ -150,7 +150,7 @@ class UsersController < InheritedResources::Base
     redirect_to user_path(@user)
   end
   def user_params
-    params.require(:user).permit(:name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :email, :zehut, :avatar)
+    params.require(:user).permit(:name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :is_admin, :is_editor, :is_volunteer, :email, :zehut, :avatar)
   end
 
 end
