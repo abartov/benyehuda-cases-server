@@ -20,19 +20,11 @@ class Comment < ActiveRecord::Base
   scope :public_comments, ->{where(:editor_eyes_only => false)}
   scope :with_user, ->{includes(:user)}
 
-  after_create :delayed_notify_comment_created
+  after_create :notify_comment_created
 
   protected
 
-  def delayed_notify_comment_created
-    #if "production" == Rails.env
-      #send_later :notify_comment_created
-    #else
-      #notify_comment_created
-    #end
-  #end
-
-  #def notify_comment_created
+  def notify_comment_created
     recipients = task.task_changes_recipients(self).select {|r| r.wants_to_be_notified_of?(:comments)}
     if editor_eyes_only?
       recipients = (recipients || []).select {|r| r.admin_or_editor?}

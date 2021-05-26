@@ -51,9 +51,9 @@ class UsersController < InheritedResources::Base
     params = user_params
     # manual update protected attributes
     if current_user.is_admin?
-      @user.is_admin = params[:user].delete(:is_admin)
-      @user.is_volunteer = params[:user].delete(:is_volunteer)
-      @user.is_editor = params[:user].delete(:is_editor)
+      @user.is_admin = params[:user].delete(:is_admin) if params[:user]
+      @user.is_volunteer = params[:user].delete(:is_volunteer) if params[:user]
+      @user.is_editor = params[:user].delete(:is_editor) if params[:user]
       @user.email = params[:user][:email] || @user.email
     end
 
