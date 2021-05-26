@@ -31,6 +31,8 @@ class PasswordsController < InheritedResources::Base
       resource.activated_at = Time.now
       @activated = true
     end
+    resource.password = params.require(:user).permit(:password)
+    resource.save!
     remove_extra_params
     update! do |success, failure|
       if resource.errors.empty?
