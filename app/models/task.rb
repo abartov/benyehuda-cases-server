@@ -103,9 +103,9 @@ class Task < ActiveRecord::Base
   def update_assignments_history
     assignee.assignment_histories.create(:task_id => self.id, :role => "assignee") if !assignee.blank?
 
-    editor.assignment_histories.create(:task_id => self.id, :role => "editor") if !editor.blank?
+    # editor.assignment_histories.create(:task_id => self.id, :role => "editor") if !editor.blank?
 
-    creator.assignment_histories.create(:task_id => self.id, :role => "creator") if !creator.blank?
+    # creator.assignment_histories.create(:task_id => self.id, :role => "creator") if !creator.blank?
   end
 
   SEARCH_INCLUDES = {
