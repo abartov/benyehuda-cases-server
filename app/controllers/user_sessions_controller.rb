@@ -1,6 +1,7 @@
 class UserSessionsController < InheritedResources::Base
   unloadable
   actions :new, :create, :destroy
+  before_action :load_authlogic
   before_action :require_user, :only => :destroy
   defaults :singleton => true
 
@@ -38,5 +39,8 @@ class UserSessionsController < InheritedResources::Base
   def resource
     @object ||= current_user_session
   end
-
+  def load_authlogic
+    Authlogic::Session::Base.controller = Authlogic::ControllerAdapters::RailsAdapter.new(self) if Authlogic::Session::Base.controller.nil?
+  end
+  
 end
