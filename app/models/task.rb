@@ -126,7 +126,7 @@ class Task < ActiveRecord::Base
       if opts[:invert_state].blank? or opts[:invert_state] == "false"
         search_opts[:conditions][:state] = opts[:state]
       else
-        states = Task.aasm_states.collect(&:name).collect(&:to_s)
+        states = Task.aasm.states.collect(&:name).collect(&:to_s)
         states.delete(opts[:state]) # all states except the specified one
         search_opts[:conditions][:state] = states
       end
