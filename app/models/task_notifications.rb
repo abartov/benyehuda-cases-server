@@ -4,20 +4,26 @@ module TaskNotifications
 
   def self.included(base)
     base.class_eval do
+      before_save :remember_changes
       after_save :delayed_notify_on_changes
     end
+  end
+
+  def remember_changes # quick fix for changed behavior after Rails upgrade
+    @was_state_changed = state_changed?
+    @was_editor_id_changed = editor_id_changed?
+    @was_assignee_id_changed = assignee_id_changed?
   end
 
   def task_changes_recipients(comment = nil)
     state_changed_by = []
     state_changed_for = []
-
-    if state_changed? || comment
+    if @was_state_changed || comment
       state_changed_for = [editor, assignee]
       state_changed_by << comment.user if comment.try(:user)
-    elsif editor_id_changed? || assignee_id_changed?
-      state_changed_for << editor if editor_id_changed?
-      state_changed_for << assignee if assignee_id_changed?
+    elsif @was_editor_id_changed || @was_assignee_id_changed
+      state_changed_for << editor if @was_editor_id_changed
+      state_changed_for << assignee if @was_assignee_id_changed
     else
       return nil
     end
@@ -27,16 +33,7 @@ module TaskNotifications
 
   # XXX
   def delayed_notify_on_changes
-    #if "production" == Rails.env
-      #send_later :notify_state_changes
-    #else
-      #notify_state_changes
-    #end
-  #end
-
-  #def notify_on_changes
     return if SKIP_STATES.member?(state.to_sym)
-
     recipients = (task_changes_recipients || []).select {|r| r.wants_to_be_notified_of?(:state)}
     return if recipients.blank?
 
