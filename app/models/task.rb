@@ -210,6 +210,15 @@ class Task < ActiveRecord::Base
     }
     return false
   end
+  def instructions=(buf)
+    tp = self.task_properties.where(property_id: PROP_INSTRUCTIONS).first
+    if tp.nil?
+      tp = CustomProperty.new(property_id: PROP_INSTRUCTIONS)
+      self.task_properties << tp
+    end
+    tp.custom_value = buf
+    tp.save!
+  end
   def instructions
     self.task_properties.each{|p|
       return p.custom_value if p.property_id == PROP_INSTRUCTIONS
