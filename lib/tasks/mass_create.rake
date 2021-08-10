@@ -26,7 +26,6 @@ task :mass_create, [:control_file] => :environment do |taskname, args|
       if thematch.nil?
         puts "warning: regexp didn't match!"
       else
-        byebug
         # apply captures
         number = 1
         thematch.captures.each do |capture|
