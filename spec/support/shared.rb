@@ -25,3 +25,10 @@ RSpec.shared_examples 'contains error msg' do |msg|
     expect(json['error'] || json['error_msg']).to eq(msg)
   end
 end
+
+RSpec.shared_examples '200' do
+  specify 'returns 200' do
+    api_call params
+    expect(response.status).to eq(200)
+  end
+end

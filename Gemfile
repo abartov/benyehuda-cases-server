@@ -59,6 +59,7 @@ gem 'nokogiri'
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 gem 'devise' # for API logins
 gem 'grape' # for API
+gem 'grape-entity' # for Grape entities exposure
 
 group :test, :development do
   gem 'factory_bot_rails'
@@ -66,6 +67,7 @@ group :test, :development do
   gem 'test-unit', '1.2.3', require: false
   gem 'rspec-rails'
   gem 'rspec'
+  gem 'grape-entity-matchers'
   gem 'mocha'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
 #  gem 'query_trace', :require => 'query_trace'
@@ -79,6 +81,7 @@ group :test do
   #gem 'factory_girl_rails', '1.4.0'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
   gem 'rspec2-rails-views-matchers'
+  gem 'database_cleaner-active_record'
 end
 
 group :development do

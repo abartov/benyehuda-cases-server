@@ -1,6 +1,7 @@
 .bundle
 .rvmrc
 config/*.sphinx.conf
+config/credentials.yml.enc
 db/sphinx/*
 log
 db/*.db
