@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  devise_for :api_users
   resources :projects
   resources :projects
   resources :projects
@@ -61,5 +62,6 @@ Rails.application.routes.draw do
   resources :task_requests
   resources :site_notices
   match "/restart", :controller => "restart", :action => "restart", :via => :post
+  mount API => '/'
 
 end

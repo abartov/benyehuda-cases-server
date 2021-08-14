@@ -1,7 +1,11 @@
-Factory.define :document do |t|
-  t.association :task, :factory => :task
-  t.file_file_size 123
-  t.association :user_id, :factory => :volunteer
-  t.file_file_name "foobar"
-  t.created_at Time.now.utc
+FactoryBot.define do
+  factory :document do
+    task
+    file_file_size {123}
+    user_id factory: :volunteer
+    file_file_name {"foobar"}
+    created_at {Time.now.utc}
+  end
+  
 end
+

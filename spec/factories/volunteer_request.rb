@@ -1,8 +1,10 @@
-Factory.define :volunteer_request do |volunteer_request|
-  volunteer_request.sequence(:preferences) {|n| "Some reason #{n}"}
-  volunteer_request.association :user, :factory => :active_user
-end
-
-Factory.define :confirmed_volunteer_request, :parent => :volunteer_request do |user|
-  user.approved_at 1.month.ago.utc
+FactoryBot.define do
+  factory :volunteer_request do
+    sequence(:preferences) {|n| "Some reason #{n}"}
+    user factory: :active_user
+    factory :confirmed_volunteer_request do
+      approved_at {1.month.ago.utc}
+    end
+  
+  end
 end
