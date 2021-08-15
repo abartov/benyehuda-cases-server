@@ -1,6 +1,7 @@
 class API < Grape::API
   prefix 'api'
   mount Login
+  mount QueryByTitle
   rescue_from Grape::Exceptions::ValidationErrors do |e|
     rack_response({
       status: e.status,
