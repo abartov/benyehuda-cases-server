@@ -1,13 +1,13 @@
 FactoryBot.define do
+  sequence(:uname) {|n| "Name#{n}"}
   factory :user do
-    sequence(:name) {|n| "Name#{n}"}
-
+    name { generate(:uname) }
     email {|a| "#{a.name}@example.com".downcase }
 
     password              {'qweqwe'}
-    password_confirmation {'qweqwe'}
+#    password_confirmation {'qweqwe'}
 
-    skip_session_maintenance {true}
+#    skip_session_maintenance {true}
     factory :active_user do
       activated_at {1.month.ago.utc}
     end

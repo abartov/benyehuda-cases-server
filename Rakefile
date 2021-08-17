@@ -24,6 +24,6 @@ require 'rake'
 #}
 # end fugly bit
 
-FastGettext.silence_errors  # XXX
+#FastGettext.silence_errors  # XXX
 
 CasesServer::Application.load_tasks

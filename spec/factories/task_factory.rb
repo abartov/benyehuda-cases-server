@@ -1,10 +1,11 @@
 FactoryBot.define do
+  sequence(:tname) {|n| "some_#{n}"}
   factory :task do
-    sequence(:name) {|n| "some_#{n}"}
-    creator factory: :admin
-    assignee factory: :volunteer
-    editor factory: :editor
-    kind factory: :task_kind
+    name { generate(:tname) }
+    creator { create :admin } 
+    assignee { create :volunteer }
+    editor { create :editor }
+    kind { create :task_kind}
     difficulty {"normal"}
     parent_id {nil}
     factory :unassigned_task do
@@ -23,7 +24,6 @@ FactoryBot.define do
     factory :approved_task do
       state {"approved"}
     end
-  
   end
 
 end

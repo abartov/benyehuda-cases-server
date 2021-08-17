@@ -3,9 +3,7 @@ FactoryBot.define do
     "apitest#{n}@mailinator.com"
   end
   factory :api_user, class: APIUser do
-    password {"Passw0rd"}
-    password_confirmation { |u| u.password }
-
+    api_key {"valid_key"}
     email
   end
 end
