@@ -1,9 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :api_users
-  resources :projects
-  resources :projects
-  resources :projects
-  resources :projects
   resources :projects
   get "report/stalled"
   get 'report/missing_metadata'

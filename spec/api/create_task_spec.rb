@@ -1,16 +1,13 @@
 require 'spec_helper'
-describe '/api/query_by_title' do
+describe '/api/create_task' do
   let(:api_user) { create :api_user}
-  let!(:task1) {create :task, name: 'משימת בדיקה 1 / חיים נחמן ביאליק'}
-  let!(:task2) {create :task, name: 'משימת בדיקה 2 / חיים נחמן ביאליק'}
-  let!(:task3) {create :task, name: 'משימת בדיקה 3 / שאול טשרניחובסקי'}
-  let(:original_params) { { title: 'ביאליק', api_key: api_user.api_key} } # counting on a Task seeded in seeds.rb
+  let!(:task_kind) {create :task_kind, name: 'סריקה'}
+  let(:original_params) { { title: 'אל הציפור', author: 'חיים נחמן ביאליק', creator_id: 11, api_key: api_user.api_key} } # counting on a Task seeded in seeds.rb
   let(:params) { original_params }
 
   def api_call(params)
-    get("/api/query_by_title", params: params)
+    post("/api/create_task", params: params)
   end
-  #it_behaves_like 'restricted for developers'
 
   context 'negative tests' do
     context 'invalid params' do
@@ -32,16 +29,21 @@ describe '/api/query_by_title' do
         it_behaves_like 'contains error msg with devheader', 'please acquire a developer key'
         it_behaves_like 'contains error code', ErrorCodes::DEVELOPER_KEY_MISSING
       end
+      context 'missing required params' do
+        let(:params) { original_params.except(:title) }
+        it_behaves_like '400'
+        it_behaves_like 'json result'
+      end
     end
   end
   context 'positive tests' do
     context 'valid params' do
       it_behaves_like '200'
       it_behaves_like 'json result'
-      specify "API returns a task" do
+      specify "API returns the created task" do
         api_call params
         json = JSON.parse(response.body)
-        expect(json.length).to eq(2) 
+        expect(json).to include('task')  # TODO: implement
       end
     
    end

@@ -3,11 +3,11 @@ class QueryByTitle < Grape::API
   before { restrict_access_to_developers }
 
   format :json
-  desc 'End-points for the QueryByTitle API action'
+  desc 'End-point for the QueryByTitle API action'
   namespace :query_by_title do
     desc 'Query by task title'
     params do
-      requires :api_key, type: String, desc: 'API token from login action'
+      requires :api_key, type: String, desc: 'API key'
       requires :title, type: String, desc: 'title to substring match'
     end
     get do

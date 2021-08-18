@@ -34,7 +34,7 @@ TaskState.create(
   ]
 )
 TaskKind.delete_all
-TaskKind.create([{name: 'typing'}, {name: 'proofing'}, {name: 'scanning'}])
+TaskKind.create([{name: 'typing'}, {name: 'הגהה'}, {name: 'סריקה'}])
 User.delete_all
 User.create([{name: 'testuser 1', email: 'testuser1@mailinator.com', is_volunteer: true}, {name: 'testuser 2', email: 'testuser2@mailinator.com', is_volunteer: true}, {name: 'testuser editor', email:'testeditor@mailinator.com', is_editor: true, is_volunteer: true}])
 Task.delete_all

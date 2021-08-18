@@ -4,7 +4,7 @@ module ApiHelpers
       #byebug
       if params[:api_key].blank?
         error_code = ErrorCodes::DEVELOPER_KEY_MISSING
-        error_msg = 'please aquire a developer key'
+        error_msg = 'please acquire a developer key'
         error!({ :error_msg => error_msg, :error_code => error_code }, 401)
       else
         user = APIUser.where(api_key:  params[:api_key] )

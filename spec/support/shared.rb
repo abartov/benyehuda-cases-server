@@ -56,7 +56,7 @@ RSpec.shared_examples 'restricted for developers' do
         let(:params) { original_params.except(:api_key) }
         it_behaves_like '401'
         it_behaves_like 'json result'
-        it_behaves_like 'contains error msg with devheader', 'please aquire a developer key'
+        it_behaves_like 'contains error msg with devheader', 'please acquire a developer key'
         it_behaves_like 'contains error code', ErrorCodes::DEVELOPER_KEY_MISSING
       end
     end

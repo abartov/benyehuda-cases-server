@@ -58,7 +58,6 @@ gem 'nokogiri'
 # gem 'astrails-safe' # depends on obsolete aws-s3
 
 gem 'scanf' # no longer stdlib in Ruby 2.7+
-gem 'devise' # for API logins
 gem 'grape' # for API
 gem 'grape-entity' # for Grape entities exposure
 
