@@ -13,10 +13,12 @@
 ActiveRecord::Schema.define(version: 2021_08_15_162939) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "email"
     t.string "api_key"
+    t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.index ["api_key"], name: "index_api_users_on_api_key", unique: true
+    t.index ["email"], name: "index_api_users_on_email", unique: true
   end
 
   create_table "assignment_histories", id: :integer, charset: "utf8mb3", force: :cascade do |t|

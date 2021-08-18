@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :api_users, controller: 'xapi_users' # weird inflection problems requiring *both* APIUsersController *and* ApiUsersController to be defined. No time to deal with it.
   resources :projects
   get "report/stalled"
   get 'report/missing_metadata'

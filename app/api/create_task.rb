@@ -13,6 +13,7 @@ class CreateTask < Grape::API
       optional :extra_info, type: String, desc: 'any additional information, such as location in libraries'
       optional :full_nikkud, type: String, desc: 'is the text with full-nikkud (diacritics), e.g. poetry, children''s prose. ("true" or "false")'
     end
+
     post do
       api_user = APIUser.find_by_api_key(params[:api_key]) # authentication eliminated the possibility we're here without a valid key
       tasks_user = User.find_by_email(api_user.email)
