@@ -23,6 +23,7 @@ gem "tzinfo"
 gem 'formtastic'
 gem 'haml'
 gem 'haml-rails'
+gem 'gettext'
 gem 'gettext_i18n_rails'
 gem 'memoist' # replacement for ActionSupport::Memoizable
 gem 'bootsnap'
