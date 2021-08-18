@@ -2,7 +2,6 @@ class CreateTask < Grape::API
   helpers ApiHelpers::AuthenticationHelper
   before { restrict_access_to_developers }
 
-  format :json
   desc 'End-point for the CreateTask API action'
   namespace :create_task do
     desc 'Post a new scanning task'
