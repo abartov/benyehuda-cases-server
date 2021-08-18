@@ -105,9 +105,10 @@ class User < ActiveRecord::Base
   end
 
   def email_recipient
-    addr = GlobalPreference.get(:email_override)
-    addr = email if addr.blank?
-    "#{name.gsub('"','')} <#{addr}>"
+    email
+#    addr = GlobalPreference.get(:email_override)
+#    addr = email if addr.blank?
+#    "#{name.gsub('"','')} <#{addr}>"
   end
 
   def disabled?
