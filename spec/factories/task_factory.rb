@@ -1,26 +1,29 @@
-Factory.define :task do |t|
-  t.sequence(:name) {|n| "some_#{n}"}
-  t.association :creator, :factory => :admin
-  t.association :assignee, :factory => :volunteer
-  t.association :editor, :factory => :editor
-  t.association :kind, :factory => :task_kind
-  t.difficulty "normal"
-  t.parent_id nil
-end
+FactoryBot.define do
+  sequence(:tname) {|n| "some_#{n}"}
+  factory :task do
+    name { generate(:tname) }
+    creator { create :admin } 
+    assignee { create :volunteer }
+    editor { create :editor }
+    kind { create :task_kind}
+    difficulty {"normal"}
+    parent_id {nil}
+    factory :unassigned_task do
+      assignee {nil}
+      editor {nil}
+    end
+  
+    factory :assigned_task do
+      state {"assigned"}
+    end
+  
+    factory :waits_for_editor_approve_task do
+      state {"waits_for_editor"}
+    end
+  
+    factory :approved_task do
+      state {"approved"}
+    end
+  end
 
-Factory.define :unassigned_task, :parent => :task do |t|
-  t.assignee nil
-  t.editor nil
-end
-
-Factory.define :assigned_task, :parent => :task do |t|
-  t.state "assigned"
-end
-
-Factory.define :waits_for_editor_approve_task, :parent => :task do |t|
-  t.state "waits_for_editor"
-end
-
-Factory.define :approved_task, :parent => :task do |t|
-  t.state "approved"
 end

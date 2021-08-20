@@ -1,0 +1,17 @@
+= form_for @api_user do |f|
+  - if @api_user.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@api_user.errors.count, "error")} prohibited this api_user from being saved:"
+      %ul
+        - @api_user.errors.full_messages.each do |message|
+          %li= message
+
+  .field
+    = f.label :api_key
+    = @api_user.api_key 
+    = f.hidden_field :api_key, value: @api_user.api_key
+  .field
+    = f.label :email
+    = f.text_field :email
+  .actions
+    = f.submit 'Save'

@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_06_15_200513) do
+ActiveRecord::Schema.define(version: 2021_08_15_162939) do
+
+  create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "api_key"
+    t.string "email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["api_key"], name: "index_api_users_on_api_key", unique: true
+    t.index ["email"], name: "index_api_users_on_email", unique: true
+  end
 
   create_table "assignment_histories", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "user_id"
@@ -19,6 +28,15 @@ ActiveRecord::Schema.define(version: 2021_06_15_200513) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["user_id"], name: "index_assignment_histories_on_user_id"
+  end
+
+  create_table "audit_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "backtrace"
+    t.string "data"
+    t.bigint "api_user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["api_user_id"], name: "index_audit_logs_on_api_user_id"
   end
 
   create_table "audits", id: :integer, charset: "utf8mb3", force: :cascade do |t|
@@ -258,4 +276,5 @@ ActiveRecord::Schema.define(version: 2021_06_15_200513) do
     t.index ["user_id"], name: "index_volunteer_requests_on_user_id"
   end
 
+  add_foreign_key "audit_logs", "api_users"
 end

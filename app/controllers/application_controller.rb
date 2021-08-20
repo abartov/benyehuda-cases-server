@@ -75,12 +75,12 @@ protected
 
   alias :authenticate_translations_admin :require_admin
 
-  before_action :setup_will_paginate
+ # before_action :setup_will_paginate
   before_action :set_locale
-  def setup_will_paginate
-    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
-    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
-  end
+ # def setup_will_paginate
+#    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
+#    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+ # end
   def set_locale
     FastGettext.locale = 'he'
   end

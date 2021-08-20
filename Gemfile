@@ -58,24 +58,32 @@ gem 'nokogiri'
 # gem 'astrails-safe' # depends on obsolete aws-s3
 
 gem 'scanf' # no longer stdlib in Ruby 2.7+
+gem 'grape' # for API
+gem 'grape-entity' # for Grape entities exposure
 
 group :test, :development do
-gem 'ZenTest', '4.0.0'
-gem 'test-unit', '1.2.3'
+  gem 'factory_bot_rails'
+  gem 'ZenTest', '4.0.0'
+  gem 'test-unit', '1.2.3', require: false
   gem 'rspec-rails'
   gem 'rspec'
+  gem 'grape-entity-matchers'
   gem 'mocha'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
 #  gem 'query_trace', :require => 'query_trace'
   gem 'thin'
   gem 'listen'
   gem 'byebug'
-  gem 'web-console'
 end
 
 group :test do
-  gem 'factory_girl_rails', '1.4.0'
+  #gem 'factory_girl_rails', '~> 4.5'
+  #gem 'factory_girl_rails', '1.4.0'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
   gem 'rspec2-rails-views-matchers'
+  gem 'database_cleaner-active_record'
 end
 
+group :development do
+  gem 'web-console'
+end

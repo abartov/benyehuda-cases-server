@@ -1,39 +1,38 @@
-Factory.define :user do |user|
-  user.sequence(:name) {|n| "Name#{n}"}
+FactoryBot.define do
+  sequence(:uname) {|n| "Name#{n}"}
+  factory :user do
+    name { generate(:uname) }
+    email {|a| "#{a.name}@example.com".downcase }
 
-  user.email {|a| "#{a.name}@example.com".downcase }
+    password              {'qweqwe'}
+#    password_confirmation {'qweqwe'}
 
-  user.password              'qweqwe'
-  user.password_confirmation 'qweqwe'
-
-  user.skip_session_maintenance true
-end
-
-Factory.define :active_user, :parent => :user do |user|
-  user.activated_at 1.month.ago.utc
-end
-
-Factory.define :admin, :parent => :active_user do |user|
-  user.is_admin true
-end
-
-Factory.define :other_admin, :parent => :admin do |user|
-end
-
-Factory.define :editor, :parent => :active_user do |user|
-  user.is_editor true
-end
-
-Factory.define :another_editor, :parent => :editor do |user|
-end
-
-Factory.define :volunteer, :parent => :active_user do |user|
-  user.is_volunteer true
-end
-
-Factory.define :another_volunteer, :parent => :volunteer do |user|
-end
-
-Factory.define :volunteer_wanting_a_task, :parent => :volunteer do |user|
-  user.task_requested_at Time.now.utc
+#    skip_session_maintenance {true}
+    factory :active_user do
+      activated_at {1.month.ago.utc}
+    end
+    
+    factory :admin do
+      is_admin {true}
+      factory :other_admin do
+      end
+    end
+    
+    factory :editor do
+      is_editor {true}
+      factory :another_editor do
+      end
+    end
+    
+    factory :volunteer do
+      is_volunteer {true}
+      factory :another_volunteer do
+      end
+      
+      factory :volunteer_wanting_a_task do
+        task_requested_at {Time.now.utc}
+      end
+  
+    end
+  end
 end

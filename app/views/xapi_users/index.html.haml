@@ -1,0 +1,23 @@
+%h1 Listing api_users
+
+%table
+  %thead
+    %tr
+      %th API key
+      %th Email
+      %th
+      %th
+      %th
+
+  %tbody
+    - @api_users.each do |api_user|
+      %tr
+        %td= api_user.api_key
+        %td= api_user.email
+        %td= link_to 'Show', api_user
+        %td= link_to 'Edit', edit_api_user_path(api_user)
+        %td= link_to 'Destroy', api_user, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New API user', new_api_user_path
