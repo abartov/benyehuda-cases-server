@@ -22,6 +22,7 @@ class CreateTask < Grape::API
           kind: TaskKind.find_by_name('סריקה'), 
           source: params[:edition_details], 
           creator_id: tasks_user.id,
+          editor_id: tasks_user.id,
           full_nikkud: params[:full_nikkud])
         task.save!
         present task, with: Entities::ApiTaskEntity
