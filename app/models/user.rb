@@ -24,6 +24,8 @@ class User < ActiveRecord::Base
       :access_key_id     => GlobalPreference.get(:s3_key) || "junk",
       :secret_access_key => GlobalPreference.get(:s3_secret) || "junk",
     }
+  validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
+
   def self.style_to_size(style)
     case style
     when :thumb
