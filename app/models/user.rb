@@ -7,7 +7,7 @@ class User < ActiveRecord::Base
     #c.crypto_provider = Authlogic::CryptoProviders::Sha512 # addressing a breaking change in Authlogic 3.4.0, sigh (June 2015)
   end
   include Astrails::Auth::Model
-  validates :email, uniqueness: { case_sensitive: false}
+  validates :email, uniqueness: { case_sensitive: false, if: :will_save_change_to_email? }
 #  attr_accessible :name, :password, :password_confirmation, :notify_on_comments, :notify_on_status, :volunteer_kind_id, :email, :zehut, :avatar
 
   has_gravatar
