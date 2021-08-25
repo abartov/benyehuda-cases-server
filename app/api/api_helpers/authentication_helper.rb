@@ -1,7 +1,6 @@
 module ApiHelpers
   module AuthenticationHelper
     def restrict_access_to_developers
-      #byebug
       if params[:api_key].blank?
         error_code = ErrorCodes::DEVELOPER_KEY_MISSING
         error_msg = 'please acquire a developer key'
