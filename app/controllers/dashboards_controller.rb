@@ -8,7 +8,7 @@ class DashboardsController < InheritedResources::Base
   def index
     if current_user.admin_or_editor?
       @waiting_volunteers = User.all_volunteers.waiting_for_tasks.all
-      @editing_tasks = current_user.editing_tasks.visible_in_my_tasks
+      @editing_tasks = current_user.editing_tasks.visible_in_my_tasks.order('updated_at desc')
       if params[:sort_by] == 'percent_done'
         @editing_tasks.sort! {|a,b| a.percent_done <=> b.percent_done }
         @editing_tasks.reverse! if params[:dir] == 'DESC'
