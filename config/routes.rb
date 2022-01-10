@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   post 'report/update_metadata'
   get "report/inactive"
   get "report/active"
-  get "report/newvols"
+  match 'report/newvols', via: [:get, :post]
   get "report/vols_notify"
   get "report/do_notify"
   get "report/index"

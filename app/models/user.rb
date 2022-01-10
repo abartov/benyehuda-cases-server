@@ -176,6 +176,9 @@ class User < ActiveRecord::Base
   def self.vols_newer_than(t)
     return User.all_volunteers.where(:activated_at => t..Date.today)
   end
+  def self.vols_created_between(fromdate, todate)
+    return User.all_volunteers.where(:activated_at => fromdate..todate)
+  end
   def to_csv
     return "#{name.gsub('"','')}, #{email}, #{current_login_at.to_s}, #{activated_at.to_s}, #{assignment_histories.count}, http://tasks.benyehuda.org/profiles/#{id}"
   end

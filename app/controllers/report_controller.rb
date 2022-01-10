@@ -68,7 +68,10 @@ class ReportController < InheritedResources::Base
   end
   def newvols
     @current_tab = :reports
-    @users = User.vols_newer_than(4.months.ago).paginate(:page => params[:page], :per_page => params[:per_page])
+    @fromdate = params[:fromdate].present? ? Date.parse(params[:fromdate]) : Date.new(Date.today.year, 1, 1) # default to Jan 1st of current year
+    @todate = params[:todate].present? ? Date.parse(params[:todate]) : Date.new(Date.today.year, 12,31) # default to end of current year
+
+    @users = User.vols_created_between(@fromdate, @todate).paginate(:page => params[:page], :per_page => params[:per_page])
   end
   def vols_notify
     @current_tab = :reports

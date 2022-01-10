@@ -1,4 +1,10 @@
 %h1= _("New Volunteers report")
+= form_tag(report_newvols_path) do
+  = 'מתאריך:'
+  = date_field_tag(:fromdate, (params[:fromdate] || Date.new(Date.today.year, 1,1)))
+  = 'עד תאריך:'
+  = date_field_tag(:todate, (params[:todate] || Date.new(Date.today.year, 12, 31)))
+  = submit_tag 'סנן לפי תאריכים אלו'
 %h2= _("Total volunteers: ")+@users.count.to_s
 != render :partial => "users/index", :locals => { :users => @users }
 
