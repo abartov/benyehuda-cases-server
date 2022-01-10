@@ -70,8 +70,13 @@ class ReportController < InheritedResources::Base
     @current_tab = :reports
     @fromdate = params[:fromdate].present? ? Date.parse(params[:fromdate]) : Date.new(Date.today.year, 1, 1) # default to Jan 1st of current year
     @todate = params[:todate].present? ? Date.parse(params[:todate]) : Date.new(Date.today.year, 12,31) # default to end of current year
-
-    @users = User.vols_created_between(@fromdate, @todate).paginate(:page => params[:page], :per_page => params[:per_page])
+    @users = User.vols_created_between(@fromdate, @todate)
+    if params[:download_csv] == '1'
+      csv_buffer = ['שם משתמש,דואל,תאריך הפעלה,מזהה']
+      @users.each{|u| csv_buffer << "#{u.name},#{u.email},#{u.activated_at},#{u.id}" }
+      csv_buffer = csv_buffer.join("\n")
+      send_data csv_buffer, filename: "new_volunteers_#{@fromdate.to_s}_to_#{@todate.to_s}.csv"
+    end
   end
   def vols_notify
     @current_tab = :reports

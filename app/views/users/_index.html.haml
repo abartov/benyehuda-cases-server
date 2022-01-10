@@ -1,4 +1,5 @@
-!= will_paginate(@users)
+- unless no_pagination
+  != will_paginate(@users)
 
 %table.list
   %tr.title
@@ -16,4 +17,5 @@
     %th &nbsp;
   != render :partial => @users
 
-!= will_paginate(@users)
+- unless no_pagination
+  != will_paginate(@users)

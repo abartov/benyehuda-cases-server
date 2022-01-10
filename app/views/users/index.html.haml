@@ -7,7 +7,7 @@
 != render(:partial => "search")
 
 #users
-  != render(:partial => "index")
+  != render(:partial => "index", locals: {no_pagination: false})
 
 :javascript
   var index_html = '#{escape_javascript(render(:template => "admin/volunteer_kinds/index"))}';

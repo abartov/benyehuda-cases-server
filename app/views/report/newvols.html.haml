@@ -1,10 +1,12 @@
 %h1= _("New Volunteers report")
-= form_tag(report_newvols_path) do
+= form_tag(report_newvols_path, class: 'pagy_form') do
   = 'מתאריך:'
   = date_field_tag(:fromdate, (params[:fromdate] || Date.new(Date.today.year, 1,1)))
   = 'עד תאריך:'
   = date_field_tag(:todate, (params[:todate] || Date.new(Date.today.year, 12, 31)))
-  = submit_tag 'סנן לפי תאריכים אלו'
+  = 'להוריד קובץ CSV?'
+  = check_box_tag :download_csv
+  = hidden_field_tag('page', '1', {class: 'pagy-page'})
+  = submit_tag 'סנן לפי תאריכים אלו', data: { disable_with: false }
 %h2= _("Total volunteers: ")+@users.count.to_s
-!= render :partial => "users/index", :locals => { :users => @users }
-
+!= render :partial => "users/index", :locals => { :users => @users, no_pagination: true }
