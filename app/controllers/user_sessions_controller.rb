@@ -9,6 +9,10 @@ class UserSessionsController < InheritedResources::Base
     respond_with_dual_blocks(object, {}, &block)
   end
 
+  def new
+    params.permit!
+    super
+  end
   def create
     @user_session = UserSession.create(email: params[:user_session][:email], password: params[:user_session][:password], remember_me: params[:user_session][:remember_me])
     do_create(@user_session) do |success, failure|
