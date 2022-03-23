@@ -2,4 +2,5 @@
 %h2= _("Total volunteers: ")+@total.to_s
 != render :partial => "users/index", :locals => { :users => @users, no_pagination: false }
 
-
+%h2= "דואלים של כל המשתמשים הפעילים"
+= @emails

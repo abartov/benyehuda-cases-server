@@ -29,8 +29,10 @@ class ReportController < InheritedResources::Base
 
   def active
     @current_tab = :reports
-    @total = User.vols_active_in_last_n_months(6).count
-    @users = User.vols_active_in_last_n_months(6).paginate(:page => params[:page], :per_page => params[:per_page])
+    users = User.vols_active_in_last_n_months(6)
+    @total = users.count
+    @emails = users.pluck(:email).join(', ')
+    @users = users.paginate(:page => params[:page], :per_page => params[:per_page])
   end
 
   def missing_metadata
