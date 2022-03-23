@@ -23,6 +23,7 @@ class User < ActiveRecord::Base
     }
   validates_attachment :avatar, content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
 
+  has_many :audits
   def self.style_to_size(style)
     case style
     when :thumb
@@ -152,7 +153,7 @@ class User < ActiveRecord::Base
     vol_active_in_last_n_months?(6)
   end
   def vol_active_in_last_n_months?(n)
-    self.assignment_histories.order('updated_at desc').each {|h|
+    self.assignment_histories.with_task.where().order('updated_at desc').each {|h|
       if h.updated_at > n.months.ago
         return true
       end
@@ -160,18 +161,10 @@ class User < ActiveRecord::Base
     return false
   end
   def self.vols_active_in_last_n_months(n)
-    ret = []
-    User.all_volunteers.each {|u|
-      ret << u if u.vol_active_in_last_n_months?(n)
-    }
-    return ret
+    User.not_on_break.distinct.joins(:audits).where('audits.created_at > ?', n.months.ago)
   end
   def self.vols_inactive_in_last_n_months(n)
-    ret = []
-    User.all_volunteers.each {|u|
-      ret << u unless u.vol_active_in_last_n_months?(n)
-    }
-    return ret
+    User.not_on_break.distinct.joins(:audits).where.not('audits.created_at > ?', n.months.ago)
   end
   def self.vols_newer_than(t)
     return User.all_volunteers.where(:activated_at => t..Date.today)
