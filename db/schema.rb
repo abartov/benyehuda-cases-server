@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_15_162939) do
+ActiveRecord::Schema.define(version: 2022_03_23_095859) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "api_key"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2021_08_15_162939) do
     t.text "changed_attrs"
     t.boolean "hidden", default: false
     t.index ["task_id"], name: "index_audits_on_task_id"
+    t.index ["user_id", "created_at"], name: "index_audits_on_user_id_and_created_at"
   end
 
   create_table "comments", id: :integer, charset: "utf8mb3", force: :cascade do |t|
