@@ -199,7 +199,7 @@ GEM
       railties (>= 5.2, < 6.2)
       responders (>= 2, < 4)
     innertube (1.1.0)
-    jmespath (1.4.0)
+    jmespath (1.6.1)
     joiner (0.6.0)
       activerecord (>= 6.1.0)
     json (2.6.1)
