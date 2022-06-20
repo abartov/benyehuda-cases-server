@@ -44,7 +44,7 @@ gem 'hoe', '2.8.0'
 
 gem 'aws-sdk-s3', '~> 1'
 gem 'kt-paperclip' # the maintained version of paperclip
-gem 'ruby-vips' # for concatenating JPEGs and PDFs with less memory
+#gem 'ruby-vips' # for concatenating JPEGs and PDFs with less memory
 
 gem 'image_science', :require => false
 gem 'mini_magick'
