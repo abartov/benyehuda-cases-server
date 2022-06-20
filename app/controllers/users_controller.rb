@@ -72,7 +72,7 @@ class UsersController < InheritedResources::Base
       flash[:notice] = _("User enabled")
       redirect_to user_path(@user)
     else
-      @user.update_attribute(:disabled_at, Time.now.utc)
+      @user.update_attribute(:disabled_at, Time.zone.now)
       flash[:notice] = _("User disabled")
       redirect_to users_path
     end

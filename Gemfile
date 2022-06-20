@@ -13,7 +13,6 @@ gem 'activerecord-session_store'
 #gem "mysql2", '0.4.9' # Sphinx can't deal with >0.4.9
 gem "mysql2", '~> 0.4'
 gem 'scrypt', '2.1.1'
-#gem 'authlogic', '~>3.7'
 gem 'authlogic' #, '~>4.0'
 gem 'uglifier'
 gem 'whenever'
@@ -43,19 +42,13 @@ gem 'inherited_resources'
 gem 'has_scope'
 gem 'hoe', '2.8.0'
 
-#gem 'aws-sdk' , '~> 2'
 gem 'aws-sdk-s3', '~> 1'
-#gem 'paperclip'
 gem 'kt-paperclip' # the maintained version of paperclip
-
-#gem 'cocaine'
+gem 'ruby-vips' # for concatenating JPEGs and PDFs with less memory
 
 gem 'image_science', :require => false
-#gem 'rmagick', '~>2.0' # upgrade safe once we move to Ruby 2.3+
 gem 'mini_magick'
 gem 'nokogiri'
-
-# gem 'astrails-safe' # depends on obsolete aws-s3
 
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 gem 'grape' # for API

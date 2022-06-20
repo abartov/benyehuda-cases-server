@@ -16,7 +16,7 @@ class GlobalPreference < ActiveRecord::Base
     value, expires = @@cache[variable]
 
     # return cache if exists and still valid
-    return value if expires && expires > Time.now
+    return value if expires && expires > Time.zone.now
 
     pref = find_or_initialize_by(name: variable)
     if pref.new_record?

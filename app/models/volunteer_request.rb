@@ -18,7 +18,7 @@ class VolunteerRequest < ActiveRecord::Base
 
   def approve!(approver_user)
     self.approver = approver_user
-    self.approved_at = Time.now.utc
+    self.approved_at = Time.zone.now
     save!
     self.user.is_volunteer = true
     self.user.save!

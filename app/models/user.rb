@@ -128,7 +128,7 @@ class User < ActiveRecord::Base
   end
 
   def deliver_activation_instructions_with_db_update!
-    update_attribute(:activation_email_sent_at, Time.now.utc)
+    update_attribute(:activation_email_sent_at, Time.zone.now)
     deliver_activation_instructions_without_db_update!
   end
   alias_method :deliver_activation_instructions_without_db_update!, :deliver_activation_instructions!
@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
   end
 
   def set_task_requested
-    self.task_requested_at = Time.now.utc
+    self.task_requested_at = Time.zone.now
     self.on_break = false
     self
   end

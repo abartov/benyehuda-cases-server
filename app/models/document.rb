@@ -37,7 +37,7 @@ class Document < ActiveRecord::Base
   scope :uploaded_by, lambda {|user| where("documents.user_id = ?", user.id)}
 
   def mark_as_deleted!
-    self.deleted_at = Time.now.utc
+    self.deleted_at = Time.zone.now
     save!
     Task.decrement_counter(:documents_count, self.task_id)
   end
