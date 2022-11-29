@@ -2,7 +2,7 @@ class Admin::TasksController < InheritedResources::Base
   include ActionController::Cookies  #include ActionController
   before_action :load_authlogic
   before_action :require_admin, :only => [:create, :update, :changes, :split_task]
-  before_action :require_editor_or_admin, :only => :index
+  before_action :require_editor_or_admin, :only => [:index, :new, :create, :split_task]
   actions :index, :new, :create, :edit, :update, :destroy, :changes, :split_task
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]

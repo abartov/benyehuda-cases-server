@@ -28,7 +28,7 @@ class PasswordsController < InheritedResources::Base
     return unless load_user_using_perishable_token
 
     unless resource.activated_at
-      resource.activated_at = Time.now
+      resource.activated_at = Time.zone.now
       @activated = true
     end
     pp = params.require(:user).permit(:password, :password_confirmation)
