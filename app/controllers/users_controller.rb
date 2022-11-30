@@ -149,7 +149,7 @@ class UsersController < InheritedResources::Base
     redirect_to user_path(@user)
   end
   def user_params
-    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, user_properties: {}, volunteer_properties: {})
+    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, user_properties: {}, volunteer_properties: {}, editor_properties: {})
     #params.permit!
   end
 
