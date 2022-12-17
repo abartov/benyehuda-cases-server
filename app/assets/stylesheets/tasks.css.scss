@@ -677,3 +677,8 @@ div.ajaxed {
 .center {
 	text-align: center;
 }
+#new_comment textarea {
+  min-width:450px;
+  width:95%;
+  height: unset;
+}
