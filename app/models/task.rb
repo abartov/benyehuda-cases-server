@@ -176,7 +176,7 @@ class Task < ActiveRecord::Base
   end
 
   def files_todo
-    todo = self.documents_by_extensions(['pdf', 'jpg'])
+    todo = self.documents_by_extensions(['pdf', 'jpg','png','jpeg'])
     return todo.length
   end
   def files_done
