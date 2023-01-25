@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_23_095859) do
+ActiveRecord::Schema.define(version: 2023_01_25_224234) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "api_key"
@@ -192,6 +192,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
     t.string "source", limit: 2048
     t.integer "project_id"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
+    t.index ["creator_id"], name: "index_tasks_on_creator_id"
     t.index ["editor_id"], name: "index_tasks_on_editor_id"
     t.index ["kind_id"], name: "index_tasks_on_kind_id"
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
@@ -207,7 +208,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
   end
 
   create_table "translation_keys", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.string "key", limit: 1024, null: false, collation: "utf8_bin"
+    t.string "key", limit: 1024, null: false, collation: "utf8mb3_bin"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["key"], name: "index_translation_keys_on_key", length: 255
