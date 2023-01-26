@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_25_224234) do
+ActiveRecord::Schema.define(version: 2023_01_26_003304) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "api_key"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2023_01_25_224234) do
     t.string "role", limit: 16
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["task_id"], name: "index_assignment_histories_on_task_id"
     t.index ["user_id"], name: "index_assignment_histories_on_user_id"
   end
 
