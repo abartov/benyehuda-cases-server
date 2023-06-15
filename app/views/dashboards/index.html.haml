@@ -1,5 +1,5 @@
 .heading
-  - set_tab :dashboard
+  = set_tab :dashboard
 
 - if current_user.might_become_volunteer?
   != button_to 'הצטרפות כמתנדב/ת', new_volunteer_request_path, :method => :get

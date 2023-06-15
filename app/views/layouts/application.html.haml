@@ -17,10 +17,10 @@
       / main
       #main
         / nav
-        - render_tabs
+        != render_tabs
         / area
         .area
-          - site_notices
+          != site_notices
           != render :partial => 'layouts/flashes'
           != yield
     / footer

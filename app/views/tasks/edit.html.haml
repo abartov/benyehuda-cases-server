@@ -1,4 +1,4 @@
-- set_tab :dashboard, false
+= set_tab :dashboard, false
 
 != link_to _("back to dashboard"), dashboard_path
 
@@ -12,7 +12,7 @@
 != render(:partial => "new_document")
 
 
-- commentable_event_form("finish")
+!= commentable_event_form("finish")
 
 :javascript
   $(document).ready(function() {
