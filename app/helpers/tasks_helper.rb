@@ -107,8 +107,8 @@ module TasksHelper
   end
   def commentable_event_form(event)
     return unless @task.send("can_be_#{event}ed?")
-    haml_tag(:div, :id => "#{event}_task") do
-      haml_concat render(:partial => "tasks/#{event}")
+    content_tag(:div, :id => "#{event}_task") do
+      concat render(:partial => "tasks/#{event}")
     end
   end
 end

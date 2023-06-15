@@ -13,16 +13,16 @@ module ApplicationHelper
 
   def render_tabs
     return unless logged_in?
-    haml_tag(:ul, :id => "nav") do #  :class => "tabs") do
+    content_tag(:ul, :id => "nav") do #  :class => "tabs") do
       TabsHelper::TABS.reverse.each do |tab|
         next if tab[:if] && !current_user.send(tab[:if])
 
         opts = {}
         opts[:class] = "active" if @current_tab == tab[:name]
 
-        haml_tag(:li, opts) do
-          haml_tag(:a, :href => tab[:path]) do
-            haml_tag :span, s_(tab[:title])
+        content_tag(:li, opts) do
+          content_tag(:a, :href => tab[:path]) do
+            content_tag :span, s_(tab[:title])
           end
         end
       end
@@ -31,7 +31,7 @@ module ApplicationHelper
 
   def site_notices
     SiteNotice.active.each do |sn|
-      haml_tag(:div, sn.html.html_safe, :class => "site-notice")
+      content_tag(:div, sn.html.html_safe, :class => "site-notice")
     end
   end
 

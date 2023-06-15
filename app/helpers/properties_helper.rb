@@ -4,7 +4,7 @@ module PropertiesHelper
     association_name = "#{property_parent}_properties"
 
     Property.send("available_for_#{property_parent}", current_user).each do |property|
-      haml_concat render(:partial => "layouts/properties_form", :locals => {:f => f, :property => property, :association_name => association_name})
+      concat render(:partial => "layouts/properties_form", :locals => {:f => f, :property => property, :association_name => association_name})
     end
   end
 
