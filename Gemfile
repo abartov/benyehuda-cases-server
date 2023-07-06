@@ -15,7 +15,7 @@ gem "mysql2", '~> 0.4'
 gem 'scrypt', '2.1.1'
 gem 'authlogic' #, '~>4.0'
 gem 'uglifier'
-gem 'whenever'
+gem 'whenever', require: false
 gem 'will_paginate', :require => 'will_paginate'
 gem 'rails_autolink'
 gem "tzinfo"
