@@ -1,7 +1,7 @@
 %li
   %div.comment{:class => class_for_comment(comment)}
     .comment-header
-      != _("By %{name} %{time} ago") % {:name => link_to(h(comment.user.name), profiles_path(comment.user)), :time => time_ago_in_words(comment.created_at)}
+      != _("By %{name} %{time} ago") % {:name => link_to(h(comment.user.name), profiles_path(comment.user)), :time => time_ago_in_words(comment.created_at).dup}
     %p.comment-text
       != auto_link(h(comment.message).gsub("\n",'<br/>'))
       - when_admin do

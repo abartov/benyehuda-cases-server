@@ -1,6 +1,6 @@
 module DashboardsHelper
   def waiting_for_task(volunteer)
-    return time_ago_in_words(volunteer.task_requested_at) if volunteer.task_requested_at.present?
+    return time_ago_in_words(volunteer.task_requested_at).dup if volunteer.task_requested_at.present?
     return "N/A"
   end
 
