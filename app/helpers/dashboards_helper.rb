@@ -7,7 +7,7 @@ module DashboardsHelper
   def pending_volunteer_requests
     pending_count = VolunteerRequest.pending.count
     if pending_count > 0
-      content_tag(:span) do
+      content_tag(:span, style: 'background-color: lightblue; color: yellow;') do
         concat link_to((n_('There is %d pending volunter request', 'There are %d pending volunter requests', pending_count) % pending_count), volunteer_requests_path)
       end
     end
