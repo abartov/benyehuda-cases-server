@@ -1,2 +1,2 @@
 .block
-  = _("Task requested %{time} ago") % {:time => time_ago_in_words(current_user.task_requested_at)}
+  = _("Task requested %{time} ago") % {:time => time_ago_in_words(current_user.task_requested_at).dup}
