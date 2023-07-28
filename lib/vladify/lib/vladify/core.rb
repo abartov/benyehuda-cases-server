@@ -47,6 +47,7 @@ namespace :vlad do
     ln_shared.each do |d|
       run "ln -sfn #{shared_path}/#{d} #{latest_release}/#{d}"
     end
+    run "ln -sfn #{shared_path}/sockets #{latest_release}/tmp/sockets"
 
     # link shared to latest/config/shared
     run "ln -sfn #{shared_path} #{latest_release}/config/shared"
