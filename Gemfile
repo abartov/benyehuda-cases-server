@@ -53,6 +53,7 @@ gem 'nokogiri'
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 gem 'grape' # for API
 gem 'grape-entity' # for Grape entities exposure
+gem 'puma'
 
 group :test, :development do
   gem 'factory_bot_rails'
@@ -64,7 +65,6 @@ group :test, :development do
   gem 'mocha'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
 #  gem 'query_trace', :require => 'query_trace'
-  gem 'thin'
   gem 'listen'
   gem 'byebug'
 end
@@ -79,4 +79,8 @@ end
 
 group :development do
   gem 'web-console'
+end
+
+group :production do
+  gem 'puma-daemon'
 end
