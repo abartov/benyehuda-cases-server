@@ -5,7 +5,7 @@ class TasksController < InheritedResources::Base
   before_action :require_editor_or_admin, :only => [:index, :create, :make_comments_editor_only, :get_last_source]
   actions :index, :show, :update, :create
 
-  EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed")}
+  EVENTS_WITH_COMMENTS = {"reject" => N_("Task rejected"), "abandon" => N_("Task abandoned"), "finish" => N_("Task completed"), "help_required" => N_("Help required")}
 
   # this action is called when a volunteer clicks "finish" on a task.
   def edit

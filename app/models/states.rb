@@ -18,7 +18,7 @@ module States
         state          :assigned
 
         # assignee is stuck and need editor's help
-        state          :stuck
+        state          :stuck # needs some fixups such as words in foreign alphabet or missing scans
 
         # assignee work in progress, and partially ready
         # NOTE: As of Nov 2012, this state is not used.
@@ -65,8 +65,8 @@ module States
         protected :_abandon, :_abandon!
 
         # assignee needs editor's help
-        aasm.event :help_required do
-          transitions :from => [:assigned, :partial, :rejected], :to => :stuck
+        aasm.event :_help_required do
+          transitions :from => [:assigned, :partial, :rejected, :waits_for_editor], :to => :stuck
         end
 
         # assignee finished partially her work
@@ -113,6 +113,9 @@ module States
         has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
           task.assignee = nil
         end
+        has_reason_comment(:_help_required, :help_required, :assignee, N_("Help required")) do |task, opts|
+          #task.assignee = nil
+        end
 
         has_reason_comment(:finish, :finished, :assignee, N_("Task finished"), :allow_blank_messages => true) do |task, request_new_task|
           task.assignee.set_task_requested.save! if request_new_task.to_bool
@@ -155,6 +158,9 @@ module States
   def abandon
     self.assignee = nil
     _abandon
+  end
+  def help_required
+    self.s
   end
 
   def pre_process_parent_task
@@ -215,6 +221,9 @@ module States
   def can_be_abandoned?
     events_for_current_state.member?(:_abandon)
   end
+  def can_be_help_requireded?
+    events_for_current_state.member?(:_help_required)
+  end
 
   def can_create_new_task?
     events_for_current_state.member?(:create_other_task)
@@ -228,7 +237,7 @@ module States
     self.state = value
   end
 
-  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve, :to_techedit]
+  EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve, :to_techedit, :help_required]
   ASSIGNEE_EVENTS = [:abandon, :finish, :help_required, :finish_partially]
 
   def allow_event_for?(event, user)

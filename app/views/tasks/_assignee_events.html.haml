@@ -6,6 +6,8 @@
         = link_to "סיימתי", edit_task_path(@task), {style:'color:white', id: 'initiate_finish', disable_with: _("Loading, please wait...")}
 .float-right
   != commentable_event_form("abandon")
+.float-right
+  != commentable_event_form("help_required")
 
 :javascript
   $(document).ready(function() {

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_01_26_003304) do
+ActiveRecord::Schema.define(version: 2023_10_04_211937) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "api_key"
@@ -65,6 +65,7 @@ ActiveRecord::Schema.define(version: 2023_01_26_003304) do
     t.boolean "is_rejection_reason", default: false
     t.boolean "is_abandoning_reason", default: false
     t.boolean "is_finished_reason"
+    t.boolean "is_help_required_reason", default: false
     t.index ["task_id", "created_at", "editor_eyes_only"], name: "task_created_eyes"
   end
 
