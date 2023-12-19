@@ -126,7 +126,7 @@ class UsersController < InheritedResources::Base
     if params[:query].blank?
       @users ||= end_of_association_chain.send("true" == params[:all] ? :by_id : :enabled).active_first.paginate(:page => params[:page], :per_page => params[:per_page])
     else
-      q = Task.fixed_Riddle_escape(params[:query])
+      q = params[:query].gsub('@',"\\@")
       @users ||= User.send("true" == params[:all] ? :sp_all : :sp_enabled).sp_active_first.search(q, indices: [@@index_name]).paginate(:page => params[:page], :per_page => params[:per_page])
     end
   end
