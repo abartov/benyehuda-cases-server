@@ -5,6 +5,7 @@ if ENV['RACK_ENV'] == 'production'
   require 'puma/daemon'
   environment 'production'
   workers 0
+  pidfile "#{shared_dir}/tmp/pids/puma.pid"
   daemonize
   bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
   stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
@@ -20,6 +21,5 @@ preload_app!
 
 # port        ENV['PORT']     || 3000
 stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
-pidfile "#{shared_dir}/tmp/pids/puma.pid"
 
 
