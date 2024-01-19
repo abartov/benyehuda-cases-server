@@ -5,6 +5,8 @@
     - if document.image?
       %a{ :href => task_document_path(document.task, document), :target => "_blank"}
         != document.file_file_name
+      != '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+      = link_to 'שרת חלופי', workaround_task_document_path(document.task, document), :target => "_blank"
       -# != link_to document.file_file_name+'&rlm;', task_document_path(document.task, document), :target => "_blank"
     - else
       %a{ :href => document.file.url, :target => "_blank"}

@@ -11,6 +11,16 @@ class DocumentsController < InheritedResources::Base
   def show
     render :layout => false
   end
+  def workaround_download
+    document = Document.find(params[:document])
+    if (require_user && document.task.participant?(current_user)) || (require_user && current_user.try(:is_admin?))
+      response = HTTParty.get(document.file.url)
+      send_data response.body, type: document.file_content_type, :disposition => 'inline'
+    else
+      flash[:error] = _("Only participant can see this page")
+      redirect_to task_path(task)
+    end
+  end
   # create
   def create
     @document = task.prepare_document(current_user, params.permit(document: :file)['document'])

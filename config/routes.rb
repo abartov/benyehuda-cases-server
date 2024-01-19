@@ -32,6 +32,8 @@ Rails.application.routes.draw do
   match '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task', via: [:get, :post]
   get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
   get '/tasks/:id/download_pdf', :controller => 'tasks', :action => 'download_pdf', as: 'task_download_pdf'
+  get '/tasks/:id/workaround_document/:document', :controller => 'documents', :action => 'workaround_download', as: 'workaround_task_document'
+
   match '/tick_file/:id' => 'documents#tick_file', :via => :get
 
   resource :profile, :controller => "users"
