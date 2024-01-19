@@ -5,13 +5,11 @@
     - if document.image?
       %a{ :href => task_document_path(document.task, document), :target => "_blank"}
         != document.file_file_name
-      != '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
-      = link_to 'שרת חלופי', workaround_task_document_path(document.task, document), :target => "_blank"
-      -# != link_to document.file_file_name+'&rlm;', task_document_path(document.task, document), :target => "_blank"
     - else
       %a{ :href => document.file.url, :target => "_blank"}
         != document.file_file_name
-      -#!= link_to document.file_file_name+'&rlm;', document.file.url
+    != '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    = link_to 'שרת חלופי', workaround_task_document_path(document.task, document), :target => "_blank"
     = raw '&rlm;'
     = "(#{sprintf("%.2f", document.file_file_size.to_f/1024)} KB)"
     != _("Uploaded by %{user} %{time} ago") % {:user => link_to(h(document.user.name), profiles_path(document.user)), :time => time_ago_in_words(document.created_at).dup}
