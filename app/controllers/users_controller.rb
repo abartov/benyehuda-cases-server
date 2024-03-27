@@ -56,7 +56,7 @@ class UsersController < InheritedResources::Base
       @user.is_editor = uparams.delete(:is_editor) 
       @user.email = uparams[:email] || @user.email
     end
-    update_resource(resource, resource_params)
+    update_resource(resource, uparams)
     render action: :show
   end
 
@@ -149,7 +149,7 @@ class UsersController < InheritedResources::Base
     redirect_to user_path(@user)
   end
   def user_params
-    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, user_properties: {}, volunteer_properties: {}, editor_properties: {})
+    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, :avatar,  user_properties: {}, volunteer_properties: {}, editor_properties: {})
     #params.permit!
   end
 
