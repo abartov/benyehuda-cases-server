@@ -82,5 +82,6 @@ group :development do
 end
 
 group :production do
+  gem 'lograge'
   gem 'puma-daemon'
 end

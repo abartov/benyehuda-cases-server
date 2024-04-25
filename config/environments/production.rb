@@ -95,7 +95,5 @@ Rails.application.configure do
   config.active_record.dump_schema_after_migration = false
 
   Rails.application.routes.default_url_options[:protocol] = 'https'
-  
-  config.logger = Logger.new(config.paths['log'].first, 5, 10.megabytes) # don't consume more than 50mb
-
+  config.lograge.enabled = true 
 end
