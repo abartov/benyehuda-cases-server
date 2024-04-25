@@ -96,6 +96,6 @@ Rails.application.configure do
 
   Rails.application.routes.default_url_options[:protocol] = 'https'
   
-  config.logger = Logger.new(config.paths[“log”].first, 5, 10.megabytes) # don't consume more than 50mb
+  config.logger = Logger.new(config.paths['log'].first, 5, 10.megabytes) # don't consume more than 50mb
 
 end
