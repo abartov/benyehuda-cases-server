@@ -34,7 +34,6 @@ module TaskNotifications
 
   # XXX
   def delayed_notify_on_changes
-    debugger
     return if SKIP_STATES.member?(state.to_sym)
     recipients = (task_changes_recipients || []).select {|r| r.wants_to_be_notified_of?(:state)}
     return if recipients.blank?
