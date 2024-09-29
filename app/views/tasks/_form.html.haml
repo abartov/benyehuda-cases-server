@@ -10,7 +10,7 @@
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
   = f.input :source, :label => 'פרטי מהדורה (מהדורה [אם יש], עיר: מו"ל, שנה)', :input_html => {:class => 'span-13'}
-  = f.collection_select :project_id, Project.where(status: 'פעיל'), :id, :name, {include_blank: 'שיוך למיזם', selected: @task.project_id}
+  = f.collection_select :project_id, Project.where(status: 'פעיל').order(:name), :id, :name, {include_blank: 'שיוך למיזם', selected: @task.project_id}
   /= f.input :project, as: :select, collection: Project.where(status: 'פעיל'), selected: @task.project, label: 'מיזם'
   - if current_user && current_user.is_admin?
     = link_to 'ניהול מיזמים', projects_path
