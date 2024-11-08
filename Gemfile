@@ -66,7 +66,8 @@ group :test, :development do
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
 #  gem 'query_trace', :require => 'query_trace'
   gem 'listen'
-  gem 'byebug'
+  gem 'debug'
+  gem 'rubocop', require: false
 end
 
 group :test do

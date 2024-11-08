@@ -50,6 +50,7 @@ class Task < ActiveRecord::Base
   has_many :task_audits, :class_name => "Audit", :dependent => :destroy
 
   has_many :assignment_histories, :dependent => :destroy
+  has_and_belongs_to_many :teams, join_table: :task_teams
 
   include CustomProperties
   has_many_custom_properties :task # task_properties
