@@ -39,33 +39,49 @@ class ReportController < InheritedResources::Base
     @current_tab = :reports
     typing = TaskKind.where(name: 'הקלדה')[0].id
     proofing = TaskKind.where(name: 'הגהה')[0].id
-    @tasks = Task.where("state <> 'ready_to_publish' AND (include_images is null or independent is null or genre is null) AND (kind_id = #{typing} OR kind_id = #{proofing})").paginate(:page => params[:page], :per_page => params[:per_page])
-  end
-  def missing_metadata_panel
-    @task = Task.find(params[:id])
-    unless @task
-      head :ok
+    filters = []
+    filters << ' include_images is null ' unless params[:images].present?
+    filters << ' independent is null ' unless params[:independent].present?
+    filters << ' genre is null ' unless params[:genre].present?
+    filters = filters.join(' OR ')
+    condition = "state <> 'ready_to_publish' AND (kind_id = #{typing} OR kind_id = #{proofing})"
+    condition += "AND (#{filters})" if filters.present?
+    if params[:team].present?
+      @tasks = Task.where(condition).paginate(:page => params[:page], :per_page => params[:per_page])
     else
-      @possibly_related = @task.possibly_related_tasks
-      render :layout => false
+      # joins team_memberships to return tasks that aren't associated with a team
+      @tasks = Task.joins('LEFT JOIN task_teams ON tasks.id = task_teams.task_id').where("task_teams.task_id IS NULL AND #{condition}").paginate(:page => params[:page], :per_page => params[:per_page])
     end
   end
+
+  def missing_metadata_panel
+    @task = Task.find(params[:id])
+    if @task
+      @possibly_related = @task.possibly_related_tasks
+      render :layout => false
+    else
+      head :ok
+    end
+  end
+
   def update_metadata
     @task = Task.find(params[:task_id])
-    unless @task
-      head :ok
-    else
+    if @task
       tasks_to_update = [@task]
       params.keys.each{|p| tasks_to_update << Task.find(p[4..-1]) if p =~ /task\d+/}
       indep = params[:independent].nil? ? false : true
       images = params[:include_images].nil? ? false : true
+      team = params[:team_id].present? ? Team.find(params[:team_id]) : nil
       tasks_to_update.each do |t|
         t.genre = params[:genre]
         t.independent = indep
         t.include_images = images
+        t.teams << team if team.present?
         t.save!
       end
       render :js => "$('.metadata_dialog').dialog('close');"
+    else
+      head :ok
     end
   end
   def newvols

@@ -21,7 +21,7 @@ he:
       actions: פעולות
       target_date: תאריך יעד
       number_of_tasks: מספר משימות
-      number_of_users: מספר משתמשים
+      number_of_users: מספר מתנדבים
       number_of_tasks_assigned: מוקצות
       number_of_tasks_approved: מאושרות
       progress: התקדמות
@@ -52,6 +52,12 @@ he:
     site_notices: הודעות מערכת
     global_prefs: הגדרות
     translations: תרגום ממשק
+  report:
+    missing_metadata:
+      missing_genre: התעלם מחוסר סוגה
+      missing_images: התעלם מהגדרת תמונות
+      missing_independent: התעלם מהגדרת נפרדוּת
+      missing_team: התעלם מהיעדר צוות
   are_you_sure: פעולה בלתי־הפיכה! להמשיך?
   edit: עריכה
   delete: מחיקה
@@ -61,3 +67,4 @@ he:
   add: הוספה
   perform_add: הוסף!
   no_matches_found: לא נמצאו תוצאות
+  submit: שלח
