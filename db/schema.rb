@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_23_095859) do
+ActiveRecord::Schema.define(version: 2024_11_08_052206) do
 
   create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "api_key"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
     t.string "role", limit: 16
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["task_id"], name: "index_assignment_histories_on_task_id"
     t.index ["user_id"], name: "index_assignment_histories_on_user_id"
   end
 
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
     t.boolean "is_rejection_reason", default: false
     t.boolean "is_abandoning_reason", default: false
     t.boolean "is_finished_reason"
+    t.boolean "is_help_required_reason", default: false
     t.index ["task_id", "created_at", "editor_eyes_only"], name: "task_created_eyes"
   end
 
@@ -171,6 +173,15 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
     t.datetime "updated_at"
   end
 
+  create_table "task_teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "task_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["task_id"], name: "index_task_teams_on_task_id"
+    t.index ["team_id"], name: "index_team_memberships_on_team_id"
+  end
+
   create_table "tasks", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.integer "creator_id"
     t.integer "editor_id"
@@ -192,10 +203,33 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
     t.string "source", limit: 2048
     t.integer "project_id"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
+    t.index ["creator_id"], name: "index_tasks_on_creator_id"
     t.index ["editor_id"], name: "index_tasks_on_editor_id"
     t.index ["kind_id"], name: "index_tasks_on_kind_id"
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
     t.index ["state"], name: "index_tasks_on_state"
+  end
+
+  create_table "team_memberships", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "team_id", null: false
+    t.integer "user_id"
+    t.datetime "joined"
+    t.datetime "left"
+    t.integer "team_role"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["team_id"], name: "index_team_memberships_on_team_id"
+    t.index ["user_id"], name: "index_team_memberships_on_user_id"
+  end
+
+  create_table "teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.boolean "open"
+    t.text "description", size: :medium
+    t.integer "status"
+    t.date "targetdate"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "tmp_stats", id: false, charset: "utf8mb3", force: :cascade do |t|
@@ -207,7 +241,7 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
   end
 
   create_table "translation_keys", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.string "key", limit: 1024, null: false, collation: "utf8_bin"
+    t.string "key", limit: 1024, null: false, collation: "utf8mb3_bin"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["key"], name: "index_translation_keys_on_key", length: 255
@@ -278,4 +312,6 @@ ActiveRecord::Schema.define(version: 2022_03_23_095859) do
   end
 
   add_foreign_key "audit_logs", "api_users"
+  add_foreign_key "task_teams", "tasks"
+  add_foreign_key "team_memberships", "users"
 end

@@ -1,0 +1,22 @@
+= form_for @team do |f|
+  - if @team.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@team.errors.count, "error")} prohibited this team from being saved:"
+      %ul
+        - @team.errors.full_messages.each do |message|
+          %li= message
+  = f.label t('.name')
+  = f.text_field :name
+  %br
+  = f.label t('.description')
+  = f.text_area :description
+  %br
+  -#= f.label :targetdate
+  -#= f.date_select :targetdate
+  .membership 
+    = render partial: 'memberships', locals: {f: f, edit: true}
+  = f.label :task_ids, t('.tasks')
+  .tasks
+    = render partial: 'tasks', locals: {edit: true}
+  .actions
+    = f.submit t(:save)

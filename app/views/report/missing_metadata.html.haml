@@ -7,6 +7,18 @@
         %span
           %em
             != _("back to dashboard")
+%form{action: "/report/missing_metadata", method: :get}
+  %input{:name => "genre", :type => "checkbox", checked: params[:genre]}
+  %label{:for => "genre"}= t('.missing_genre')
+  %input{:name => "images", :type => "checkbox", checked: params[:images]}
+  %label{:for => "images"}= t('.missing_images')
+  %input{:name => "independent", :type => "checkbox", checked: params[:independent]}
+  %label{:for => "independent"}= t('.missing_independent')
+  %input{:name => "team", :type => "checkbox", checked: params[:team]}
+  %label{:for => "team"}= t('.missing_team')
+
+  %input{type: :submit, value: t(:submit)}
+%p
 .metadata_dialog
   .metadata_panel
 .block

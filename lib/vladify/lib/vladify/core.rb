@@ -47,6 +47,7 @@ namespace :vlad do
     ln_shared.each do |d|
       run "ln -sfn #{shared_path}/#{d} #{latest_release}/#{d}"
     end
+    run "ln -sfn #{shared_path}/sockets #{latest_release}/tmp/sockets"
 
     # link shared to latest/config/shared
     run "ln -sfn #{shared_path} #{latest_release}/config/shared"
@@ -60,8 +61,8 @@ namespace :vlad do
   remote_task :assets_precompile, :roles => :app do
     run "cd #{current_release} && ./rvmdo.sh 'bundle exec rake assets:precompile'"
   end
-  remote_task :restart_thin do
-    run ". ~/.profile && rvm use 2.6 && cd ~/tasks && ./stop.sh && ./start.sh"
+  remote_task :restart_puma do
+    run ". ~/.profile && rvm use 3.2.1 && cd ~/tasks && ./stop.sh && ./start.sh"
   end
 end
 
@@ -83,7 +84,7 @@ namespace :deploy do
   task :prepare => %w/vlad:dbmigrate/
   task :assetsprep => %w/vlad:assets_precompile/
   # restart all the services
-  task :restart => %w/vlad:restart_thin/
+  task :restart => %w/vlad:restart_puma/
   #task :restart => %w/mod_rails:restart/
   # cleanup
   task :cleanup => %w/vlad:cleanup/

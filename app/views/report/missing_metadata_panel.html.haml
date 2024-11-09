@@ -9,6 +9,8 @@
     = label_tag 'מותר להעלות תמונות?'
     = check_box_tag :include_images
     %p
+    = label_tag 'צוות'
+    = select_tag :team_id, options_for_select(Team.all.map{|t| [t.name, t.id]}), include_blank: true
     %h2= 'משימות עם שם דומה'
     = check_box_tag 'toggle'
     %ol

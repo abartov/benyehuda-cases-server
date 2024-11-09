@@ -1,4 +1,4 @@
-- set_tab :dashboard, false
+= set_tab :dashboard, false
 
 != link_to _("back to dashboard"), dashboard_path
 
@@ -30,9 +30,14 @@
               = _("Instructions")+": "
           %td.instructions
             != auto_link(@task.instructions)
-      %a.purple-button.gradient{ :href => 'https://benyehuda.org/page/typing', :target => '_new'}
-        %span
-          = _("Standard instructions")
+      - if @task.kind.name == 'הגהה'
+        %a.purple-button.gradient{ :href => 'https://benyehuda.org/page/proofreading', :target => '_new'}
+          %span
+            = "הנחיות הגהה קבועות"
+      - else
+        %a.purple-button.gradient{ :href => 'https://benyehuda.org/page/typing', :target => '_new'}
+          %span
+            = _("Standard instructions")
       %br
       %br
 

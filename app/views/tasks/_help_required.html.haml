@@ -1,0 +1,14 @@
+- toggle_js = "jQuery('#help_required_link, #help_required_container').toggle();"
+.purple-button.gradient{ :id => "help_required_link" }
+  %span
+    != link_to_function 'דרושות השלמות', "#{toggle_js}$('help_required_comment_message').show().focus()", :style => has_rejection_errors? ? "display:none" : "color:white"
+
+#help_required_container.block{style:'display:none;margin-bottom:120px;'}
+  = semantic_form_for(@task, :live_validations => false, :url => task_path(@task, :event => "help_required"), :remote => true) do |f|
+    = f.inputs do
+      != f.fields_for :comment, @task.help_required_comment  do |comment_fields|
+        != comment_fields.input :message, :as => :text, :input_html => {:id => "help_required_comment_message", :class => "comment_message"}, :label => 'איזו השלמה או עזרה נדרשת?'
+    != f.submit 'סמן את המשימה כטעונת השלמות', class: 'purple-button gradient', style: 'margin-bottom:0; height:35px;'
+    .gray-button
+      %span
+        != link_to_function _("cancel"), toggle_js, :style => "color:#565253"

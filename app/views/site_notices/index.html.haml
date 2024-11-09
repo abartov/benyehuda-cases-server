@@ -1,4 +1,4 @@
-- set_tab :site_notices, (params[:all] ? _("All Site Notices") : _("Active Site Notices"))
+= set_tab :site_notices, (params[:all] ? _("All Site Notices") : _("Active Site Notices"))
 
 != link_to s_("site notice|New"), new_site_notice_path
 != link_to s_("site notice|Active"), site_notices_path

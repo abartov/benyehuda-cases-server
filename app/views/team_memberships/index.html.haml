@@ -1,0 +1,29 @@
+%h1 Listing team_memberships
+
+%table
+  %thead
+    %tr
+      %th Joined
+      %th Left
+      %th Team role
+      %th Team
+      %th User
+      %th
+      %th
+      %th
+
+  %tbody
+    - @team_memberships.each do |team_membership|
+      %tr
+        %td= team_membership.joined
+        %td= team_membership.left
+        %td= team_membership.team_role
+        %td= team_membership.team_id
+        %td= team_membership.user_id
+        %td= link_to 'Show', team_membership
+        %td= link_to 'Edit', edit_team_membership_path(team_membership)
+        %td= link_to 'Destroy', team_membership, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Team membership', new_team_membership_path

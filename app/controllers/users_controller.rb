@@ -56,7 +56,7 @@ class UsersController < InheritedResources::Base
       @user.is_editor = uparams.delete(:is_editor) 
       @user.email = uparams[:email] || @user.email
     end
-    update_resource(resource, resource_params)
+    update_resource(resource, uparams)
     render action: :show
   end
 
@@ -126,8 +126,8 @@ class UsersController < InheritedResources::Base
     if params[:query].blank?
       @users ||= end_of_association_chain.send("true" == params[:all] ? :by_id : :enabled).active_first.paginate(:page => params[:page], :per_page => params[:per_page])
     else
-
-      @users ||= User.send("true" == params[:all] ? :sp_all : :sp_enabled).sp_active_first.search(params[:query], indices: [@@index_name]).paginate(:page => params[:page], :per_page => params[:per_page])
+      q = params[:query].gsub('@',"\\@")
+      @users ||= User.send("true" == params[:all] ? :sp_all : :sp_enabled).sp_active_first.search(q, indices: [@@index_name]).paginate(:page => params[:page], :per_page => params[:per_page])
     end
   end
 
@@ -149,7 +149,7 @@ class UsersController < InheritedResources::Base
     redirect_to user_path(@user)
   end
   def user_params
-    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, user_properties: {}, volunteer_properties: {}, editor_properties: {})
+    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor, :is_volunteer, :avatar,  user_properties: {}, volunteer_properties: {}, editor_properties: {})
     #params.permit!
   end
 

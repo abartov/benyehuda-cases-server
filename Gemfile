@@ -15,7 +15,7 @@ gem "mysql2", '~> 0.4'
 gem 'scrypt', '2.1.1'
 gem 'authlogic' #, '~>4.0'
 gem 'uglifier'
-gem 'whenever'
+gem 'whenever', require: false
 gem 'will_paginate', :require => 'will_paginate'
 gem 'rails_autolink'
 gem "tzinfo"
@@ -49,10 +49,12 @@ gem 'kt-paperclip' # the maintained version of paperclip
 gem 'image_science', :require => false
 gem 'mini_magick'
 gem 'nokogiri'
+gem 'rails-jquery-autocomplete', '>= 1.0.5' # for auto-completion
 
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 gem 'grape' # for API
 gem 'grape-entity' # for Grape entities exposure
+gem 'puma'
 
 group :test, :development do
   gem 'factory_bot_rails'
@@ -64,9 +66,9 @@ group :test, :development do
   gem 'mocha'
   #gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
 #  gem 'query_trace', :require => 'query_trace'
-  gem 'thin'
   gem 'listen'
-  gem 'byebug'
+  gem 'debug'
+  gem 'rubocop', require: false
 end
 
 group :test do
@@ -79,4 +81,9 @@ end
 
 group :development do
   gem 'web-console'
+end
+
+group :production do
+  gem 'lograge'
+  gem 'puma-daemon'
 end

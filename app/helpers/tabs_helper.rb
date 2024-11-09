@@ -1,6 +1,8 @@
 require "fast_gettext/translation_repository/db"
 
 module TabsHelper
+  I18n.locale = 'he'
+
   TABS = [
     {:name => :translations, :title => N_("Translations"), :path => "/translation_keys", :if => :is_admin?},
     {:name => :global_prefs, :title => N_("Global Preferences"), :path => "/global_preferences", :if => :is_admin?},
@@ -9,10 +11,11 @@ module TabsHelper
     {:name => :reports, :title => N_("Reports"), :path => "/report", :if => :is_admin?},
     {:name => :profile, :title => N_("Profile"), :path => "/profile"},
     {:name => :volunteer_requests, :title => N_("Volunteer Requests"), :path => "/volunteer_requests", :if => :admin_or_editor?},
+    {name: :teams, title: I18n.t(:teams), path: "/teams", if: :is_admin?},
     {:name => :users, :title => N_("Users"), :path => "/users", :if => :is_admin?}, 
     {:name => :tasks_admin, :title => N_("Tasks Admin"), :path => "/admin/tasks", :if => :admin_or_editor?},
     {:name => :dashboard, :title => N_("Dashboard"), :path => "/dashboard"},
-  ]
+  ].freeze
 
   def tabs_by_name
     @tabs_by_name ||= TABS.inject({}) do |res, tab|
@@ -35,6 +38,6 @@ module TabsHelper
   end
 
   def render_page_title
-    haml_tag(:h1, @page_title.html_safe)
+    content_tag(:h1, @page_title.html_safe)
   end
 end

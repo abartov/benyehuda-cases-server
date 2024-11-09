@@ -20,5 +20,5 @@ Dir[Rails.root.join('lib', 'plugins', '*')].each do |plugin|
   end
 
   initializer = File.join(File.dirname(plugin), 'initializers', File.basename(plugin) + '.rb')
-  require initializer if File.exists?(initializer)
+  require initializer if File.exist?(initializer)
 end

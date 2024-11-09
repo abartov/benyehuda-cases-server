@@ -50,6 +50,7 @@ class Task < ActiveRecord::Base
   has_many :task_audits, :class_name => "Audit", :dependent => :destroy
 
   has_many :assignment_histories, :dependent => :destroy
+  has_and_belongs_to_many :teams, join_table: :task_teams
 
   include CustomProperties
   has_many_custom_properties :task # task_properties
@@ -118,7 +119,7 @@ class Task < ActiveRecord::Base
   }
   TASK_LENGTH.default = 46..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source']
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source', 'invert_state', 'project']
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -138,7 +139,7 @@ class Task < ActiveRecord::Base
     search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:conditions][:project] = opts[:project] unless opts[:project].blank?
-    
+
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
@@ -148,6 +149,10 @@ class Task < ActiveRecord::Base
       search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
       ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(sql: SEARCH_INCLUDES).merge(:order => 'updated_at DESC', :page => opts[:page], :per_page => opts[:per_page]).merge(indices: [@@index_name])
     end
+  end
+
+  def name_with_kind
+    "#{name} (#{kind.try(:name)})"
   end
 
   def parent_task_updated
@@ -176,7 +181,7 @@ class Task < ActiveRecord::Base
   end
 
   def files_todo
-    todo = self.documents_by_extensions(['pdf', 'jpg'])
+    todo = self.documents_by_extensions(['pdf', 'jpg','png','jpeg'])
     return todo.length
   end
   def files_done

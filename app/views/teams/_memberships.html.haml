@@ -1,0 +1,44 @@
+= label_tag t('.team_leads')
+%br
+%ol
+- @team_leads.each do |membership|
+  %li{id: membership.id}
+    = link_to membership.user.name, user_path(membership.user)
+    != '&emsp;&emsp;'
+    - if edit
+      = link_to t(:remove), team_membership_path(membership), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
+    %br
+- if edit
+  = t(:add)
+  = collection_select @team, :team_lead_ids, User.not_on_break, :id, :name
+  = button_tag t(:perform_add), id: "add_lead", type: :button
+  %br
+
+%p
+= label_tag :user_ids, t('.users')
+%br
+%ol
+- @team_members.each do |membership|
+  %li{id: membership.id}
+    = link_to membership.user.name, user_path(membership.user)
+    != '&emsp;&emsp;'
+    - if edit
+      = link_to t(:remove), team_membership_path(membership), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
+    %br
+- if edit
+  = t(:add)
+  = collection_select @team, :user_ids, User.not_on_break, :id, :name
+  = button_tag t(:perform_add), id: "add_member", type: :button
+  %br
+
+%br
+
+:javascript
+  $(document).ready(function() {
+    $("#add_lead").click(function() {
+      $.post("#{team_memberships_path}", {team_membership: {team_role: #{TeamMembership.team_roles[:lead]}, team_id: #{@team.id}, user_id: $("#team_team_lead_ids").val()}});
+    });
+    $("#add_member").click(function() {
+      $.post("#{team_memberships_path}", {team_membership: {team_role: #{TeamMembership.team_roles[:member]}, team_id: #{@team.id}, user_id: $("#team_user_ids").val()}});
+    });
+  });

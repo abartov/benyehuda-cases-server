@@ -1,0 +1,39 @@
+%h1= t('.title')
+
+%table
+  %thead
+    %tr
+      %th= t('activerecord.attributes.team.name')
+      %th= t('activerecord.attributes.team.description')
+      %th= t('.team_leads')
+      %th= t('.number_of_users')
+      %th= t('.number_of_tasks')
+      %th= t('.number_of_tasks_assigned')
+      %th= t('.number_of_tasks_approved')
+      %th= t('.progress')
+      %th= t('activerecord.attributes.team.targetdate')
+      %th= t('.actions')
+
+  %tbody
+    - @teams.each do |team|
+      %tr
+        %td= link_to team.name, edit_team_path(team)
+        %td= team.description
+        %td
+          - team.team_leads.each do |team_lead|
+            = team_lead.name
+            %br
+        %td= team.users.count
+        - total = team.tasks.count
+        - done = team.tasks.approved.count + team.tasks.other_task_creat.count
+        %td= total
+        %td= team.tasks.assigned.count
+        %td= done.to_s
+        %td= done > 0 ? "#{(done.to_f / total.to_f * 100).round(2)}%" : ""
+        %td= team.targetdate
+        %td
+          = link_to t(:delete), team, method: :delete, data: { confirm: t(:are_you_sure) }
+
+%br
+
+= link_to t('.new'), new_team_path

@@ -1,6 +1,10 @@
 Rails.application.routes.draw do
   resources :api_users, controller: 'xapi_users' # weird inflection problems requiring *both* APIUsersController *and* ApiUsersController to be defined. No time to deal with it.
   resources :projects
+  resources :teams
+  resources :team_memberships
+  resources :task_teams
+  get 'autocomplete_task_title' => 'tasks#autocomplete_task_name', as: 'autocomplete_task_title'
   get "report/stalled"
   get 'report/missing_metadata'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
@@ -32,6 +36,8 @@ Rails.application.routes.draw do
   match '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task', via: [:get, :post]
   get '/tasks/:id/make_comments_editor_only', :controller => 'tasks', :action => 'make_comments_editor_only'
   get '/tasks/:id/download_pdf', :controller => 'tasks', :action => 'download_pdf', as: 'task_download_pdf'
+  get '/tasks/:id/workaround_document/:document', :controller => 'documents', :action => 'workaround_download', as: 'workaround_task_document'
+
   match '/tick_file/:id' => 'documents#tick_file', :via => :get
 
   resource :profile, :controller => "users"

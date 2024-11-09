@@ -1,13 +1,13 @@
 .boxbody
-  %b
-    = _("Task kind")+": "
-  = @task.kind.try(:name)
-  %br
-  %b
-    = 'מיזם: '
-  = @task.project.try(:name)
-  %br
-  %div{style:'background-color: orange'}
+  %div{style:'background-color: orange; font-size: 200%;'}
+    %b
+      = _("Task kind")+": "
+    = @task.kind.try(:name)
+    %br
+    %b
+      = 'מיזם: '
+    = @task.project.try(:name)
+    %br
     %b
       = 'סוגה: '
     = @task.try(:genre)

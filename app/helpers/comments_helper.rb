@@ -5,6 +5,7 @@ module CommentsHelper
       res << "rejection_reason" if comment.is_rejection_reason?
       res << "abandoning_reason" if comment.is_abandoning_reason?
       res << "finished_reason" if comment.is_finished_reason?
+      res << "help_required_reason" if comment.is_help_required_reason?
     end.join(" ")
   end
 end

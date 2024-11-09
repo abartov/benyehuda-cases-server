@@ -15,6 +15,12 @@ class Notification < ActionMailer::Base
     mail to: recipient_users.collect(&:email_recipient), from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("state changed notification subject|%{state} (%{domain}): %{task_name_snippet}") % { :state => Task.textify_state(task.state), :task_name_snippet => task.name.utf_snippet(20), :domain => domain}
   end
 
+  def task_published(task, recipient_users)
+    @task = task
+    @task_url = task_url(task)
+    mail to: recipient_users.collect(&:email_recipient), from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: "המשימה '#{task.name.utf_snippet(20)}' פורסמה באתר"
+  end
+
   def volnteer_welcome(user)
     @user = user
     @domain = domain

@@ -1,0 +1,12 @@
+%p#notice= notice
+
+%p
+  %b Task:
+  = @task_team.task
+%p
+  %b Team:
+  = @task_team.team
+
+= link_to 'Edit', edit_task_team_path(@task_team)
+\|
+= link_to 'Back', task_teams_path
