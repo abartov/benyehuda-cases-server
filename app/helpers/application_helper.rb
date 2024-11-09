@@ -21,7 +21,7 @@ module ApplicationHelper
       opts[:class] = "active" if @current_tab == tab[:name]
 
       buf += "<li " + (@current_tab == tab[:name] ? 'class="active"' : '') +'>'
-      buf += "<a href=\"#{tab[:path]}\"><span>#{s_(tab[:title])}</span></a></li>"
+      buf += "<a href=\"#{tab[:path]}\"><span>#{I18n.t("tabs.#{tab[:name]}")}</span></a></li>"
     end
     buf += "</ul>"
     buf

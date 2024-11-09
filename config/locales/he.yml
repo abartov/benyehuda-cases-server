@@ -1,0 +1,60 @@
+he:
+  date:
+    order: ["יום", "חודש", "שנה"]
+    
+  activerecord:
+    attributes:
+      team:
+        created_at: נוצר ב
+        updated_at: עודכן ב
+        name: שם
+        email: דואל
+        title: כותרת
+        status: סטטוס
+        description: תיאור
+        targetdate: תאריך יעד
+
+  teams:
+    index:
+      title: צוותים
+      new: צור צוות חדש
+      actions: פעולות
+      target_date: תאריך יעד
+      number_of_tasks: מספר משימות
+      number_of_users: מספר משתמשים
+      number_of_tasks_assigned: מוקצות
+      number_of_tasks_approved: מאושרות
+      progress: התקדמות
+      team_leads: מנהלי צוות
+    new:
+      title: צוות חדש
+      target_date: תאריך יעד
+      team_leads: מנהלי צוות
+      submit: שמור
+    form:
+      tasks: משימות
+      name: שם
+      description: תיאור
+    memberships:
+      users: מתנדבים
+      team_leads: מנהלי צוות
+  tabs:
+    teams: צוותים
+    users: משתמשים
+    tasks_admin: ניהול משימות
+    volunteer_requests: בקשות התנדבות
+    dashboard: מרכז הפעילות
+    profile: דף מתנדב
+    reports: דו"חות
+    object_prefs: תכונות פריטים
+    site_notices: הודעות מערכת
+    global_prefs: הגדרות
+    translations: תרגום ממשק
+  are_you_sure: פעולה בלתי־הפיכה! להמשיך?
+  edit: עריכה
+  delete: מחיקה
+  show: תצוגה
+  back: חזרה
+  save: שמירה
+  add: הוספה
+  perform_add: הוסף!

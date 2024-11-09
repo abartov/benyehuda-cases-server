@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   resources :api_users, controller: 'xapi_users' # weird inflection problems requiring *both* APIUsersController *and* ApiUsersController to be defined. No time to deal with it.
   resources :projects
+  resources :teams
+  resources :team_memberships
   get "report/stalled"
   get 'report/missing_metadata'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
@@ -47,6 +49,7 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :tasks, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :task_kinds, :only => [:create, :new, :index, :destroy]
+    resources :task_teams
     resources :volunteer_kinds, :only => [:create, :new, :index, :destroy]
   end
   get '/admin/changes', :controller => 'admin/tasks', :action => 'changes'

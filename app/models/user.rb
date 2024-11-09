@@ -74,7 +74,7 @@ class User < ActiveRecord::Base
   has_many :search_settings
   belongs_to :kind, :class_name => "VolunteerKind", :foreign_key => :volunteer_kind_id
   has_and_belongs_to_many :teams, :join_table => :team_memberships
-
+  has_many :team_memberships
   #FIXME add validation and validate_kind?
   # validates :volunteer_kind_id, :presence => true, :if => :validate_kind?, :on => :update
 
