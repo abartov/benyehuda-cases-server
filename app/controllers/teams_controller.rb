@@ -15,7 +15,7 @@ class TeamsController < ApplicationController
   def create
     @team = Team.new(team_params)
     if @team.save
-      redirect_to @team, notice: 'Team was successfully created.'
+      redirect_to edit_team_path(@team), notice: 'Team was successfully created.'
     else
       render :new
     end
@@ -25,13 +25,13 @@ class TeamsController < ApplicationController
   def edit
     @team_leads = @team.team_lead_memberships
     @team_members = @team.team_member_memberships
-    @tasks = @team.tasks
+    @task_teams = @team.task_teams
   end
 
   # PATCH/PUT /teams/1
   def update
     if @team.update(team_params)
-      redirect_to @team, notice: 'Team was successfully updated.'
+      redirect_to edit_team_path(@team), notice: 'Team was successfully updated.'
     else
       render :edit
     end

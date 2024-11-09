@@ -319,6 +319,8 @@ GEM
     rails-i18n (6.0.0)
       i18n (>= 0.7, < 2)
       railties (>= 6.0.0, < 7)
+    rails-jquery-autocomplete (1.0.5)
+      rails (>= 3.2)
     rails_autolink (1.1.8)
       actionview (> 3.1)
       activesupport (> 3.1)
@@ -497,6 +499,7 @@ DEPENDENCIES
   rack (>= 2.1.4)
   rails (~> 6)
   rails-i18n (~> 6)
+  rails-jquery-autocomplete (>= 1.0.5)
   rails_autolink
   rake
   rexml

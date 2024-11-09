@@ -35,6 +35,8 @@ he:
       tasks: משימות
       name: שם
       description: תיאור
+    edit:
+      title: עריכת צוות
     memberships:
       users: מתנדבים
       team_leads: מנהלי צוות
@@ -58,3 +60,4 @@ he:
   save: שמירה
   add: הוספה
   perform_add: הוסף!
+  no_matches_found: לא נמצאו תוצאות

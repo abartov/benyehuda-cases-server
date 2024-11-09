@@ -49,6 +49,7 @@ gem 'kt-paperclip' # the maintained version of paperclip
 gem 'image_science', :require => false
 gem 'mini_magick'
 gem 'nokogiri'
+gem 'rails-jquery-autocomplete', '>= 1.0.5' # for auto-completion
 
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 gem 'grape' # for API

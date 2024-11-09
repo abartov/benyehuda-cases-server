@@ -139,7 +139,7 @@ class Task < ActiveRecord::Base
     search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:conditions][:project] = opts[:project] unless opts[:project].blank?
-    
+
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
@@ -149,6 +149,10 @@ class Task < ActiveRecord::Base
       search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
       ret = self.search fixed_Riddle_escape(opts[:query]), search_opts.merge(sql: SEARCH_INCLUDES).merge(:order => 'updated_at DESC', :page => opts[:page], :per_page => opts[:per_page]).merge(indices: [@@index_name])
     end
+  end
+
+  def name_with_kind
+    "#{name} (#{kind.try(:name)})"
   end
 
   def parent_task_updated

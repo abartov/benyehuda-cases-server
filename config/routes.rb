@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   resources :projects
   resources :teams
   resources :team_memberships
+  resources :task_teams
+  get 'autocomplete_task_title' => 'tasks#autocomplete_task_name', as: 'autocomplete_task_title'
   get "report/stalled"
   get 'report/missing_metadata'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
@@ -49,7 +51,6 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :tasks, :only => [:index, :new, :create, :edit, :update, :destroy]
     resources :task_kinds, :only => [:create, :new, :index, :destroy]
-    resources :task_teams
     resources :volunteer_kinds, :only => [:create, :new, :index, :destroy]
   end
   get '/admin/changes', :controller => 'admin/tasks', :action => 'changes'

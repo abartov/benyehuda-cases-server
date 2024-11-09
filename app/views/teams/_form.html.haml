@@ -16,7 +16,7 @@
   .membership 
     = render partial: 'memberships', locals: {f: f, edit: true}
   = f.label :task_ids, t('.tasks')
-  -#= f.collection_select :task_ids, Task.all, :id, :name, {}, {multiple: true}
-
+  .tasks
+    = render partial: 'tasks', locals: {edit: true}
   .actions
     = f.submit t(:save)
