@@ -16,7 +16,9 @@
   %label{:for => "independent"}= t('.missing_independent')
   %input{:name => "team", :type => "checkbox", checked: params[:team]}
   %label{:for => "team"}= t('.missing_team')
-
+  = ' | '
+  %label{:for => "q"}= t('.search')
+  %input{:name => "q", :type => "text", value: params[:q]}
   %input{type: :submit, value: t(:submit)}
 %p
 .metadata_dialog

@@ -46,6 +46,7 @@ class ReportController < InheritedResources::Base
     filters = filters.join(' OR ')
     condition = "state <> 'ready_to_publish' AND (kind_id = #{typing} OR kind_id = #{proofing})"
     condition += "AND (#{filters})" if filters.present?
+    condition += "AND name like '%#{params[:q]}%'" if params[:q].present?
     if params[:team].present?
       @tasks = Task.where(condition).paginate(:page => params[:page], :per_page => params[:per_page])
     else
