@@ -7,7 +7,7 @@ class Team < ApplicationRecord
   has_many :task_teams, dependent: :destroy
 
   def has_member?(user)
-    users.include?(user)
+    users.joins(:team_memberships).where(team_memberships: {left: nil}).include?(user)
   end
 
   def has_task?(task)
@@ -16,19 +16,27 @@ class Team < ApplicationRecord
 
   # return users whose role in the team is 'lead'
   def team_leads
-    users.joins(:team_memberships).where(team_memberships: {team_role: TeamMembership.team_roles[:lead]})
+    users.joins(:team_memberships).where(team_memberships: {team_role: TeamMembership.team_roles[:lead], left: nil})
   end
 
   def team_lead_memberships
-    team_memberships.where(team_role: TeamMembership.team_roles[:lead])
+    team_memberships.where(team_role: TeamMembership.team_roles[:lead], left: nil)
   end
 
   def team_member_memberships
-    team_memberships.where(team_role: TeamMembership.team_roles[:member])
+    team_memberships.where(team_role: TeamMembership.team_roles[:member], left: nil)
+  end
+
+  def current_team_memberships
+    team_memberships.where(left: nil)
+  end
+
+  def all_team_memberships_ever
+    team_memberships
   end
 
   def user_ids
-    users.map(&:id)
+    users.joins(:team_memberships).where(team_memberships: {left: nil}).map(&:id)
   end
 
   def team_lead_ids

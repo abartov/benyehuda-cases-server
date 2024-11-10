@@ -26,9 +26,17 @@ class Notification < ActionMailer::Base
     @domain = domain
     mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("volunteer welcome subject|Welcome to Ben Yehuda Project")
   end
+
   def tasks_added_to_site(user)
     @user = user
     mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("your work added to site subject|Your contributions are now published on the Ben-Yehuda site!")
+  end
+
+  def team_mass_message(user, team, message)
+    @user = user
+    @team = team
+    @message = message.gsub("\n", "<br>")
+    mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: t(:team_mass_message, team: team.name)
   end
 
 protected

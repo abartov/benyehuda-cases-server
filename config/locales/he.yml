@@ -34,6 +34,12 @@ he:
       target_date: תאריך יעד
       team_leads: מנהלי צוות
       submit: שמור
+    show:
+      tasks_count: הצוות עובד על %{count} משימות
+      completed_count: הצוות השלים %{count} משימות
+      members_count: הצוות מונה %{count} מתנדבים
+      including_you: כולל אותך :)
+      mass_message: שליחת הודעה לכל חברי הצוות
     form:
       tasks: משימות
       name: שם
@@ -43,6 +49,10 @@ he:
     memberships:
       users: מתנדבים
       team_leads: מנהלי צוות
+      since: "מזה %{since}"
+      join: אני רוצה להצטרף!
+      leave: אני רוצה לפרוש מהצוות
+    mass_message_sent: ההודעה נשלחה לכל חברי הצוות
   tabs:
     teams: צוותים
     users: משתמשים
@@ -72,3 +82,5 @@ he:
   no_matches_found: לא נמצאו תוצאות
   submit: שלח
   team: צוות
+  stats: במספרים
+  team_mass_message: הודעה לחברי צוות %{team} בפרויקט בן־יהודה

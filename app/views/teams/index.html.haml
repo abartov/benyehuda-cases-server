@@ -17,7 +17,7 @@
   %tbody
     - @teams.each do |team|
       %tr
-        %td= link_to team.name, edit_team_path(team)
+        %td= link_to team.name, team
         %td= team.description
         %td
           - team.team_leads.each do |team_lead|
@@ -32,6 +32,8 @@
         %td= done > 0 ? "#{(done.to_f / total.to_f * 100).round(2)}%" : ""
         %td= team.targetdate
         %td
+          = link_to t(:edit), edit_team_path(team)
+          = ' | '
           = link_to t(:delete), team, method: :delete, data: { confirm: t(:are_you_sure) }
 
 %br

@@ -1,5 +1,6 @@
 class TeamsController < ApplicationController
-  before_action :set_team, only: [:edit, :update, :destroy]
+  before_action :set_team, only: %i[show edit update destroy mass_message]
+  before_action :require_admin, only: %i[create edit update destroy mass_message]
 
   # GET /teams
   def index
@@ -24,6 +25,13 @@ class TeamsController < ApplicationController
     end
   end
 
+  # GET /teams/1
+  def show
+    @team_leads = @team.team_lead_memberships
+    @team_members = @team.team_member_memberships
+    @task_teams = @team.task_teams
+  end
+
   # GET /teams/1/edit
   def edit
     @team_leads = @team.team_lead_memberships
@@ -44,7 +52,15 @@ class TeamsController < ApplicationController
   def destroy
     @team.destroy
     redirect_to teams_url, notice: 'Team was successfully destroyed.'
-  end  
+  end
+
+  # POST /teams/1/mass_message
+  def mass_message
+    @team.users.each do |user|
+      Notification.team_mass_message(user, @team, params[:message].html_safe).deliver
+    end
+    redirect_to team_path(@team), notice: I18n.t('teams.mass_message_sent')
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

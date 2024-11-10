@@ -8,7 +8,7 @@
       - @task.teams.each do |team|
         %b
           = t(:team)+": "
-        = team.name
+        = link_to team.name, team
         %br
     - if @task.project.present?
       %b

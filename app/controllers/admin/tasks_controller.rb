@@ -144,6 +144,7 @@ class Admin::TasksController < InheritedResources::Base
     # t.parent_id = task.id # setting the parent_id before save would trigger Task.clone_parent_documents, which we *don't* want here.
     task.task_properties.each {|tp| t.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
     t.state = :unassigned
+    task.teams.each {|team| t.teams << team} # copy over team assignments
     return t
   end
   def finalize_split_task(task, docs, parent_id)

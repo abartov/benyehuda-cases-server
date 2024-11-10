@@ -4,6 +4,7 @@
 - @team_leads.each do |membership|
   %li{id: membership.id}
     = link_to membership.user.name, user_path(membership.user)
+    = t('.since', since: time_ago_in_words(membership.created_at).dup)
     != '&emsp;&emsp;'
     - if edit
       = link_to t(:remove), team_membership_path(membership), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
@@ -13,7 +14,6 @@
   = collection_select 'team', :team_lead_ids, User.not_on_break, :id, :name
   = button_tag t(:perform_add), id: "add_lead", type: :button
   %br
-
 %p
 = label_tag :user_ids, t('.users')
 %br
@@ -21,6 +21,7 @@
 - @team_members.each do |membership|
   %li{id: membership.id}
     = link_to membership.user.name, user_path(membership.user)
+    = t('.since', since: time_ago_in_words(membership.created_at).dup)
     != '&emsp;&emsp;'
     - if edit
       = link_to t(:remove), team_membership_path(membership), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
@@ -30,8 +31,14 @@
   = collection_select 'team', :user_ids, User.not_on_break, :id, :name
   = button_tag t(:perform_add), id: "add_member", type: :button
   %br
+- else
+  %p
+  - if @team.has_member?(current_user)
+    = link_to t('.leave'), team_membership_path(@team.team_memberships.where(user_id: current_user.id).first), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
+  - elsif @team.open?
+    %span{style: 'background-color: lightgreen; font-weight: bold;'}= link_to t('.join'), team_memberships_path(team_membership: {team_id: @team.id, user_id: current_user.id}), remote: true, method: :post
 
-%br
+%p
 
 :javascript
   $(document).ready(function() {

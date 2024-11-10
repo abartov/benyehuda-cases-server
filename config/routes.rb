@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :api_users, controller: 'xapi_users' # weird inflection problems requiring *both* APIUsersController *and* ApiUsersController to be defined. No time to deal with it.
   resources :projects
-  resources :teams
+  resources :teams do
+    post 'mass_message', on: :member
+  end
   resources :team_memberships
   resources :task_teams
   get 'autocomplete_task_title' => 'tasks#autocomplete_task_name', as: 'autocomplete_task_title'
