@@ -9,6 +9,9 @@ class TeamsController < ApplicationController
   # GET /teams/new
   def new
     @team = Team.new
+    @team_leads = []
+    @team_members = []
+    @task_teams = []
   end
 
   # POST /teams

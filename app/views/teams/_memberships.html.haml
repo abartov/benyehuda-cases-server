@@ -10,7 +10,7 @@
     %br
 - if edit
   = t(:add)
-  = collection_select @team, :team_lead_ids, User.not_on_break, :id, :name
+  = collection_select 'team', :team_lead_ids, User.not_on_break, :id, :name
   = button_tag t(:perform_add), id: "add_lead", type: :button
   %br
 
@@ -27,7 +27,7 @@
     %br
 - if edit
   = t(:add)
-  = collection_select @team, :user_ids, User.not_on_break, :id, :name
+  = collection_select 'team', :user_ids, User.not_on_break, :id, :name
   = button_tag t(:perform_add), id: "add_member", type: :button
   %br
 

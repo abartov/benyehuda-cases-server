@@ -4,10 +4,17 @@
       = _("Task kind")+": "
     = @task.kind.try(:name)
     %br
-    %b
-      = 'מיזם: '
-    = @task.project.try(:name)
-    %br
+    - if @task.teams.present?
+      - @task.teams.each do |team|
+        %b
+          = t(:team)+": "
+        = team.name
+        %br
+    - if @task.project.present?
+      %b
+        = 'מיזם: '
+      = @task.project.try(:name)
+      %br
     %b
       = 'סוגה: '
     = @task.try(:genre)
@@ -24,14 +31,16 @@
     = _("Nikud")+": "
   = textify_full_nikud(@task)
   %br
-  %b
-    = _("Source")+": "
-  = @task.source
-  %br
-  %b
-    = _("Original language")+': '
-  = @task.orig_lang
-  %br
+  - if @task.source.present?
+    %b
+      = _("Source")+": "
+    = @task.source
+    %br
+  - if @task.orig_lang.present?
+    %b
+      = _("Original language")+': '
+    = @task.orig_lang
+    %br
   %b
     = _("Rashi")+": "
   = textify_rashi(@task)
@@ -40,9 +49,10 @@
     = _("Difficulty")+": "
   = Task.textify_difficulty(@task.difficulty)
   %br
-  %b
-    = _("Priority")+": "
-  = Task.textify_priority(@task.priority)
+  - if @task.priority.present?
+    %b
+      = _("Priority")+": "
+    = Task.textify_priority(@task.priority)
 .midtitle
   .boxbody
     = _("Status and allocation")

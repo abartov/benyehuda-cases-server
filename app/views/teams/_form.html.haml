@@ -13,10 +13,11 @@
   %br
   -#= f.label :targetdate
   -#= f.date_select :targetdate
-  .membership 
-    = render partial: 'memberships', locals: {f: f, edit: true}
-  = f.label :task_ids, t('.tasks')
-  .tasks
-    = render partial: 'tasks', locals: {edit: true}
+  - unless @team.new_record?
+    .membership 
+      = render partial: 'memberships', locals: {f: f, edit: true}
+    = f.label :task_ids, t('.tasks')
+    .tasks
+      = render partial: 'tasks', locals: {edit: true}
   .actions
     = f.submit t(:save)

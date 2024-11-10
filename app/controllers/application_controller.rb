@@ -18,7 +18,7 @@ protected
   end
 
   def default_locale
-    "he"
+    'he'
   end
 
   def detect_locale_from(source)
@@ -26,7 +26,7 @@ protected
     when :params
       params[:locale]
     when :session
-      session[:locale] rescue "he"
+      session[:locale] rescue 'he'
     when :cookie
       cookies[:locale]
     when :domain
@@ -83,5 +83,6 @@ protected
  # end
   def set_locale
     FastGettext.locale = 'he'
+    I18n.locale = 'he'
   end
 end

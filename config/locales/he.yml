@@ -13,7 +13,10 @@ he:
         status: סטטוס
         description: תיאור
         targetdate: תאריך יעד
-
+  tasks:
+    form:
+      manage_teams: ניהול צוותים
+      teams: צוותים
   teams:
     index:
       title: צוותים
@@ -68,3 +71,4 @@ he:
   perform_add: הוסף!
   no_matches_found: לא נמצאו תוצאות
   submit: שלח
+  team: צוות

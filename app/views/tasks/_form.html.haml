@@ -10,6 +10,21 @@
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
   = f.input :source, :label => 'פרטי מהדורה (מהדורה [אם יש], עיר: מו"ל, שנה)', :input_html => {:class => 'span-13'}
+  - if current_user && current_user.is_admin?
+    %h4= t('.teams')
+    %ol
+    - @task.task_teams.each do |task_team|
+      %li{id: task_team.id}
+        = link_to task_team.team.name, team_path(task_team.team)
+        = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
+      %br
+    = t(:add)
+    = select_tag :team_id, options_for_select(Team.where.not(id: @task.teams.pluck(:id)).map{|t| [t.name, t.id]}), include_blank: true
+    = button_tag t(:perform_add), id: "add_team", type: :button
+    %br
+
+    = link_to t('.manage_teams'), teams_path
+  %p
   = f.collection_select :project_id, Project.where(status: 'פעיל').order(:name), :id, :name, {include_blank: 'שיוך למיזם', selected: @task.project_id}
   /= f.input :project, as: :select, collection: Project.where(status: 'פעיל'), selected: @task.project, label: 'מיזם'
   - if current_user && current_user.is_admin?
@@ -44,4 +59,13 @@
     if($('#task_kind_id').val() == '') {
       $('#task_kind_id').val('1'); // default to typing
     }
+    $("#add_team").click(function() {
+
+      $.post("#{task_teams_path}", {task_team: {team_id: $("#team_id").val(), task_id: #{@task.id}}}).done(
+        function(data) {
+          location.reload();
+        }
+      );
+    });
+
   });

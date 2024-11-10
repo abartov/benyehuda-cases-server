@@ -51,6 +51,7 @@ class Task < ActiveRecord::Base
 
   has_many :assignment_histories, :dependent => :destroy
   has_and_belongs_to_many :teams, join_table: :task_teams
+  has_many :task_teams, dependent: :destroy
 
   include CustomProperties
   has_many_custom_properties :task # task_properties
