@@ -4,7 +4,10 @@ Rails.application.routes.draw do
   resources :teams do
     post 'mass_message', on: :member
   end
-  resources :team_memberships
+  resources :team_memberships do
+    # remove a user from a team
+    delete 'leave', on: :member
+  end
   resources :task_teams
   get 'autocomplete_task_title' => 'tasks#autocomplete_task_name', as: 'autocomplete_task_title'
   get "report/stalled"

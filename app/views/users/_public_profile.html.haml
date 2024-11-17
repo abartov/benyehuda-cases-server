@@ -32,6 +32,18 @@
       .boxbody
         %p
           != @user.volunteer_request.try(:preferences)
+      .midtitle.teams
+        %h4= t('tabs.teams')
+      .boxbody
+        %ul
+          - @user.team_memberships.each do |tm|
+            %li{id: tm.id}
+              %strong= link_to tm.team.name, team_path(tm.team)
+              != "&emsp;&emsp;&emsp;&emsp;&emsp;"
+              = link_to t('teams.leave'), leave_team_membership_path(tm), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}, style: 'color:red;'
+        %br
+        = select_tag :team_ids, options_from_collection_for_select(Team.open.where.not(id: @user.teams.pluck(:id)).order(:name), :id, :name, {include_blank: t('teams.choose_team')})
+        = button_tag t('teams.join'), id: "add_team", type: :button
 
     - when_user_volunteer do
       .midtitle
@@ -58,3 +70,13 @@
     .boxbody
       != render(:partial => "assignment_histories/assignment_history", :collection => @user.assignment_histories.rev_order.with_task.recent(5))
       != link_to _("more &raquo;").html_safe, user_assignment_histories_path(@user)
+
+:javascript
+  $(document).ready(function() {
+    $("#add_team").click(function() {
+      $.post("#{team_memberships_path}", {team_membership: {team_id: $("#team_ids").val(), user_id: #{@user.id}}})
+        .done(function(data) {
+          location.reload();
+        });
+    });
+  });

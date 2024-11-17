@@ -6,6 +6,8 @@ class Team < ApplicationRecord
   has_many :team_memberships, dependent: :destroy
   has_many :task_teams, dependent: :destroy
 
+  scope :open, -> { where(open: true) }
+
   def has_member?(user)
     users.joins(:team_memberships).where(team_memberships: {left: nil}).include?(user)
   end
