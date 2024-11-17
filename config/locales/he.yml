@@ -55,6 +55,7 @@ he:
     mass_message_sent: ההודעה נשלחה לכל חברי הצוות
     leave: פרישה מהצוות
     join: הצטרפות לצוות
+    none: אין שיוך לצוות
   tabs:
     teams: צוותים
     users: משתמשים
