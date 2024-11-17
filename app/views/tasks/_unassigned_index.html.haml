@@ -6,6 +6,10 @@
     = form_tag(tasks_path, params.merge(:method => :get, :remote => true)) do
       = label_tag :kind, _("Kind")
       = select_tag :kind, options_for_select([""] + task_kinds_for_select(:name), params[:kind] || 'הקלדה')
+      = label_tag :genre, 'סוגה'
+      = select_tag :genre, options_for_select([""] + Task.genres.keys.map{|x| [x,x]}, params[:genre])
+      = label_tag :team, 'צוות'
+      = select_tag :team, options_for_select([""] + Team.all.map{|x| [x.name, x.id]}, params[:team])
       = label_tag :full_nikkud, _("Full Nikkud")
       = select_tag :full_nikkud, options_for_select({"" => "", _("true") => "true", _("false") => "false"}, params[:full_nikkud])
       != '<input type="hidden" name="assignee_id" value="%{a}"/>' % {:a => @assignee.id}

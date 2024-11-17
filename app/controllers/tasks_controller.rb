@@ -86,21 +86,27 @@ class TasksController < InheritedResources::Base
 
   def index
     #@tasks = Task.unassigned.paginate(:page => params[:page], :per_page => params[:per_page])
-    if params[:kind].nil? or params[:kind].blank?
-      tasks = Task.unassigned.sort_by {|t|
-        kindname = t.kind.nil? ? '' : t.kind.try(:name) # shouldn't happen -- is only the case in some odd old test items
-        kindname + t.updated_at.to_i.to_s # manual sort :( # TODO: figure out how to do this through the assoc
-      }
-      @tasks = tasks.reverse.paginate(:page => params[:page], :per_page => params[:per_page])
-    else
+    #debugger
+    #if params[:kind].nil? or params[:kind].blank?
+    #  tasks = Task.unassigned.sort_by {|t|
+    #    kindname = t.kind.nil? ? '' : t.kind.try(:name) # shouldn't happen -- is only the case in some odd old test items
+    #    kindname + t.updated_at.to_i.to_s # manual sort :( # TODO: figure out how to do this through the assoc
+    #  }
+    #  @tasks = tasks.reverse.paginate(:page => params[:page], :per_page => params[:per_page])
+    #else
       #params[:state] = :unassigned
       #current_user.search_settings.set_from_params!(params)
-      unless params[:full_nikkud].nil? || params[:full_nikkud].empty?
-        @tasks = Task.unassigned.where(:kind_id => TaskKind.find_by_name(params[:kind]).id, full_nikkud: params[:full_nikkud] == 'true' ? true : false).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
-      else
-        @tasks = Task.unassigned.where(:kind_id => TaskKind.find_by_name(params[:kind]).id).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
+      conds = {}
+      joins = []
+      conds[:kind_id] = TaskKind.find_by_name(params[:kind]).id if params[:kind].present?
+      conds[:full_nikkud] = params[:full_nikkud] == 'true' ? true : false if params[:full_nikkud].present?
+      conds[:genre] = params[:genre] if params[:genre].present?
+      if params[:team].present?
+        conds[:teams] = {id: params[:team]} 
+        joins << :teams
       end
-    end
+      @tasks = Task.unassigned.joins(joins).where(conds).order('updated_at desc').paginate(:page => params[:page], :per_page => params[:per_page])
+    #end
 
     @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
   end

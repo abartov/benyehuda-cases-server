@@ -3,7 +3,7 @@
   .float-right
     .purple-button.gradient
       %span
-        = link_to "סיימתי", edit_task_path(@task), {style:'color:white', id: 'initiate_finish', disable_with: _("Loading, please wait...")}
+        = link_to "סיימתי", edit_task_path(@task), {style:'color:white', id: 'initiate_finish', disable_with: t(:loading)}
 .float-right
   != commentable_event_form("abandon")
 .float-right
