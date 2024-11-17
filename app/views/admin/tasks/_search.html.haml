@@ -23,6 +23,8 @@
         = select_tag :genre, options_for_select([""] + Task.genres.keys.map{|x| [x,x]}, params[:genre])
         = label_tag :project, 'מיזם'
         = select_tag :project, options_for_select([""] + Project.all.map{|x| [x.name, x.id]}, params[:project])
+        = label_tag :team, 'צוות'
+        = select_tag :team, options_for_select([""] + Team.all.map{|x| [x.name, x.id]}, params[:team])
         = label_tag :independent, 'אפשר להעלות בנפרד?'
         = check_box_tag :independent, 'true', 'true' == params[:independent]
         = label_tag :include_images, 'מותר להעלות תמונות?'

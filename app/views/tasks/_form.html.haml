@@ -19,7 +19,7 @@
         = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
       %br
     = t(:add)
-    = select_tag :team_id, options_for_select(Team.where.not(id: @task.teams.pluck(:id)).map{|t| [t.name, t.id]}), include_blank: true
+    = f.collection_select :team_ids, Team.where.not(id: @task.teams.pluck(:id)).order(:name), :id, :name, {include_blank: 'בחר צוות'}
     = button_tag t(:perform_add), id: "add_team", type: :button
     %br
 
@@ -61,7 +61,7 @@
     }
     $("#add_team").click(function() {
 
-      $.post("#{task_teams_path}", {task_team: {team_id: $("#team_id").val(), task_id: #{@task.id}}}).done(
+      $.post("#{task_teams_path}", {task_team: {team_id: $("#task_team_ids").val(), task_id: #{@task.id}}}).done(
         function(data) {
           location.reload();
         }

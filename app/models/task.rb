@@ -120,7 +120,7 @@ class Task < ActiveRecord::Base
   }
   TASK_LENGTH.default = 46..100000
 
-  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source', 'invert_state', 'project']
+  SEARCH_KEYS = ["state", "difficulty", "kind", "full_nikkud", "query", "length", "priority", 'independent', 'include_images', 'genre', 'source', 'invert_state', 'project', 'team']
   def self.filter(opts)
     return self.all.paginate(:page => opts[:page], :per_page => opts[:per_page]) if (opts.keys & SEARCH_KEYS).blank?
     search_opts = {:conditions => {}, :with => {}}
@@ -140,11 +140,12 @@ class Task < ActiveRecord::Base
     search_opts[:with][:include_images] = ("true" == opts[:include_images]) unless opts[:include_images].blank?
     search_opts[:conditions][:priority] = opts[:priority] unless opts[:priority].blank?
     search_opts[:conditions][:project] = opts[:project] unless opts[:project].blank?
+    search_opts[:conditions][:teams] = opts[:team] unless opts[:team].blank?
 
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
     if opts[:query].blank?
       search_opts[:conditions][:task_kinds] = {:name => opts[:kind]} unless opts[:kind].blank?
-      ret = self.includes([:creator, :assignee, :editor, :kind]).where(search_opts[:conditions].merge(search_opts[:with])).order("tasks.updated_at DESC").paginate(:page => opts[:page], :per_page => opts[:per_page])
+      ret = self.includes([:creator, :assignee, :editor, :kind, :teams]).where(search_opts[:conditions].merge(search_opts[:with])).order("tasks.updated_at DESC").paginate(:page => opts[:page], :per_page => opts[:per_page])
     else
       search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
       search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ') if search_opts[:conditions][:state].class == Array # Sphinx doesn't handle arrays; it wants pipe-separated values
