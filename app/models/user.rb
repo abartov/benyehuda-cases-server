@@ -1,5 +1,7 @@
 include ThinkingSphinx::Scopes
 class User < ActiveRecord::Base
+  PROP_VOL_PREFERENCES = 21 # TODO: horrible hardcoding to production DB value, until we refactor this
+
   acts_as_authentic do |c|
     c.perishable_token_valid_for = 2.weeks
     c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
@@ -112,6 +114,10 @@ class User < ActiveRecord::Base
 #    "#{name.gsub('"','')} <#{addr}>"
   end
 
+  def volunteer_preferences
+    @volunteer_preferences ||= get_volunteer_preferences
+  end
+
   def disabled?
     !disabled_at.blank?
   end
@@ -189,5 +195,11 @@ class User < ActiveRecord::Base
 
   def handle_volunteer_kind
     self.volunteer_kind_id = nil if is_volunteer_changed? && !is_volunteer?
+  end
+
+  def get_volunteer_preferences
+    return '' if self.id.nil?
+    prefs = volunteer_properties.where(property_id: PROP_VOL_PREFERENCES)
+    return prefs.present? ? prefs.first.custom_value : ''
   end
 end

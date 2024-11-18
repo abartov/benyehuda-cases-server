@@ -8,6 +8,10 @@
       %span{style: 'background-color: yellow'}= @assignee.teams.pluck(:name).join('; ')
     - else
       %p= t('teams.none')
+    - prefs = @assignee.volunteer_preferences
+    - if prefs.present?
+      %strong= t(:volunteer_prefs)+': '
+      %span{style: 'background-color: blanchedalmond'}= prefs
     = form_tag(tasks_path, params.merge(:method => :get, :remote => true)) do
       = label_tag :kind, _("Kind")
       = select_tag :kind, options_for_select([""] + task_kinds_for_select(:name), params[:kind] || 'הקלדה')
