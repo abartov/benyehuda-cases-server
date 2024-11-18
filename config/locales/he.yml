@@ -1,6 +1,9 @@
 he:
   date:
-    order: ["יום", "חודש", "שנה"]
+    order: 
+      - 'שנה'
+      - 'חודש'
+      - 'יום'
     
   activerecord:
     attributes:
@@ -13,6 +16,7 @@ he:
         status: סטטוס
         description: תיאור
         targetdate: תאריך יעד
+        open: פתוח לכל?
   tasks:
     form:
       manage_teams: ניהול צוותים
@@ -44,6 +48,8 @@ he:
       tasks: משימות
       name: שם
       description: תיאור
+      open: פתוח לכל?
+      targetdate: תאריך יעד
     edit:
       title: עריכת צוות
     memberships:
@@ -61,7 +67,7 @@ he:
     users: משתמשים
     tasks_admin: ניהול משימות
     volunteer_requests: בקשות התנדבות
-    dashboard: מרכז הפעילות
+    dashboard: המשימות שלי
     profile: דף מתנדב
     reports: דו"חות
     object_prefs: תכונות פריטים
@@ -89,3 +95,5 @@ he:
   stats: במספרים
   team_mass_message: הודעה לחברי צוות %{team} בפרויקט בן־יהודה
   loading: הנתונים נטענים...
+  'yes': כן
+  'no': לא

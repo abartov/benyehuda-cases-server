@@ -83,6 +83,7 @@ protected
  # end
   def set_locale
     FastGettext.locale = 'he'
-    I18n.locale = 'he'
+    I18n.locale = :he
+    I18n.default_locale = :he
   end
 end

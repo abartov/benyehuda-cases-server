@@ -11,8 +11,11 @@
   = f.label t('.description')
   = f.text_area :description
   %br
-  -#= f.label :targetdate
-  -#= f.date_select :targetdate
+  = f.check_box :open, checked: @team.open?
+  = f.label t('.open')
+  %br
+  = f.label t('.targetdate')
+  = f.date_select :targetdate, order: [:day, :month, :year], start_year: Date.today.year, end_year: Date.today.year + 10, locale: :he, use_month_numbers: true
   - unless @team.new_record?
     .membership 
       = render partial: 'memberships', locals: {f: f, edit: true}

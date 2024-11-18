@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy mass_message]
-  before_action :require_admin, only: %i[create edit update destroy mass_message]
+  before_action :require_admin
 
   # GET /teams
   def index
@@ -9,7 +9,7 @@ class TeamsController < ApplicationController
 
   # GET /teams/new
   def new
-    @team = Team.new
+    @team = Team.new(open: true)
     @team_leads = []
     @team_members = []
     @task_teams = []
