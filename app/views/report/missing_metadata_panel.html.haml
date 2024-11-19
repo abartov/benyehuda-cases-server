@@ -3,11 +3,11 @@
   = form_tag 'update_metadata', remote: true do
     = hidden_field_tag :task_id, @task.id
     = label_tag 'סוגה'
-    = select_tag :genre, options_for_select(['']+Task.genres.keys.map{|g| [g, g]})
+    = select_tag :genre, options_for_select(['']+Task.genres.keys.map{|g| [g, g]}, @task.genre)
     = label_tag 'אפשר להעלות בנפרד?'
-    = check_box_tag :independent
+    = check_box_tag :independent, '1', @task.independent
     = label_tag 'מותר להעלות תמונות?'
-    = check_box_tag :include_images
+    = check_box_tag :include_images, '1', @task.include_images
     %p
     = label_tag 'צוות'
     = select_tag :team_id, options_for_select(Team.all.map{|t| [t.name, t.id]}), include_blank: true

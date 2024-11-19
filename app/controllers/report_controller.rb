@@ -43,15 +43,16 @@ class ReportController < InheritedResources::Base
     filters << ' include_images is null ' unless params[:images].present?
     filters << ' independent is null ' unless params[:independent].present?
     filters << ' genre is null ' unless params[:genre].present?
+    filters << ' task_teams.task_id is null ' unless params[:team].present?
     filters = filters.join(' OR ')
     condition = "state <> 'ready_to_publish' AND (kind_id = #{typing} OR kind_id = #{proofing})"
-    condition += "AND (#{filters})" if filters.present?
-    condition += "AND name like '%#{params[:q]}%'" if params[:q].present?
+    condition = "name like '%#{params[:q]}%' AND #{condition}"  if params[:q].present?
+    condition += " AND (#{filters})" if filters.present?
     if params[:team].present?
       @tasks = Task.where(condition).paginate(:page => params[:page], :per_page => params[:per_page])
     else
       # joins team_memberships to return tasks that aren't associated with a team
-      @tasks = Task.joins('LEFT JOIN task_teams ON tasks.id = task_teams.task_id').where("task_teams.task_id IS NULL AND #{condition}").paginate(:page => params[:page], :per_page => params[:per_page])
+      @tasks = Task.joins('LEFT JOIN task_teams ON tasks.id = task_teams.task_id').where("#{condition}").paginate(:page => params[:page], :per_page => params[:per_page])
     end
   end
 

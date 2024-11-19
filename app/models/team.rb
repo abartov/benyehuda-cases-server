@@ -18,7 +18,7 @@ class Team < ApplicationRecord
 
   # return users whose role in the team is 'lead'
   def team_leads
-    users.joins(:team_memberships).where(team_memberships: {team_role: TeamMembership.team_roles[:lead], left: nil})
+    users.where(team_memberships: {team_role: TeamMembership.team_roles[:lead], left: nil})
   end
 
   def team_lead_memberships
@@ -38,7 +38,7 @@ class Team < ApplicationRecord
   end
 
   def user_ids
-    users.joins(:team_memberships).where(team_memberships: {left: nil}).map(&:id)
+    users.where(team_memberships: {left: nil}).map(&:id)
   end
 
   def team_lead_ids
