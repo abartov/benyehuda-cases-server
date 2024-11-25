@@ -53,6 +53,6 @@ class TeamMembershipsController < InheritedResources::Base
   end
 
   def allowed?
-    current_user.admin_or_editor? || current_user == User.find(pp[:user_id])
+    current_user.admin_or_editor? || current_user == User.find(team_membership_params[:user_id])
   end
 end

@@ -1,4 +1,41 @@
-- search by source field (publisher information)
+# teams to-do
+
++ team#show
+  + show team info, 
+  + stats
+  + join/leave button for volunteers
++ in user's profile page:
+  + user can join team
+  + user can leave team
+- admin's team info and editing screen
+  - team detailed stats
+  + add / remove tasks
+  + add / remove users
+  + edit team settings
+  + add / remove team leads
+  + mass-message team members
++ task allocation screen
+  + filter by team
++ task editing screen
+  + associate with team
+  + remove association with team
+
++ include team in search form and results
+- tasks search results
+  - add all to team
+  - remove all from team
+
+## post 1.0 
+- task allocation screen
+  - default to allocating within user's teams
+  - allocate random task within team pool
+- optionally specify team when requesting new task and member of multiple teams
+- optionally self-allocate random task within team pool
+- team discussion board?
+- notifications to team leaders when volunteers join/leave? by preference?
+- team status; archiving teams
+
+== general todo ==
 - fix sorting in task list views
-- send volunteers e-mails when works they were involved with have been uploaded.
++ send volunteers e-mails when works they were involved with have been uploaded.
   - As weekly cronjob, perhaps, updating about all uploads since last run.  No more than one e-mail per user per week!
