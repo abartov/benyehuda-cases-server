@@ -1,6 +1,6 @@
 %p#notice= notice
 
-%h1= "#{t(:team)}: #{@team.name}"
+%h1#team_show= "#{t(:team)}: #{@team.name}"
 %p
   = @team.description
 %h2= t(:stats)
@@ -8,7 +8,7 @@
   %li
     = t('.members_count', count: @team.team_memberships.count)
     - if @team.has_member?(current_user)
-      %span{style: 'background-color: lightgreen;'}= t('.including_you')
+      %span{id: @team.team_memberships.where(user_id: current_user.id).first.id, style: 'background-color: lightgreen;'}= t('.including_you')
   %li= t('.tasks_count', count: @team.tasks.count)
   %li= t('.completed_count', count: @team.tasks.approved.count + @team.tasks.other_task_creat.count)
 = render partial: 'memberships', locals: {edit: false}

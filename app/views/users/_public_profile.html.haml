@@ -1,4 +1,4 @@
-.box
+.box#public_profile
   .boxhead
     = _("User details")
   .boxcontainer
@@ -35,6 +35,7 @@
       .midtitle.teams
         %h4= t('tabs.teams')
       .boxbody
+        %b= link_to t(:to_all_teams), '/teams'
         %ul
           - @user.team_memberships.each do |tm|
             %li{id: tm.id}

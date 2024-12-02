@@ -13,7 +13,8 @@
       %th= t('.number_of_tasks_approved')
       %th= t('.progress')
       %th= t('activerecord.attributes.team.targetdate')
-      %th= t('.actions')
+      - if current_user.is_admin?
+        %th= t('.actions')
 
   %tbody
     - @teams.each do |team|
@@ -33,11 +34,12 @@
         %td= done.to_s
         %td= done > 0 ? "#{(done.to_f / total.to_f * 100).round(2)}%" : ""
         %td= team.targetdate
-        %td
-          = link_to t(:edit), edit_team_path(team)
-          = ' | '
-          = link_to t(:delete), team, method: :delete, data: { confirm: t(:are_you_sure) }
+        - if current_user.is_admin?
+          %td
+            = link_to t(:edit), edit_team_path(team)
+            = ' | '
+            = link_to t(:delete), team, method: :delete, data: { confirm: t(:are_you_sure) }
 
 %br
-
-= link_to t('.new'), new_team_path
+- if current_user.is_admin?
+  = link_to t('.new'), new_team_path

@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy mass_message]
-  before_action :require_admin
+  before_action :require_admin, only: %i[new create edit update destroy mass_message]
 
   # GET /teams
   def index

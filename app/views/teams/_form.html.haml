@@ -15,7 +15,7 @@
   = f.label t('.open')
   %br
   = f.label t('.targetdate')
-  = f.date_select :targetdate, order: [:day, :month, :year], start_year: Date.today.year, end_year: Date.today.year + 10, locale: :he, use_month_numbers: true
+  = f.date_select :targetdate, order: [:day, :month, :year], start_year: Date.today.year, end_year: Date.today.year + 10, locale: :he, use_month_numbers: true, include_blank: true
   - unless @team.new_record?
     .membership 
       = render partial: 'memberships', locals: {f: f, edit: true}

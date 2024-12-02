@@ -1,5 +1,4 @@
 class TeamMembershipsController < InheritedResources::Base
-
   before_action :set_tm, only: %i[show edit update destroy]
 
   def create
@@ -34,7 +33,7 @@ class TeamMembershipsController < InheritedResources::Base
 
   def leave
     @team_membership = TeamMembership.find(params[:id])
-    if current_user == @team_membership.user || current_user.admin_or_editor?
+    if current_user.id == @team_membership.user_id || current_user.admin_or_editor?
       @the_id = @team_membership.id
       @team_membership.destroy
     else
@@ -53,6 +52,7 @@ class TeamMembershipsController < InheritedResources::Base
   end
 
   def allowed?
-    current_user.admin_or_editor? || current_user == User.find(team_membership_params[:user_id])
+    relevant_user_id = params[:team_membership].present? ? team_membership_params[:user_id].to_i : @team_membership.user_id
+    current_user.admin_or_editor? || current_user.id == relevant_user_id
   end
 end

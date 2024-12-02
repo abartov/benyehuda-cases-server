@@ -1,1 +1,4 @@
 $('.membership').html("<%= escape_javascript(render partial: 'teams/memberships', locals: { edit: true}) %>");
+if($('#team_show').length > 0 || $('#public_profile').length > 0) {
+  location.reload();
+}

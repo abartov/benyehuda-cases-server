@@ -12,7 +12,7 @@
 
 ActiveRecord::Schema.define(version: 2024_11_08_052206) do
 
-  create_table "api_users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
     t.string "email"
     t.datetime "created_at", precision: 6, null: false
@@ -31,7 +31,7 @@ ActiveRecord::Schema.define(version: 2024_11_08_052206) do
     t.index ["user_id"], name: "index_assignment_histories_on_user_id"
   end
 
-  create_table "audit_logs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "audit_logs", charset: "latin1", force: :cascade do |t|
     t.string "backtrace"
     t.string "data"
     t.bigint "api_user_id"
