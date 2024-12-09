@@ -1,11 +1,38 @@
-!= javascript_include_tag "jquery.uploadifive.min.js"
-!= upload_javascripts
-!= stylesheet_link_tag "uploadifive"
 
 %b= _("Attach new document")
 %br
 %br
 
-%input#upload_documents{:type => "file", :name => "upload_documents"}
+%input.multi#upload_documents{:type => "file", :name => "upload_documents", :multiple => true, 'data-url' => task_documents_path(@task)}
 
 #fileQueue
+#progress
+
+:javascript
+  $(document).ready(function() {
+    $('#upload_documents').fileupload({
+      dataType: 'json',
+      add: function(e, data) {
+        data.context = $('<p class="file"></p>')
+          .append($('<a target="_blank"></a>').text(data.files[0].name))
+          .appendTo($('#progress'));
+        data.submit();
+      },
+      progress: function(e, data) {
+        var progress = parseInt((data.loaded / data.total) * 100, 10);
+        data.context.css("background-position-x", 100 - progress + "%");
+      },
+      done: function (e, data) {
+        data.context
+          .addClass("done")
+          .find("a")
+          .prop("href", data.result.files[0].url).fadeOut(2000);
+
+        $('#ol_documents').append(data.result.li_item);
+
+        $.each(data.result.files, function (index, file) {
+          $('#no_docs_uploaded').remove();
+        });
+      }
+    });
+  });
