@@ -12,6 +12,7 @@
   $(document).ready(function() {
     $('#upload_documents').fileupload({
       dataType: 'json',
+      limitConcurrentUploads: 5,
       add: function(e, data) {
         data.context = $('<p class="file"></p>')
           .append($('<a target="_blank"></a>').text(data.files[0].name))
