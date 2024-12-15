@@ -292,16 +292,37 @@ p{margin:0 0 18px;}
   overflow:hidden;
   border-radius:10px;
   text-decoration:none;
-  /* float:right;*/
+}
+.green-button{
+	color:#fff !important;
+	background-color: green;
+	height:33px;
+	display:inline-block;
+	padding-right:5px;
+	cursor:pointer;
+	position:relative;
+	margin:-7px 0 -7px -3px;
+	border:0;
+	list-style:none;
+	overflow:hidden;
+	border-radius:10px;
+	text-decoration:none;
 }
 
 .purple-button span{
-	/*background:image-url("bg-link.png") no-repeat 0 -148px;*/
 	display:block;
   height:18px;
   padding:7px 10px 8px 12px;
   border-radius:10px;
   font:bold 15px/18px Arial, Helvetica, sans-serif;
+}
+
+.green-button span{
+	display:block;
+	height:18px;
+	padding:7px 10px 8px 12px;
+	border-radius:10px;
+	font:bold 15px/18px Arial, Helvetica, sans-serif;
 }
 
 .link1{

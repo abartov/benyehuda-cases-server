@@ -253,6 +253,21 @@ class Task < ActiveRecord::Base
     ''
   end
 
+  def document_uploaders
+    ret = documents.select { |d| d.text? }.collect { |d| d.user.name }
+    children.each do |c|
+      ret += c.document_uploaders
+    end
+    ret
+  end
+
+  # reach ultimate parent task, then traverse all children, gathering every uploader of a document
+  def gather_all_involved
+    t = self
+    t = t.parent while t.parent
+    t.document_uploaders.uniq
+  end
+
   def self.textify_priority(p)
     s_(PRIORITIES[p]) if PRIORITIES[p]
   end

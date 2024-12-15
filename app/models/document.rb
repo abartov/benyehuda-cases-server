@@ -6,6 +6,7 @@ class Document < ActiveRecord::Base
   belongs_to :task, touch: true, counter_cache: true
 
   IMAGE_FILE_EXTS = %w[jpg png tiff tif gif jpeg bmp xls xlsx]
+  DOC_FILE_EXTS = %w[doc docx txt rtf odt]
 
   include ActsAsAuditable
   acts_as_auditable :file_file_name,
@@ -47,6 +48,10 @@ class Document < ActiveRecord::Base
 
   def image?
     !file_file_name.blank? && IMAGE_FILE_EXTS.member?((File.extname(file_file_name)[1..-1] || '').downcase)
+  end
+
+  def text?
+    !file_file_name.blank? && DOC_FILE_EXTS.member?((File.extname(file_file_name)[1..-1] || '').downcase)
   end
 
   def self.convert_pdf_to_img(pdf_path, out_file_name)

@@ -36,3 +36,4 @@ tasks.code-workspace
 run.sh
 
 /config/master.key
+node_modules
