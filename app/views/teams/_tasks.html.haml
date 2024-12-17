@@ -1,12 +1,19 @@
 %ol
-- @task_teams.each do |task_team|
-  %li{id: task_team.id}
-    = link_to h(task_team.task.name), task_path(task_team.task)
-    = " (#{task_team.task.kind.try(:name)})"
-    != '&emsp;&emsp;'
-    - if edit
-      = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
-    %br
+- @tasks_by_state.each do |state, task_teams|
+  - if task_teams.present?
+    %li
+      = Task.textify_state(state)
+      %ol
+        - task_teams.each do |task_team|
+          %li{id: task_team.id}
+            = link_to h(task_team.task.name), task_path(task_team.task)
+            = " (#{task_team.task.kind.try(:name)})"
+            != '&emsp;&emsp;'
+            - if edit
+              = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
+            %br
+      %br
+
 - if edit
   %div{style: 'margin-right:150px;'}
     = t(:add)
