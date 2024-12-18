@@ -27,11 +27,6 @@
           != property_value(p)
 
     - when_user_volunteer do
-      .midtitle
-        %h4= _("Preferences")
-      .boxbody
-        %p
-          != @user.volunteer_request.try(:preferences)
       .midtitle.teams
         %h4= t('tabs.teams')
       .boxbody
