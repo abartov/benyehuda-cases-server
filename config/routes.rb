@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   get 'autocomplete_task_title' => 'tasks#autocomplete_task_name', as: 'autocomplete_task_title'
   get 'report/stalled'
   get 'report/missing_metadata'
+  get 'report/few_tasks_left'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
   match 'report/hours', via: %i[get post]
   post 'report/update_metadata'

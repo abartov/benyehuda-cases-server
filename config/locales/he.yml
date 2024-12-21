@@ -76,6 +76,7 @@ he:
     global_prefs: הגדרות
     translations: תרגום ממשק
   report:
+    few_tasks_left: 'דו"ח עוד קצת וגמרנו'
     missing_metadata:
       missing_genre: התעלם מחוסר סוגה
       missing_images: התעלם מהגדרת תמונות
