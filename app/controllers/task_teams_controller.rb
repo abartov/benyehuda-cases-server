@@ -1,10 +1,14 @@
 class TaskTeamsController < InheritedResources::Base
   def create
-    tt = TaskTeam.create!(task_team_params)
+    tt = TaskTeam.where(task_id: task_team_params[:task_id], team_id: task_team_params[:team_id])
+    tt = if tt.present?
+           tt.first
+         else
+           TaskTeam.create!(task_team_params)
+         end
     @team = tt.team
     @task_teams = @team.task_teams
     respond_to(&:js)
-
   end
 
   def destroy
