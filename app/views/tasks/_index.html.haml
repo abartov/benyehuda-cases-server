@@ -5,8 +5,9 @@
       .c
         %h2
           = title
-          = "#{_('total')} (#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
-          = ")"
+          - if tasks.respond_to?(:total_entries) || tasks.size.class.to_s == 'Integer'
+            = "#{_('total')} (#{tasks.respond_to?(:total_entries) ? tasks.total_entries : tasks.size}"
+            = ")"
   .container
     .t
       %span.l
