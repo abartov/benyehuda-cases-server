@@ -1,6 +1,6 @@
 -#!= render(:partial => "tasks/editor_simple_actions", :locals => {:task => @task})
 %div
-  - if @task.approved? || @task.kind_id == 61 # hardcoded value for technical editing # TODO: replace with enum instead of DB values
+  - if @task.approved? || (@task.kind_id == 61) # hardcoded value for technical editing # TODO: replace with enum instead of DB values
     .float-right
       %a.green-button#start_ingestion{ :href => '#', :style => "padding:0px;" }
         %span
