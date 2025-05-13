@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_02_05_001718) do
+ActiveRecord::Schema.define(version: 2025_05_12_202000) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -103,6 +103,7 @@ ActiveRecord::Schema.define(version: 2025_02_05_001718) do
     t.datetime "updated_at"
     t.datetime "deleted_at"
     t.boolean "done"
+    t.integer "document_type", default: 0
     t.index ["task_id"], name: "index_documents_on_task_id"
   end
 

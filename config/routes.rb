@@ -40,6 +40,8 @@ Rails.application.routes.draw do
   end
   get '/users/:id/cancel_task_request', controller: 'users', action: 'cancel_task_request'
   match '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task', via: %i[get post]
+  match '/tasks/:id/classify_scans', controller: 'admin/tasks', action: 'classify_scans', as: 'classify_scans',
+                                     via: %i[get post]
   get '/tasks/:id/make_comments_editor_only', controller: 'tasks', action: 'make_comments_editor_only'
   get '/tasks/:id/download_pdf', controller: 'tasks', action: 'download_pdf', as: 'task_download_pdf'
   get '/tasks/:id/start_ingestion', controller: 'admin/tasks', action: 'start_ingestion', as: 'task_start_ingestion'

@@ -2,6 +2,12 @@ require 'rubygems'
 require 'mini_magick'
 
 class Document < ActiveRecord::Base
+  enum document_type: {
+    'maintext': 0, # part of main work file
+    'front': 1, # front matter, table of contents, etc.
+    'footnotes_and_corrigenda': 2 # appendix
+  }
+
   belongs_to :user
   belongs_to :task, touch: true, counter_cache: true
 

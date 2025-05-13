@@ -64,13 +64,47 @@ class Admin::TasksController < InheritedResources::Base
     end
   end
 
+  def classify_scans
+    @task = Task.find(params[:id])
+    if @task.nil?
+      flash[:error] = 'אין משימה כזו'
+      redirect_to '/'
+    else
+      @jpegs = @task.documents.select { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png)$/ }
+      if @jpegs.empty?
+        flash[:error] = 'אין סריקות במשימה הזו!'
+        redirect_to task_path(@task)
+      elsif params[:commit].present?
+        @starter_ids = params.keys.grep(/front_/) { |x| x[x.index('_') + 1..].to_i }
+        @footnote_ids = params.keys.grep(/footnotes_/) { |x| x[x.index('_') + 1..].to_i }
+        @jpegs.each do |jpeg|
+          if @starter_ids.include?(jpeg.id)
+            jpeg.document_type = 'front'
+          elsif @footnote_ids.include?(jpeg.id)
+            jpeg.document_type = 'footnotes_and_corrigenda'
+          else
+            # should already be the default, but conceivably a task could be *re-classified* to correct a mistake
+            jpeg.document_type = 'maintext'
+          end
+          jpeg.save!
+        end
+        redirect_to task_path(@task)
+      end
+    end
+  end
+
   def split_task
     @task = Task.find(params[:id])
     if @task.nil?
       flash[:error] = 'אין משימה כזו'
       redirect_to '/'
     else
-      @jpegs = @task.documents.select { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/ }
+      # select front matter and footnotes
+      @fronts = @task.documents.select { |x| x.document_type == 'front' }
+      @footnotes = @task.documents.select { |x| x.document_type == 'footnotes_and_corrigenda' }
+      @jpegs = @task.documents.select do |x|
+        x.document_type == 'maintext' && x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/
+      end
       if @jpegs.empty?
         flash[:error] = 'אין סריקות במשימה הזו!'
         redirect_to task_path(@task)
@@ -87,7 +121,6 @@ class Admin::TasksController < InheritedResources::Base
           @total_parts = @starter_ids.count
           if @total_parts < 2
             flash[:error] = 'סומנו פחות משתי סריקות; אין טעם לפצל...'
-            redirect_to task_path(@task)
           else
             partno = 1
             next_task = prepare_cloned_task(@task, partno, @total_parts)
@@ -96,7 +129,7 @@ class Admin::TasksController < InheritedResources::Base
               next if @skip_ids.include?(jpeg.id)
 
               if @starter_ids.include?(jpeg.id) && !docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
-                @new_tasks << finalize_split_task(next_task, docs, @task.id) # create split task with documents accumulated so far
+                @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts, @footnotes) # create split task with documents accumulated so far
                 docs = []
                 partno += 1
                 next_task = prepare_cloned_task(@task, partno, @total_parts)
@@ -104,7 +137,7 @@ class Admin::TasksController < InheritedResources::Base
               docs << jpeg
             end
             # finish last split task, if any docs are left
-            @new_tasks << finalize_split_task(next_task, docs, @task.id) if docs.count > 0
+            @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts, @footnotes) if docs.count > 0
             # prepare new cloned tasks with all metadata copied and ordinal number incremented
             # iterate through scans until next split marker or end
             # (if final set equals the document set of the task, report and do nothing)
@@ -117,22 +150,30 @@ class Admin::TasksController < InheritedResources::Base
             @task.priority = old_priority
             @task.save!
             flash[:notice] = 'המשימה פוצלה וסווגה מחדש כמשימת סריקה במצב עלה לאתר!'
-            redirect_to task_path(@task)
           end
-        end # process filled out form
+          redirect_to task_path(@task)
+        end
       end
     end
   end
 
+  # prepare JSON payload for user's browser to POST to benyehuda.org
   def start_ingestion
-    # prepare JSON payload for user's browser to POST to benyehuda.org
     @task = Task.find(params[:id])
     @title = @task.name
     @genre = @task.genre
     @credits = @task.gather_all_involved.join('; ')
     @orig_lang = @task.orig_lang
     @publisher = @task.source
-    @docx = @task.documents.last.file.url
+    docx = []
+    @task.documents.each do |doc|
+      next unless doc.document_type == 'maintext'
+
+      url = doc.file.url
+      url = url[0..url.index('?') - 1] if url.index('?')
+      docx << doc if url.ends_with?('.docx')
+    end
+    @docx = docx.present? ? docx.last.file.url : nil
   end
 
   protected
@@ -164,15 +205,20 @@ class Admin::TasksController < InheritedResources::Base
     t
   end
 
-  def finalize_split_task(task, docs, parent_id)
+  def finalize_split_task(task, docs, parent_id, fronts, footnotes)
     task.save! # actually create the task, also triggering the post-create hook!
     # now that the post-create hook has run, we can safely populate the parent id
     task.parent_id = parent_id
-    docs.each do |doc|
-      d = doc.dup
-      d.task_id = task.id
-      d.file = Paperclip.io_adapters.for(doc.file)
-      d.save
+    # copy over front matter, footnotes and corrigenda
+    [fronts, footnotes, docs].each do |list|
+      next unless list.present?
+
+      list.each do |doc|
+        d = doc.dup
+        d.task_id = task.id
+        d.file = Paperclip.io_adapters.for(doc.file)
+        d.save
+      end
     end
     task.save!
     task

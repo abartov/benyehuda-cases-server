@@ -1,0 +1,65 @@
+= set_tab :dashboard, false
+
+!= link_to _("back to dashboard"), dashboard_path
+
+.task-title
+  %b
+    = _("Task title")+": "
+  = @task.name
+.box
+  /.boxhead
+  /  %b
+  /    = _("Task details")
+  /.boxcontainer
+  /  != render(:partial => "tasks/description")
+  .boxhead
+    %b
+      = 'סיווג סריקות'
+  .boxcontainer
+    .boxbody
+      %h2= 'יש לסמן את תיבת הסימון מעל כל סריקה ששייכת לשער[ים] ו/או לתוכן העניינים של הספר (גם אם הוא בסוף!).'
+      %h2= 'יש לסמן את תיבת הסימון מתחת כל סריקה ששייכת להערות סיום או ללוחות תיקונים!).'
+      %p= 'בכל השאר לא לסמן דבר.'
+      %br
+      = form_tag(classify_scans_path(@task), method: 'POST') do
+        .thumbs_container
+          = hidden_field_tag :id, @task.id
+          - @jpegs.each do |jpeg|
+            .bigthumb
+              - is_front = jpeg.front?
+              = check_box_tag "front_#{jpeg.id}",'',is_front, {class: 'cb_start_split'}
+              %span.start_split= 'שער ותוכן'
+              %br
+              %a{href: jpeg.file.url, target: '_new'}= jpeg.file_file_name
+              %br
+              %img{src: jpeg.file.url, style:"width:500px; height:500px;"}
+              %br
+              - is_footnotes = jpeg.footnotes_and_corrigenda?
+              = check_box_tag "footnotes_#{jpeg.id}", '', is_footnotes, {class: 'cb_skip_doc'}
+              %span.skip_doc= 'הערות ו/או תיקונים'
+        %p
+        .center
+          = submit_tag 'בצע סיווג!', {style: 'font-size:30px;'}
+:javascript
+  $(document).ready(function(){
+    $('.cb_start_split').click(function(){
+      if($(this).prop('checked')) {
+        $(this).next().css('color', 'green');
+        other = $(this).parent().find('.cb_skip_doc').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
+      } else {
+        $(this).next().css('color','unset');
+      }
+    });
+    $('.cb_skip_doc').click(function(){
+      if($(this).prop('checked')) {
+        other = $(this).parent().find('.cb_start_split').first();
+        other.prop('checked', false);
+        other.next().css('color','unset');
+        $(this).next().css('color', 'red');
+      } else {
+        $(this).next().css('color','unset');
+      }
+    });
+  });
