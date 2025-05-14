@@ -27,7 +27,7 @@ class TasksController < InheritedResources::Base
           jpegs = jpegs.select { |x| x.document_type == 'maintext' }
         elsif params['dtype'] == 'front'
           jpegs = jpegs.select { |x| x.document_type == 'front' }
-        elsif params['dtype'] == 'footnotes_and_corrigenda'
+        elsif params['dtype'] == 'footnotes'
           jpegs = jpegs.select { |x| x.document_type == 'footnotes_and_corrigenda' }
         else
           flash[:error] = 'התבקש סוג הורדה לא תקין'
