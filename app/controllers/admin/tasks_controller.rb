@@ -129,7 +129,7 @@ class Admin::TasksController < InheritedResources::Base
               next if @skip_ids.include?(jpeg.id)
 
               if @starter_ids.include?(jpeg.id) && !docs.empty? # if an empty set, this must be the first non-skipped file, so our already-prepared empty task will do
-                @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts, @footnotes) # create split task with documents accumulated so far
+                @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts.dup, @footnotes.dup) # create split task with documents accumulated so far
                 docs = []
                 partno += 1
                 next_task = prepare_cloned_task(@task, partno, @total_parts)
@@ -137,7 +137,7 @@ class Admin::TasksController < InheritedResources::Base
               docs << jpeg
             end
             # finish last split task, if any docs are left
-            @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts, @footnotes) if docs.count > 0
+            @new_tasks << finalize_split_task(next_task, docs, @task.id, @fronts.dup, @footnotes.dup) if docs.count > 0
             # prepare new cloned tasks with all metadata copied and ordinal number incremented
             # iterate through scans until next split marker or end
             # (if final set equals the document set of the task, report and do nothing)
@@ -214,10 +214,9 @@ class Admin::TasksController < InheritedResources::Base
       next unless list.present?
 
       list.each do |doc|
-        d = doc.dup
-        d.task_id = task.id
-        d.file = Paperclip.io_adapters.for(doc.file)
-        d.save
+        d = Document.create(task_id: task.id, user_id: doc.user_id, document_type: doc.document_type)
+        d.file = doc.file.url
+        d.save!
       end
     end
     task.save!
