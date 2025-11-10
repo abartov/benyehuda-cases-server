@@ -12,4 +12,6 @@ To set up an environment, install RVM (http://get.rvm.io), and, on Ubuntu, I nee
 
   sudo apt-get install libmysqlclient-dev libxml2-dev libxslt-dev libmagickwand-dev
 
+You also need the (https://github.com/josch/img2pdf)[img2pdf] utility to allow batch download of scans as PDFs. 
+
 For the download-as-PDF feature to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
