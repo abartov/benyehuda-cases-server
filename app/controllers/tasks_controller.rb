@@ -51,10 +51,17 @@ class TasksController < InheritedResources::Base
         end
         tmpfilename = tmpfile.path
         inputfiles = tmpfilename + '_input.txt'
-        File.open(inputfiles, 'w') { |f| f.write(tmpjpegs.map { |tj| tj.path }.join("\n")) }
+        # img2pdf needs NUL-separated list
+        File.open(inputfiles, 'w') do |f|
+          f.write(tmpjpegs.map do |tj|
+                    tj.path
+                  end.join("\0"))
+        end
         # run the conversion
         # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-        `convert @#{inputfiles} #{tmpfilename}`
+        # `convert @#{inputfiles} #{tmpfilename}`
+        # ImageMagick was producing low-quality PDFs, so switched to img2pdf:
+        `img2pdf --from-file #{inputfiles} -o #{tmpfilename}`
         pdf = File.read(tmpfilename)
         send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         File.delete(tmpfilename) # delete temporary generated PDF
