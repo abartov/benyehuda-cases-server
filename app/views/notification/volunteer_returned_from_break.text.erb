@@ -1,0 +1,10 @@
+<%=raw _("Hello %{editor_name},
+
+The volunteer %{volunteer_name} has returned from a break and is now available for new tasks.
+
+You were the last editor to work with this volunteer, so we wanted to let you know they're back and ready to contribute.
+
+This email was generated automatically. Please do not reply to it.
+
+Project Ben-Yehuda Team.") % {:editor_name => @editor.name, :volunteer_name => @volunteer.name}
+%>
