@@ -7,6 +7,7 @@ class TasksController < InheritedResources::Base
   autocomplete :task, :name, full: true, extra_data: [:kind_id], display_value: :name_with_kind
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
+  has_scope :order_by_updated_at, :only => :index, :using => [:dir]
 
   EVENTS_WITH_COMMENTS = { 'reject' => N_('Task rejected'), 'abandon' => N_('Task abandoned'),
                            'finish' => N_('Task completed'), 'help_required' => N_('Help required') }
@@ -137,7 +138,7 @@ class TasksController < InheritedResources::Base
     base_query = Task.unassigned.joins(joins).where(conds)
     
     # Apply sorting scopes if present
-    @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:sort_by].present?
+    @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:order_by_updated_at].present? || params[:sort_by].present?
                apply_scopes(base_query)
              else
                base_query.order('updated_at desc')

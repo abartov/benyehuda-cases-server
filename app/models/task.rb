@@ -99,6 +99,8 @@ class Task < ActiveRecord::Base
 
   scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
 
+  scope :order_by_updated_at, proc { |dir| order("updated_at #{dir}") }
+
   after_save :update_assignments_history
   @@index_name = ENV['is_staging'] == 'true' ? 'staging_task' : 'task'
 

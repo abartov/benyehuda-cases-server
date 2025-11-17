@@ -3,6 +3,7 @@ class DashboardsController < InheritedResources::Base
   defaults :resource_class => 'Task', :collection_name => 'tasks', :instance_name => 'task'
   has_scope :order_by, :only => :index, :using => [:includes, :property, :dir]
   has_scope :order_by_state, :only => :index, :using => [:dir]
+  has_scope :order_by_updated_at, :only => :index, :using => [:dir]
   actions :index
 
   def index
