@@ -1,6 +1,9 @@
 class ReportController < InheritedResources::Base
   before_action :require_editor_or_admin # , :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
   actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
+  has_scope :order_by, :only => [:stalled, :few_tasks_left], :using => [:includes, :property, :dir]
+  has_scope :order_by_state, :only => [:stalled, :few_tasks_left], :using => [:dir]
+  has_scope :order_by_updated_at, :only => [:stalled, :few_tasks_left], :using => [:dir]
 
   def index
     @current_tab = :reports
@@ -8,7 +11,8 @@ class ReportController < InheritedResources::Base
 
   def stalled
     @current_tab = :reports
-    @tasks = Task.assigned.where(updated_at: 20.years.ago..6.months.ago)
+    base_query = Task.assigned.where(updated_at: 20.years.ago..6.months.ago)
+    @tasks = apply_scopes(base_query)
   end
 
   def hours
@@ -44,8 +48,9 @@ class ReportController < InheritedResources::Base
 
   def few_tasks_left
     @current_tab = :reports
-    @tasks = Task.includes(:parent).where(kind_id: [1, 21], state: 'unassigned',
+    base_query = Task.includes(:parent).where(kind_id: [1, 21], state: 'unassigned',
                                           parent: { kind_id: 71 }).group('parent_id').having('count(tasks.id) < 3')
+    @tasks = apply_scopes(base_query)
   end
 
   def missing_metadata
