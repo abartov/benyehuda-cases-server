@@ -133,23 +133,23 @@ class TasksController < InheritedResources::Base
       conds[:teams] = { id: params[:team] }
       joins << :teams
     end
-    
+
     # Build base query with filters
     base_query = Task.unassigned.joins(joins).where(conds)
-    
+
     # Apply sorting scopes if present
     @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:order_by_updated_at].present? || params[:sort_by].present?
                apply_scopes(base_query)
              else
                base_query.order('updated_at desc')
              end
-    
+
     # Handle percent_done sorting (special case like in DashboardsController)
     if params[:sort_by] == 'percent_done'
       @tasks = @tasks.to_a.sort { |a, b| a.percent_done <=> b.percent_done }
       @tasks.reverse! if params[:dir] == 'DESC'
     end
-    
+
     @tasks = @tasks.paginate(page: params[:page], per_page: params[:per_page])
     # end
 
