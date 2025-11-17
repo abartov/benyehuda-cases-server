@@ -17,6 +17,19 @@ module TasksHelper
     param == 'ASC' ? 'DESC' : 'ASC'
   end
 
+  def sorting_path_for_current_context(params_to_merge = {})
+    # Determine the correct path based on the current controller
+    case controller_name
+    when 'tasks'
+      tasks_path(params_to_merge)
+    when 'dashboards'
+      dashboard_path(params_to_merge)
+    else
+      # For report pages or other contexts, default to current path with params
+      url_for(params.merge(params_to_merge))
+    end
+  end
+
   def textify_event(event)
     # TODO: gettext here
     s_(TASK_EVENTS[event])

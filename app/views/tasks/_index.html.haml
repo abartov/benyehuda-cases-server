@@ -24,26 +24,26 @@
               %tbody
                 %tr
                   %th.first.style4
-                    %a.up{ :href => dashboard_path(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                    %a.up{ :href => sorting_path_for_current_context(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Name")
                   - if editing
                     %th.style12
                       = _("Assignee")
                   %th.style12
-                    %a.up{ :href => dashboard_path(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                    %a.up{ :href => sorting_path_for_current_context(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Kind")
                   %th.style7
                     - if defined? stalled and stalled
-                      %a.up{ :href=> dashboard_path(:order_by_updated_at => {:dir => order_direction(params[:order_by_updated_at].try(:[], :dir))})}
+                      %a.up{ :href=> sorting_path_for_current_context(:order_by_updated_at => {:dir => order_direction(params[:order_by_updated_at].try(:[], :dir))})}
                         = _("Last Updated")
                     - else
-                      %a.up{ :href => dashboard_path(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
+                      %a.up{ :href => sorting_path_for_current_context(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
                         = _("State")
                   %th.style12
-                    %a.up{ :href => dashboard_path(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                    %a.up{ :href => sorting_path_for_current_context(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Files")
                   %th.style7
-                    %a.up{ :href => dashboard_path(:sort_by => "percent_done", :dir => order_direction(params[:order_by].try(:[], :dir)), :order_by => { :dir =>order_direction(params[:order_by].try(:[], :dir)), :property => 'documents_count' })}
+                    %a.up{ :href => sorting_path_for_current_context(:sort_by => "percent_done", :dir => order_direction(params[:order_by].try(:[], :dir)), :order_by => { :dir =>order_direction(params[:order_by].try(:[], :dir)), :property => 'documents_count' })}
                       = _("Progress")
                   %th.first.style11
                     \&nbsp;
