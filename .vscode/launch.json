@@ -22,6 +22,14 @@
       "name": "Attach debugger",
       "request": "attach"
     },
+        {
+            "type": "ruby_lsp", // Or "rdbg" depending on your chosen extension
+            "request": "launch",
+            "name": "Debug RSpec Current File",
+            "program": "${workspaceFolder}/bin/rspec", // Adjust if rspec is located elsewhere
+            "args": ["${file}"],
+            "useBundler": true // Set to true if using Bundler
+        },
     {
       "type": "ruby_lsp",
       "name": "Debug Rails server",
