@@ -87,7 +87,8 @@ class User < ActiveRecord::Base
   # validates :volunteer_kind_id, :presence => true, :if => :validate_kind?, :on => :update
 
   before_update :handle_volunteer_kind, :request_task_on_volunteering
-  after_update :welcome_on_volunteering, :notify_editor_on_return_from_break
+  after_update :welcome_on_volunteering
+  around_update :notify_editor_on_return_from_break
 
   sphinx_scope(:sp_enabled) { { where: 'disabled_at is NULL' } }
   sphinx_scope(:sp_active_first) { { order: 'current_login_at DESC' } }
@@ -231,10 +232,12 @@ class User < ActiveRecord::Base
 
   def notify_editor_on_return_from_break
     # Notify the last editor when a volunteer returns from break
-    if on_break_changed? && on_break_was == true && on_break == false
-      editor = last_editor
-      Notification.volunteer_returned_from_break(self, editor).deliver if editor
-    end
+    changed = on_break_changed?
+    yield
+    return unless on_break == false && changed
+
+    editor = last_editor
+    Notification.volunteer_returned_from_break(self, editor).deliver if editor
   end
 
   def handle_volunteer_kind
