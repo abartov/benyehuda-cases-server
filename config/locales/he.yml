@@ -62,6 +62,7 @@ he:
     leave: פרישה מהצוות
     join: הצטרפות לצוות
     none: אין שיוך לצוות
+    choose_team: בחירת צוות
   tabs:
     teams: צוותים
     users: משתמשים
@@ -75,6 +76,7 @@ he:
     global_prefs: הגדרות
     translations: תרגום ממשק
   report:
+    few_tasks_left: 'דו"ח עוד קצת וגמרנו'
     missing_metadata:
       missing_genre: התעלם מחוסר סוגה
       missing_images: התעלם מהגדרת תמונות
@@ -99,3 +101,7 @@ he:
   'no': לא
   volunteer_prefs: העדפות התנדבות
   to_all_teams: לרשימת כל הצוותים
+  start_ingestion: העלאה לאתר!
+  maintext: גוף המשימה
+  front: שער ותוכן עניינים (אם ישנו)
+  footnotes_and_corrigenda: הערות או לוח תיקונים

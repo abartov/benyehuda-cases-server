@@ -28,7 +28,7 @@
         %td= team.users.count
         %td= team.open? ? t('yes') : t('no')
         - total = team.tasks.count
-        - done = team.tasks.approved.count + team.tasks.other_task_creat.count
+        - done = team.tasks.approved.count + team.tasks.other_task_creat.count + team.tasks.ready_to_publish.count
         %td= total
         %td= team.tasks.assigned.count
         %td= done.to_s

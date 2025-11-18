@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "blueimp-file-upload": "^10.32.0"
+  }
+}

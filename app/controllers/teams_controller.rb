@@ -36,7 +36,11 @@ class TeamsController < ApplicationController
   def edit
     @team_leads = @team.team_lead_memberships
     @team_members = @team.team_member_memberships
-    @task_teams = @team.task_teams
+    @tasks_by_state = TaskState.pluck(:name).map { |s| [s, []] }.to_h
+    @task_teams = @team.task_teams.includes(:task).order('tasks.state')
+    @task_teams.each do |tt|
+      @tasks_by_state[tt.task.state] << tt
+    end
   end
 
   # PATCH/PUT /teams/1
@@ -63,13 +67,14 @@ class TeamsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_team
-      @team = Team.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def team_params
-      params.require(:team).permit(:name, :description, :status, :targetdate, :open)
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_team
+    @team = Team.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def team_params
+    params.require(:team).permit(:name, :description, :status, :targetdate, :open)
+  end
 end

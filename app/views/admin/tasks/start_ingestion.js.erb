@@ -1,0 +1,7 @@
+<% if @docx.present? %>
+  var form = $('<form action="https://benyehuda.org/ingestibles" method="post"><input name="ingestible[title]" value="<%= j(@title) %>"/><input name="ingestible[genre]" value="<%= @genre %>" /><input name="ingestible[credits]" value="<%= j(@credits) %>" /><input name="docx" value="<%= @docx %>" /><input name="ingestible[orig_lang]" value="<%= @orig_lang %>" /><input name="ingestible[publisher]" value="<%= j(@publisher) %>" /><input name="ingestible[originating_task]" value="<%= task_url(@task) %>" /><input name="ingestible[no_volume]" value="1" /><input name="ingestible[status]" value="draft" /></form>');
+  $('body').append(form);
+  form.submit();
+<% else %>
+  $('#start_ingestion_area').append('<p /><h2 style="color:red">לא נמצא קובץ DOCX (להבדיל מ־DOC) במשימה הזו!</h2>');
+<% end %>

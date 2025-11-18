@@ -5,7 +5,12 @@ class TeamMembershipsController < InheritedResources::Base
     pp = team_membership_params
     pp[:team_role] = pp[:team_role].to_i
     if allowed?
-      @team_membership = TeamMembership.create!(pp)
+      @team_membership = TeamMembership.where(team_id: pp[:team_id], user_id: pp[:user_id])
+      @team_membership = if @team_membership.present?
+                           @team_membership.first
+                         else
+                           TeamMembership.create!(pp)
+                         end
       @team = @team_membership.team
       @team_leads = @team.team_lead_memberships
       @team_members = @team.team_member_memberships

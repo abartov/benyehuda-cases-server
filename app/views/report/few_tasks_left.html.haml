@@ -1,0 +1,3 @@
+%h1= t('report.few_tasks_left')
+!= render :partial => "tasks/index", :locals => { :tasks => @tasks, :editing => false, :title => t('report.few_tasks_left'), :stalled => false }
+

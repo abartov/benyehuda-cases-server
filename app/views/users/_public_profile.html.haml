@@ -27,11 +27,6 @@
           != property_value(p)
 
     - when_user_volunteer do
-      .midtitle
-        %h4= _("Preferences")
-      .boxbody
-        %p
-          != @user.volunteer_request.try(:preferences)
       .midtitle.teams
         %h4= t('tabs.teams')
       .boxbody
@@ -43,8 +38,9 @@
               != "&emsp;&emsp;&emsp;&emsp;&emsp;"
               = link_to t('teams.leave'), leave_team_membership_path(tm), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}, style: 'color:red;'
         %br
-        = select_tag :team_ids, options_from_collection_for_select(Team.open.where.not(id: @user.teams.pluck(:id)).order(:name), :id, :name, {include_blank: t('teams.choose_team')})
+        = select_tag :team_ids, options_from_collection_for_select(Team.open.where.not(id: @user.teams.pluck(:id)).order(:name), :id, :name), include_blank: t('teams.choose_team')
         = button_tag t('teams.join'), id: "add_team", type: :button
+        #team_description{style: 'background-color:lightgreen;'}
 
     - when_user_volunteer do
       .midtitle
@@ -79,5 +75,11 @@
         .done(function(data) {
           location.reload();
         });
+    });
+    var teams = {
+      #{Team.open.where.not(id: @user.teams.pluck(:id)).map { |t| "#{t.id}: '#{j(t.description)}'" }.join(",\n")}
+    };
+    $('#team_ids').change(function() {
+      $('#team_description').text(teams[$(this).val()]);
     });
   });
