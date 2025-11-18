@@ -1,10 +1,10 @@
-<%=raw _("Hello %{editor_name},
+<%= ("שלום %{editor_name},
 
-The volunteer %{volunteer_name} has returned from a break and is now available for new tasks.
+המתנדב/ת %{volunteer_name} חזר/ה מהפסקה וכעת זמין/ה למשימות חדשות.
 
-You were the last editor to work with this volunteer, so we wanted to let you know they're back and ready to contribute.
+את/ה היית העורך/ת האחרון/ה שעבד/ה עם מתנדב/ת זה/זו, אז רצינו ליידע אותך.
 
-This email was generated automatically. Please do not reply to it.
+זוהי הודעה אוטומטית מהמערכת. אין טעם להשיב עליה.
 
-Project Ben-Yehuda Team.") % {:editor_name => @editor.name, :volunteer_name => @volunteer.name}
+שרת פרויקט בן־יהודה.") % {:editor_name => @editor.name, :volunteer_name => @volunteer.name}
 %>
