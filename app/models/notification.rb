@@ -39,6 +39,13 @@ class Notification < ActionMailer::Base
     mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: t(:team_mass_message, team: team.name)
   end
 
+  def volunteer_returned_from_break(volunteer, editor)
+    @volunteer = volunteer
+    @editor = editor
+    @domain = domain
+    mail to: editor.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("Volunteer %{volunteer_name} has returned from break") % { volunteer_name: volunteer.name }
+  end
+
 protected
 
   def domain

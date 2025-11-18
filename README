@@ -1,4 +1,4 @@
-This is a task management system supporting the workflow of Project Ben-Yehuda (http://benyehuda.org), a volunteer effort to digitize and make freely available Hebrew works that are in the public domain.
+This is a task management system supporting the workflow of Project Ben-Yehuda (https://benyehuda.org), a volunteer effort to digitize and make freely available Hebrew works that are in the public domain.
 
 While it uses I18N libraries to localize its interface, it's really only designed to work right-to-left and in Hebrew.  It should be fairly easy to generalize, but the core team has no interest in expending effort to that end, so it is left to those interested in adapting the code.
 
@@ -11,3 +11,7 @@ Write to us at editor@benyehuda.org
 To set up an environment, install RVM (http://get.rvm.io), and, on Ubuntu, I needed to install development libraries for MySQL, libxml2, libxslt, and ImageMagick to allow bundler to install the gems, so use something like:
 
   sudo apt-get install libmysqlclient-dev libxml2-dev libxslt-dev libmagickwand-dev
+
+You also need the (https://github.com/josch/img2pdf)[img2pdf] utility to allow batch download of scans as PDFs. 
+
+For the download-as-PDF feature to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion

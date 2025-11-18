@@ -9,7 +9,9 @@
 #progress
 
 :javascript
+
   $(document).ready(function() {
+      var activeUploads = []; // Array to store active jqXHR objects
     $('#upload_documents').fileupload({
       dataType: 'json',
       sequentialUploads: true,
@@ -17,11 +19,21 @@
         data.context = $('<p class="file"></p>')
           .append($('<a target="_blank"></a>').text(data.files[0].name))
           .appendTo($('#progress'));
-        data.submit();
+        var jqXHR = data.submit();
+        activeUploads.push(jqXHR);
       },
       progress: function(e, data) {
         var progress = parseInt((data.loaded / data.total) * 100, 10);
         data.context.css("background-position-x", 100 - progress + "%");
+      },
+      fail: function(e,data) {
+              console.error('Upload failed:', data.xhr().responseText);
+            // An upload failed, so abort all other active uploads
+            $.each(activeUploads, function (index, xhr) {
+                if (xhr && xhr.readyState !== 4) { // Check if the upload is still in progress
+                    xhr.abort();
+                }
+            });
       },
       done: function (e, data) {
         data.context
@@ -37,3 +49,4 @@
       }
     });
   });
+

@@ -190,6 +190,7 @@ class Task < ActiveRecord::Base
     doc.file = opts.tempfile
     doc.file_file_name = opts.original_filename
     doc.user_id = uploader.id
+    doc.document_type = 'maintext' # default
     doc
   end
 

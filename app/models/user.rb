@@ -88,6 +88,7 @@ class User < ActiveRecord::Base
 
   before_update :handle_volunteer_kind, :request_task_on_volunteering
   after_update :welcome_on_volunteering
+  around_update :notify_editor_on_return_from_break
 
   sphinx_scope(:sp_enabled) { { where: 'disabled_at is NULL' } }
   sphinx_scope(:sp_active_first) { { order: 'current_login_at DESC' } }
@@ -163,6 +164,11 @@ class User < ActiveRecord::Base
     save!
   end
 
+  def last_editor
+    # Find the most recent task where this user was the assignee and return the editor
+    assigned_tasks.where.not(editor_id: nil).order('tasks.updated_at DESC').first&.editor
+  end
+
   def vol_active?
     vol_active_in_last_n_months?(6)
   end
@@ -222,6 +228,16 @@ class User < ActiveRecord::Base
 
   def welcome_on_volunteering
     Notification.volnteer_welcome(self).deliver if is_volunteer_changed? && is_volunteer?
+  end
+
+  def notify_editor_on_return_from_break
+    # Notify the last editor when a volunteer returns from break
+    changed = on_break_changed?
+    yield
+    return unless on_break == false && changed
+
+    editor = last_editor
+    Notification.volunteer_returned_from_break(self, editor).deliver if editor
   end
 
   def handle_volunteer_kind

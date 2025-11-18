@@ -5,11 +5,49 @@
       %td.vtop
         %h4= _("Attached documents")
       %td
+    - front = []
+    - footnotes_and_corrigenda = []
+    - maintext = []
+    - documents.each do |d|
+      - if d.front?
+        - front << d
+      - elsif d.footnotes_and_corrigenda?
+        - footnotes_and_corrigenda << d
+      - else
+        - maintext << d
+    - if front.any?
+      %tr{style: 'background-color:lightblue;'}
+        %td.vtop
+          %h4= t(:front)
+        %td
+          %a.purple-button.gradient{ href: task_download_pdf_path(@task.id, {dtype: 'front'}) }
+            %span
+              = _("Download as single PDF")
+          %br
+          %br
+          %ol#ol_front_documents
+            != render(:partial => "documents/document", :collection => front, :as => :document)
+    %tr{style: 'background-color:lightyellow;'}
+      %td.vtop
+        - if front.any? || footnotes_and_corrigenda.any? # otherwise maintext title is unnecessary
+          %h4= t(:maintext)
+      %td
         %a.purple-button.gradient{ href: task_download_pdf_path(@task.id) }
           %span
             = _("Download as single PDF")
         %br
         %br
         %ol#ol_documents
-          != render(:partial => "documents/document", :collection => documents, :as => :document)
- 
+          != render(:partial => "documents/document", :collection => maintext, :as => :document)
+    - if footnotes_and_corrigenda.any?
+      %tr{style: 'background-color:lightsalmon;'}
+        %td.vtop
+          %h4= t(:footnotes_and_corrigenda)
+        %td
+          %a.purple-button.gradient{ href: task_download_pdf_path(@task.id, {dtype: 'footnotes'}) }
+            %span
+              = _("Download as single PDF")
+          %br
+          %br
+          %ol#ol_footnotes_documents
+            != render(:partial => "documents/document", :collection => footnotes_and_corrigenda, :as => :document)
