@@ -24,8 +24,10 @@ module TasksHelper
       tasks_path(params_to_merge)
     when 'dashboards'
       dashboard_path(params_to_merge)
+    when 'report'
+      url_for(params.merge(params_to_merge))
     else
-      # For report pages or other contexts, default to current path with params
+      # For other contexts, default to current path with params
       url_for(params.merge(params_to_merge))
     end
   end
