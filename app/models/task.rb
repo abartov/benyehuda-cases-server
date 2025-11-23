@@ -147,11 +147,12 @@ class Task < ActiveRecord::Base
     search_opts[:conditions][:teams] = opts[:team] unless opts[:team].blank?
 
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
+    ord = opts[:order_by].present? ? "#{opts[:order_by][:property]} #{opts[:order_by][:dir]}" : 'tasks.updated_at DESC'
     if opts[:query].blank?
       joins = []
       joins << :teams if opts[:team].present?
       search_opts[:conditions][:task_kinds] = { name: opts[:kind] } unless opts[:kind].blank?
-      ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order('tasks.updated_at DESC').paginate(
+      ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order(ord).paginate(
         page: opts[:page], per_page: opts[:per_page]
       )
     else
@@ -160,7 +161,7 @@ class Task < ActiveRecord::Base
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
       ret = search fixed_Riddle_escape(opts[:query]),
-                   search_opts.merge(sql: SEARCH_INCLUDES).merge(order: 'updated_at DESC', page: opts[:page],
+                   search_opts.merge(sql: SEARCH_INCLUDES).merge(order: ord, page: opts[:page],
                                                                  per_page: opts[:per_page]).merge(indices: [@@index_name])
     end
   end
