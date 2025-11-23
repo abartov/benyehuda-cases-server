@@ -27,7 +27,7 @@
 # Enable per-form CSRF tokens.
 # Rails.application.config.action_controller.per_form_csrf_tokens = true
 
-# Set CSRF token expiration.
+# Enable origin checking for CSRF protection.
 # Rails.application.config.action_controller.forgery_protection_origin_check = true
 
 # Use SHA-256 to generate digest of content in ETags

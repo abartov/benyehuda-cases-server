@@ -5,7 +5,7 @@ gem 'builder'
 gem 'json', '~>2'
 gem 'marcel', '~>1'
 gem 'rack', '>=2.1.4'
-gem 'rails', '~> 7.0'
+gem 'rails', '~> 7.2.0'
 gem 'rails-i18n', '~> 7.0'
 gem 'rake'
 gem 'rexml' # required by xml-simple but not yet listed as a dependency in 1.18
