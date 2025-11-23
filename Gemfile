@@ -1,12 +1,12 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'activerecord-session_store'
 gem 'builder'
 gem 'json', '~>2'
 gem 'marcel', '~>1'
 gem 'rack', '>=2.1.4'
-gem 'rails', '~> 6'
-gem 'rails-i18n', '~> 6'
+gem 'rails', '~> 7.0'
+gem 'rails-i18n', '~> 7.0'
 gem 'rake'
 gem 'rexml' # required by xml-simple but not yet listed as a dependency in 1.18
 gem 'sassc-rails'

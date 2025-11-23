@@ -9,6 +9,9 @@ Bundler.require(*Rails.groups)
 
 module CasesServer
   class Application < Rails::Application
+    # Load defaults for Rails 7.0
+    config.load_defaults 7.0
+
     config.generators do |g|
       g.test_framework :rspec, :fixture => true, :views => false, :fixture_replacement => :factory_bot, :view_specs => false
       g.fixture_replacement :factory_bot, :dir => 'spec/factories'
