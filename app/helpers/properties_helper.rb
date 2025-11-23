@@ -1,3 +1,7 @@
+# DEPRECATED: PropertiesHelper has been replaced by direct form fields
+# This helper is kept for reference but should not be used in new code
+# Migration completed: 2025-11-23
+
 module PropertiesHelper
   def custom_properties_fields(f, property_parent)
     property_parent = property_parent.to_s.downcase
