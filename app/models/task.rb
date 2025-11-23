@@ -195,6 +195,9 @@ class Task < ActiveRecord::Base
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
       ord.gsub!('tasks.', '') # the Sphinx config aliases tasks fields
+      ord.gsub!('assignee_users.name', 'assignee')
+      ord.gsub!('editor_users.name', 'editor')
+      ord.gsub!('creator_users.name', 'creator')
       ret = search fixed_Riddle_escape(opts[:query]),
                    search_opts.merge(sql: SEARCH_INCLUDES).merge(order: ord, page: opts[:page],
                                                                  per_page: opts[:per_page]).merge(indices: [@@index_name])

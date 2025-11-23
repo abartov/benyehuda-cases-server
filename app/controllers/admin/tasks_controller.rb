@@ -179,7 +179,7 @@ class Admin::TasksController < InheritedResources::Base
   protected
 
   def collection
-    @tasks ||= apply_scopes(Task.filter(task_params))
+    @tasks ||= (params['query'].present? ? Task.filter(task_params) : apply_scopes(Task.filter(task_params)))
   end
 
   def interpolation_options
