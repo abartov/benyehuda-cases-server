@@ -262,6 +262,15 @@ class Task < ActiveRecord::Base
   # rashi is now a boolean column
   # instructions is now a text column
   
+  # Ensure methods return expected defaults
+  def orig_lang
+    read_attribute(:orig_lang) || ''
+  end
+  
+  def instructions
+    read_attribute(:instructions) || ''
+  end
+  
   def legacy_source
     source || ''
   end

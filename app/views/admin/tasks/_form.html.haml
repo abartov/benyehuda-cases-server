@@ -8,7 +8,10 @@
 
 %br
 = f.inputs :name => s_("task section|Task Settings") do
-  - custom_properties_fields(f, "task")
+  = f.input :instructions, :as => :text, :label => _("Instructions"), :input_html => {:class => 'span-13'}
+  = f.input :orig_lang, :label => _("Original Language"), :input_html => {:class => 'span-13'}
+  = f.input :rashi, :as => :boolean, :label => _("Rashi script")
+
 
 :javascript
   $(document).ready(function() {

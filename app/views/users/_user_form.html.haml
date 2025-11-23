@@ -2,4 +2,5 @@
   = f.input :zehut, label: 'מספר תעודת זהות (לא חובה)'
   = '(דיווח של מספרי הזהות של המתנדבים הפועלים במסגרת הפרויקט נדרש על ידי רשם העמותות, ומאפשר לנו הכרה כמוסד ללא כוונת רווח. לעולם לא נחלוק את מספר הזהות שלכם עם שום גורם אחר, ונודה לכם מאוד אם תיאותו למלאו כאן.)'
   = f.inputs :name => _("User Settings") do
-    - custom_properties_fields(f, "user")
+    -# custom_properties_fields removed - migrated to columns
+
