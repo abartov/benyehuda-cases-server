@@ -1,6 +1,8 @@
 .block
+  = f.input :mobile_phone, label: 'טלפון נייד (לא חובה)'
+  = f.input :telephone , label: 'טלפון קווי (לא חובה)'
+  = f.input :address, label: 'כתובת מגורים (לא חובה)'
   = f.input :zehut, label: 'מספר תעודת זהות (לא חובה)'
   = '(דיווח של מספרי הזהות של המתנדבים הפועלים במסגרת הפרויקט נדרש על ידי רשם העמותות, ומאפשר לנו הכרה כמוסד ללא כוונת רווח. לעולם לא נחלוק את מספר הזהות שלכם עם שום גורם אחר, ונודה לכם מאוד אם תיאותו למלאו כאן.)'
-  = f.inputs :name => _("User Settings") do
-    -# custom_properties_fields removed - migrated to columns
+  = f.input :volunteer_preferences, as: :text, label: 'העדפות מתנדב', input_html: { rows: 5, style: 'direction: rtl;' }
 
