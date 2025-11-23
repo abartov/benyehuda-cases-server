@@ -147,11 +147,11 @@ class Task < ActiveRecord::Base
     search_opts[:conditions][:teams] = opts[:team] unless opts[:team].blank?
 
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
-    
+
     # Handle ordering with proper table aliasing for user associations
     ord = 'tasks.updated_at DESC'
     user_association_alias = nil
-    
+
     if opts[:order_by].present?
       # Check if we're ordering by a user-related field
       if opts[:order_by][:property] == 'users.name' && opts[:order_by][:includes].present?
@@ -174,17 +174,17 @@ class Task < ActiveRecord::Base
         ord = "#{opts[:order_by][:property]} #{opts[:order_by][:dir]}"
       end
     end
-    
+
     if opts[:query].blank?
       joins = []
       joins << :teams if opts[:team].present?
-      
+
       # Add explicit join with alias if sorting by a user association
       if user_association_alias
         user_association = opts[:order_by][:includes]
         joins << "LEFT JOIN users AS #{user_association_alias} ON tasks.#{user_association}_id = #{user_association_alias}.id"
       end
-      
+
       search_opts[:conditions][:task_kinds] = { name: opts[:kind] } unless opts[:kind].blank?
       ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order(ord).paginate(
         page: opts[:page], per_page: opts[:per_page]
@@ -194,6 +194,7 @@ class Task < ActiveRecord::Base
       if search_opts[:conditions][:state].class == Array
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
+      ord.gsub!('tasks.', '') # the Sphinx config aliases tasks fields
       ret = search fixed_Riddle_escape(opts[:query]),
                    search_opts.merge(sql: SEARCH_INCLUDES).merge(order: ord, page: opts[:page],
                                                                  per_page: opts[:per_page]).merge(indices: [@@index_name])
