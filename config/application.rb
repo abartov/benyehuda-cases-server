@@ -13,8 +13,9 @@ module CasesServer
     config.load_defaults 7.0
 
     config.generators do |g|
-      g.test_framework :rspec, :fixture => true, :views => false, :fixture_replacement => :factory_bot, :view_specs => false
-      g.fixture_replacement :factory_bot, :dir => 'spec/factories'
+      g.test_framework :rspec, fixture: true, views: false, fixture_replacement: :factory_bot,
+                               view_specs: false
+      g.fixture_replacement :factory_bot, dir: 'spec/factories'
     end
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -22,7 +23,7 @@ module CasesServer
 
     # Custom directories with classes and modules you want to be autoloadable.
     # config.autoload_paths += %W(#{config.root}/extras)
-    config.autoload_paths += %W(#{config.root}/app/middleware/)
+    # config.autoload_paths += %W(#{config.root}/app/middleware/)
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named.
@@ -45,7 +46,7 @@ module CasesServer
     # config.action_view.javascript_expansions[:defaults] = %w(jquery rails)
 
     # Configure the default encoding used in templates for Ruby 1.9.
-    config.encoding = "utf-8"
+    config.encoding = 'utf-8'
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password]

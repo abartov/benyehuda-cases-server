@@ -1,7 +1,7 @@
 %tr{:class => cycle("odd", "even"), :id => "task_#{task.id}"}
   %td= task.id
   %td!= link_to h(task.creator.name), user_path(task.creator)
-  %td= task.updated_at.to_s(:db)
+  %td= task.updated_at.strftime("%Y-%m-%d %H:%M")
   %td!= link_to h(task.name), task_path(task)
   %td= task.try(:genre)
   %td= task.kind.try(:name)
