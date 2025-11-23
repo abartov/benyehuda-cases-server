@@ -55,7 +55,8 @@ Rails.application.routes.draw do
   match '/' => 'welcome#index', via: :get
   match '/byebye' => 'welcome#byebye', via: %i[get post]
   # resources :pages, :only => [:show]
-  resources :properties
+  # DEPRECATED: properties routes - migrated to columns (2025-11-23)
+  # resources :properties
   match '/dashboard' => 'dashboards#index', :via => :get, :as => :dashboard
   resources :volunteer_requests
   namespace :admin do
