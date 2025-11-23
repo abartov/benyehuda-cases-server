@@ -15,7 +15,7 @@
 # Raise when assigning to attr_readonly attributes.
 # Rails.application.config.active_record.raise_on_assign_to_attr_readonly = true
 
-# Make Active Record's read_only_attributes read from config.
+# Disable deprecated singular association names.
 # Rails.application.config.active_record.allow_deprecated_singular_associations_name = false
 
 # Set the queue name for Action Mailer deliver_later.
