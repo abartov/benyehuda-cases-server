@@ -53,8 +53,9 @@ class Task < ActiveRecord::Base
   has_and_belongs_to_many :teams, join_table: :task_teams
   has_many :task_teams, dependent: :destroy
 
-  include CustomProperties
-  has_many_custom_properties :task # task_properties
+  # CustomProperties removed - migrated to columns
+  # include CustomProperties
+  # has_many_custom_properties :task # task_properties
 
   include CommentWithReason
   include States
@@ -256,43 +257,13 @@ class Task < ActiveRecord::Base
     (files_done.to_f / files_todo * 100).round
   end
 
-  # convenience method for custom prop
-  def orig_lang
-    task_properties.each do |p|
-      return p.custom_value if p.property_id == PROP_ORIGLANG
-    end
-    ''
-  end
-
+  # Migrated from custom properties to columns - these methods now just access attributes
+  # orig_lang is now a column
+  # rashi is now a boolean column
+  # instructions is now a text column
+  
   def legacy_source
-    task_properties.each do |p|
-      return p.custom_value if p.property_id == PROP_SOURCE
-    end
-    ''
-  end
-
-  def rashi
-    task_properties.each do |p|
-      return p.custom_value if p.property_id == PROP_RASHI
-    end
-    false
-  end
-
-  def instructions=(buf)
-    tp = task_properties.where(property_id: PROP_INSTRUCTIONS).first
-    if tp.nil?
-      tp = CustomProperty.new(property_id: PROP_INSTRUCTIONS)
-      task_properties << tp
-    end
-    tp.custom_value = buf
-    tp.save!
-  end
-
-  def instructions
-    task_properties.each do |p|
-      return p.custom_value if p.property_id == PROP_INSTRUCTIONS
-    end
-    ''
+    source || ''
   end
 
   def document_uploaders

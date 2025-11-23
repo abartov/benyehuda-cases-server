@@ -196,7 +196,10 @@ module States
     new_task = Task.new(opts)
     new_task.editor = new_task.creator = actor
     new_task.parent_id = self.id
-    self.task_properties.each {|tp| new_task.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)} # copy over custom properties
+    # copy over custom property columns (migrated from custom_properties)
+    new_task.orig_lang = self.orig_lang
+    new_task.rashi = self.rashi
+    new_task.instructions = self.instructions
     new_task
   end
   def events_for_current_state

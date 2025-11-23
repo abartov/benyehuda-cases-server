@@ -13,8 +13,10 @@ class VolunteerRequest < ActiveRecord::Base
   scope :by_request_time, -> { order('volunteer_requests.created_at') }
   scope :with_user, -> { includes(:user) }
 
-  include CustomProperties
-  has_many_custom_properties :request # task_properties
+  # CustomProperties removed - no specific properties used
+  # include CustomProperties
+  # has_many_custom_properties :request # task_properties
+
 
   def approve!(approver_user)
     self.approver = approver_user
