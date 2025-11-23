@@ -99,6 +99,8 @@ class Task < ActiveRecord::Base
 
   scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
 
+  scope :order_by_updated_at, proc { |dir| order("updated_at #{dir}") }
+
   after_save :update_assignments_history
   @@index_name = ENV['is_staging'] == 'true' ? 'staging_task' : 'task'
 
@@ -145,11 +147,46 @@ class Task < ActiveRecord::Base
     search_opts[:conditions][:teams] = opts[:team] unless opts[:team].blank?
 
     search_opts[:with][:documents_count] = TASK_LENGTH[opts[:length]] unless opts[:length].blank?
+
+    # Handle ordering with proper table aliasing for user associations
+    ord = 'tasks.updated_at DESC'
+    user_association_alias = nil
+
+    if opts[:order_by].present?
+      # Check if we're ordering by a user-related field
+      if opts[:order_by][:property] == 'users.name' && opts[:order_by][:includes].present?
+        # Determine which user association we're sorting by
+        user_association = opts[:order_by][:includes]
+        case user_association
+        when 'assignee'
+          user_association_alias = 'assignee_users'
+          ord = "#{user_association_alias}.name #{opts[:order_by][:dir]}"
+        when 'editor'
+          user_association_alias = 'editor_users'
+          ord = "#{user_association_alias}.name #{opts[:order_by][:dir]}"
+        when 'creator'
+          user_association_alias = 'creator_users'
+          ord = "#{user_association_alias}.name #{opts[:order_by][:dir]}"
+        else
+          ord = "#{opts[:order_by][:property]} #{opts[:order_by][:dir]}"
+        end
+      else
+        ord = "#{opts[:order_by][:property]} #{opts[:order_by][:dir]}"
+      end
+    end
+
     if opts[:query].blank?
       joins = []
       joins << :teams if opts[:team].present?
+
+      # Add explicit join with alias if sorting by a user association
+      if user_association_alias
+        user_association = opts[:order_by][:includes]
+        joins << "LEFT JOIN users AS #{user_association_alias} ON tasks.#{user_association}_id = #{user_association_alias}.id"
+      end
+
       search_opts[:conditions][:task_kinds] = { name: opts[:kind] } unless opts[:kind].blank?
-      ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order('tasks.updated_at DESC').paginate(
+      ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order(ord).paginate(
         page: opts[:page], per_page: opts[:per_page]
       )
     else
@@ -157,8 +194,12 @@ class Task < ActiveRecord::Base
       if search_opts[:conditions][:state].class == Array
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
+      ord.gsub!('tasks.', '') # the Sphinx config aliases tasks fields
+      ord.gsub!('assignee_users.name', 'assignee')
+      ord.gsub!('editor_users.name', 'editor')
+      ord.gsub!('creator_users.name', 'creator')
       ret = search fixed_Riddle_escape(opts[:query]),
-                   search_opts.merge(sql: SEARCH_INCLUDES).merge(order: 'updated_at DESC', page: opts[:page],
+                   search_opts.merge(sql: SEARCH_INCLUDES).merge(order: ord, page: opts[:page],
                                                                  per_page: opts[:per_page]).merge(indices: [@@index_name])
     end
   end

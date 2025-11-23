@@ -1,10 +1,14 @@
 require 'httparty'
+require 'will_paginate/array' # for sorting the array when sorting by percent_done
 
 class TasksController < InheritedResources::Base
   before_action :require_task_participant_or_editor, only: %i[show update edit download_pdf]
   before_action :require_editor_or_admin, only: %i[index create make_comments_editor_only get_last_source]
   actions :index, :show, :update, :create
   autocomplete :task, :name, full: true, extra_data: [:kind_id], display_value: :name_with_kind
+  has_scope :order_by, only: :index, using: %i[includes property dir]
+  has_scope :order_by_state, only: :index, using: [:dir]
+  has_scope :order_by_updated_at, only: :index, using: [:dir]
 
   EVENTS_WITH_COMMENTS = { 'reject' => N_('Task rejected'), 'abandon' => N_('Task abandoned'),
                            'finish' => N_('Task completed'), 'help_required' => N_('Help required') }
@@ -130,8 +134,24 @@ class TasksController < InheritedResources::Base
       conds[:teams] = { id: params[:team] }
       joins << :teams
     end
-    @tasks = Task.unassigned.joins(joins).where(conds).order('updated_at desc').paginate(page: params[:page],
-                                                                                         per_page: params[:per_page])
+
+    # Build base query with filters
+    base_query = Task.unassigned.joins(joins).where(conds)
+
+    # Apply sorting scopes if present
+    @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:order_by_updated_at].present? || params[:sort_by].present?
+               apply_scopes(base_query)
+             else
+               base_query.order('updated_at desc')
+             end
+
+    # Handle percent_done sorting (special case like in DashboardsController)
+    if params[:sort_by] == 'percent_done'
+      @tasks = @tasks.to_a.sort { |a, b| a.percent_done <=> b.percent_done } # this converts to array
+      @tasks.reverse! if params[:dir] == 'DESC'
+    end
+
+    @tasks = @tasks.paginate(page: params[:page], per_page: params[:per_page])
     # end
 
     @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
