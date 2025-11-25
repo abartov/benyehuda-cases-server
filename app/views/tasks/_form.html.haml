@@ -13,11 +13,10 @@
   - if current_user && current_user.is_admin?
     %h4= t('.teams')
     %ol#task_teams_list
-    - @task.task_teams.each do |task_team|
-      %li{id: "task_team_#{task_team.id}"}
-        = link_to task_team.team.name, team_path(task_team.team)
-        = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
-      %br
+      - @task.task_teams.each do |task_team|
+        %li{id: "task_team_#{task_team.id}"}
+          = link_to task_team.team.name, team_path(task_team.team)
+          = link_to t(:remove), task_team_path(task_team), method: :delete, remote: true, data: {confirm: t(:are_you_sure)}
     = t(:add)
     = select_tag :add_team_id, options_from_collection_for_select(Team.where.not(id: @task.teams.pluck(:id)).order(:name), :id, :name), include_blank: 'בחר צוות'
     - if @task.persisted?
@@ -60,16 +59,26 @@
     if($('#task_kind_id').val() == '') {
       $('#task_kind_id').val('1'); // default to typing
     }
-    - if @task.persisted?
+    persisted = #{@task.persisted? ? 'true' : 'false'};
+    if (persisted) {
       $("#add_team").click(function() {
         var teamId = $("#add_team_id").val();
         if (!teamId) return;
         $.ajax({
           url: "#{task_teams_path}",
           type: "POST",
-          data: {task_team: {team_id: teamId, task_id: #{@task.id}}},
-          dataType: "script"
+          data: {task_team: {team_id: teamId, task_id: #{@task.id}}, add_team_id: true},
+          dataType: "json",
+          success: function(data) {
+            var newItem = '<li id="task_team_' + data.task_team_id + '">' +
+              '<a href="/teams/' + data.team_id + '">' + data.team_name + '</a> ' +
+              '<a data-confirm="#{j(t(:are_you_sure))}" data-method="delete" href="/task_teams/' + data.task_team_id + '" rel="nofollow" data-remote="true">#{j(t(:remove))}</a>' +
+              '</li>';
+            $('#task_teams_list').append(newItem);
+            $('#add_team_id option[value="' + data.team_id + '"]').remove();
+            $('#add_team_id').val('');
+          }
         });
       });
-
+    }
   });

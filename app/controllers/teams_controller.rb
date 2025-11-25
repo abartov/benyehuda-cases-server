@@ -2,6 +2,7 @@ class TeamsController < ApplicationController
   before_action :set_team, only: %i[show edit update destroy mass_message]
   before_action :require_admin, only: %i[new create edit update destroy mass_message]
 
+  include TeamsHelper
   # GET /teams
   def index
     @teams = Team.all
@@ -34,13 +35,7 @@ class TeamsController < ApplicationController
 
   # GET /teams/1/edit
   def edit
-    @team_leads = @team.team_lead_memberships
-    @team_members = @team.team_member_memberships
-    @tasks_by_state = TaskState.pluck(:name).map { |s| [s, []] }.to_h
-    @task_teams = @team.task_teams.includes(:task).order('tasks.state')
-    @task_teams.each do |tt|
-      @tasks_by_state[tt.task.state] << tt
-    end
+    prep_for_edit
   end
 
   # PATCH/PUT /teams/1

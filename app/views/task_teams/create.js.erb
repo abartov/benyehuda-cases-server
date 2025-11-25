@@ -1,14 +1,6 @@
-// Handle task edit view - add the new team to the list
-if ($('#task_teams_list').length) {
-  var newItem = '<li id="task_team_<%= @task_team.id %>">' +
-    '<a href="<%= team_path(@team) %>"><%= j(@team.name) %></a> ' +
-    '<a data-confirm="<%= j(t(:are_you_sure)) %>" data-method="delete" href="<%= task_team_path(@task_team) %>" rel="nofollow" data-remote="true"><%= j(t(:remove)) %></a>' +
-    '</li>' +
-    '<br>';
-  $('#task_teams_list').append(newItem);
-  // Remove the added team from the dropdown
-  $('#add_team_id option[value="<%= @team.id %>"]').remove();
-} else {
+<% if params[:add_team_id].present? %>
+  <%# This response is now handled by the AJAX success callback in the form %>
+<% else %>
   // Handle teams management view
   $('.tasks').html("<%= escape_javascript(render partial: 'teams/tasks', locals: { edit: true}) %>");
-}
+<% end %>
