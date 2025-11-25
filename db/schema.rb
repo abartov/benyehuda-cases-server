@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_12_202000) do
+ActiveRecord::Schema.define(version: 2025_11_23_041200) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -203,6 +203,9 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.boolean "include_images"
     t.string "source", limit: 2048
     t.integer "project_id"
+    t.string "orig_lang"
+    t.boolean "rashi", default: false
+    t.text "instructions"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
     t.index ["editor_id"], name: "index_tasks_on_editor_id"
@@ -290,6 +293,7 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.boolean "on_break"
     t.date "last_reminder"
     t.string "zehut"
+    t.text "volunteer_preferences"
     t.index ["email"], name: "index_users_on_email"
     t.index ["perishable_token"], name: "index_users_on_perishable_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"

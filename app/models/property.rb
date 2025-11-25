@@ -1,3 +1,7 @@
+# DEPRECATED: Property has been migrated to individual columns
+# This model is kept for reference but should not be used in new code
+# Migration completed: 2025-11-23
+
 class Property < ActiveRecord::Base
 
   PARENTS = %w(User Volunteer Editor Task Request)
