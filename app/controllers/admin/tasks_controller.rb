@@ -19,9 +19,14 @@ class Admin::TasksController < InheritedResources::Base
     resource.admin_state = params[:task][:admin_state] || resource.admin_state
     resource.editor_id = params[:task][:editor_id] || resource.editor_id
     resource.assignee_id = params[:task][:assignee_id] || resource.assignee_id
+    add_team_id = params[:add_team_id]
     remove_extra_params
     create! do |success, failure|
       success.html do
+        # Create TaskTeam record if a team was selected during task creation
+        if add_team_id.present?
+          TaskTeam.find_or_create_by(task_id: @task.id, team_id: add_team_id)
+        end
         redirect_to params[:commit] == _('Save and New') ? new_admin_task_path : task_path(@task)
       end
     end
@@ -32,9 +37,16 @@ class Admin::TasksController < InheritedResources::Base
     resource.admin_state = params[:task][:admin_state] || resource.admin_state
     resource.editor_id = params[:task][:editor_id] || resource.editor_id
     resource.assignee_id = params[:task][:assignee_id] || resource.assignee_id
+    add_team_id = params[:add_team_id]
     remove_extra_params
     update! do |success, failure|
-      success.html { redirect_to task_path(resource) }
+      success.html do
+        # Create TaskTeam record if a team was selected during task update
+        if add_team_id.present?
+          TaskTeam.find_or_create_by(task_id: resource.id, team_id: add_team_id)
+        end
+        redirect_to task_path(resource)
+      end
     end
   end
 
