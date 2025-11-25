@@ -37,7 +37,6 @@ class Admin::TasksController < InheritedResources::Base
     resource.assignee_id = params[:task][:assignee_id] || resource.assignee_id
     add_team_id = params[:add_team_id]
     # add to team_ids if add_team_id present
-    resource.team_ids << add_team_id.to_i if add_team_id.present? && !resource.team_ids.include?(add_team_id.to_i)
 
     remove_extra_params
     update! do |success, failure|
