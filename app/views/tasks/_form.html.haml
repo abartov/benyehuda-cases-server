@@ -1,11 +1,11 @@
-= f.inputs :name => s_("task section|General") do
-  = f.input :name, :required => true, :label => _("Name"), :input_html => {:class => 'span-13'}
+= f.inputs :name => I18n.t('task_section.general') do
+  = f.input :name, :required => true, :label => I18n.t('gettext.name'), :input_html => {:class => 'span-13'}
   - if defined? newkind
-    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind"), :selected => newkind
+    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => I18n.t('gettext.kind'), :selected => newkind
   - else
-    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind")
+    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => I18n.t('gettext.kind')
   - if current_user && current_user.is_admin?
-    = link_to _("Manage Kinds"), "#", :id => "manage_kinds"
+    = link_to I18n.t('gettext.manage_kinds'), "#", :id => "manage_kinds"
   = f.input :genre, :as => :select, :collection => Task.genres.keys.map{|g| [g, g]}, :label => 'סוגה'
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
@@ -29,10 +29,10 @@
   /= f.input :project, as: :select, collection: Project.where(status: 'פעיל'), selected: @task.project, label: 'מיזם'
   - if current_user && current_user.is_admin?
     = link_to 'ניהול מיזמים', projects_path
-  /= f.input :difficulty, :as => :select, :collection => task_difficulties_for_select, :required => true, :label => _("Difficulty")
-  /= f.input :priority, :as => :select, :collection => task_priorities_for_select, :required => true, :label => _("Priority")
-  = f.input :full_nikkud, :as => :boolean, :label => _("Full Nikkud")
-  = f.input :hours, :label => _("Hours spent")+' '
+  /= f.input :difficulty, :as => :select, :collection => task_difficulties_for_select, :required => true, :label => I18n.t('gettext.difficulty')
+  /= f.input :priority, :as => :select, :collection => task_priorities_for_select, :required => true, :label => I18n.t('gettext.priority')
+  = f.input :full_nikkud, :as => :boolean, :label => I18n.t('gettext.full_nikkud')
+  = f.input :hours, :label => I18n.t('gettext.hours_spent')+' '
 
 :javascript
   var index_html = '#{escape_javascript(render(:template => "admin/task_kinds/index"))}';

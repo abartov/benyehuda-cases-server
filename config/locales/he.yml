@@ -226,10 +226,68 @@ he:
     priority: "עדיפות"
     full_nikkud: "ניקוד מלא"
     
+    # Form labels
+    file: "קובץ"
+    message: "הודעה"
+    email: "דוא\"ל"
+    password: "סיסמה"
+    password_confirmation: "אישור סיסמה"
+    avatar: "תמונה"
+    preferences: "העדפות"
+    
+    # Actions
+    upload: "העלה"
+    publish: "פרסם"
+    create: "צור"
+    update: "עדכן"
+    assign: "הקצה"
+    
     # Task related
     task_created: "המשימה נוצרה."
     task_updated: "המשימה עודכנה"
     task_cannot_be_updated: "לא ניתן לעדכן את המשימה"
+    task: "משימה"
+    new_task: "משימה חדשה"
+    my_tasks: "המשימות שלי"
+    my_editing_tasks: "משימות העריכה שלי"
+    request_a_task: "בקש משימה"
+    assign_a_task_title: "הקצה משימה"
+    back_to_task: "חזרה למשימה"
+    
+    # Comments
+    comments: "הערות"
+    add_comment: "הוסף הערה"
+    editor_eyes_only: "לעיני עורך בלבד"
+    
+    # Reasons
+    abandoning_reason: "סיבת נטישה"
+    rejection_reason: "סיבת דחייה"
+    reason: "סיבה"
+    also_request_a_new_task: "בקש גם משימה חדשה"
+    
+    # Admin
+    manage_kinds: "נהל סוגים"
+    hours_spent: "שעות שהושקעו"
+    
+    # Document
+    attach_new_document: "צרף מסמך חדש"
+    
+    # User
+    assignment_history: "היסטוריית הקצאות"
+    change_assignments: "שנה הקצאות"
+    waits_for: "ממתין ל"
+    volunteers_waiting_for_tasks: "מתנדבים הממתינים למשימות"
+    cancel_request: "בטל בקשה"
+    
+    # History
+    history: "היסטוריה"
+    
+    # Other
+    other: "אחר"
+    empty: ""
+    hello_world: "שלום עולם"
+    become_volunteer: "הפוך למתנדב"
+    back_to_volunteer_requests: "חזרה לבקשות מתנדבים"
     
     # Messages
     search_is_not_available_at_this_moment: "החיפוש אינו זמין כעת, אנא נסה שוב מאוחר יותר"
@@ -295,3 +353,7 @@ he:
     paginator_previous_page:
       laquo_previous: "&laquo; הקודם"
       next_raquo: "הבא &raquo;"
+
+  # Task section
+  task_section:
+    general: "כללי"

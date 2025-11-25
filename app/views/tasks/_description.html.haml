@@ -47,12 +47,12 @@
   = textify_rashi(@task)
   %br
   %b
-    = _("Difficulty")+": "
+    = I18n.t('gettext.difficulty')+": "
   = Task.textify_difficulty(@task.difficulty)
   %br
   - if @task.priority.present?
     %b
-      = _("Priority")+": "
+      = I18n.t('gettext.priority')+": "
     = Task.textify_priority(@task.priority)
 .midtitle
   .boxbody

@@ -21,7 +21,7 @@
             %a.link1.edit{ :href => task_requests_path, "data-method" => :post, "data-remote" => :true }
               %span
                 %em
-                  != _("Request a Task")
+                  != I18n.t('gettext.request_a_task')
           - else
             %span
               != render(:partial => "users/task_request")
@@ -33,7 +33,7 @@
         %a.link1{ :href => new_admin_task_path }
           %span
             %em
-              =_("New Task")
+              =I18n.t('gettext.new_task')
 
 - when_admin do
   / block
@@ -41,7 +41,7 @@
     .head
       .l
         .c
-          %h2= _("Volunteers waiting for tasks")+" (#{@waiting_volunteers.nil? ? "0" : @waiting_volunteers.length.to_s})"
+          %h2= I18n.t('gettext.volunteers_waiting_for_tasks')+" (#{@waiting_volunteers.nil? ? "0" : @waiting_volunteers.length.to_s})"
     .container
       .t
         %span.l
@@ -52,7 +52,7 @@
         %span.l
           %span.c
 
-!= render(:partial => "tasks/index", :locals => {:tasks => collection, :title => _("My Tasks"), :editing => false})
+!= render(:partial => "tasks/index", :locals => {:tasks => collection, :title => I18n.t('gettext.my_tasks'), :editing => false})
 
 - when_editor do
   != render(:partial => "editor_dashboard")

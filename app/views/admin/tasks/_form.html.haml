@@ -1,10 +1,10 @@
 != render(:partial => "tasks/form", :locals => {:f => f})
 
 = f.inputs do
-  != f.input :assignee, :as => :select, :collection => User.all_volunteers.order("users.name"), :label => _("Assignee")
-  != f.input :editor, :as => :select, :collection => User.all_editors.order("users.name"), :label => _("Editor")
+  != f.input :assignee, :as => :select, :collection => User.all_volunteers.order("users.name"), :label => I18n.t('gettext.assignee')
+  != f.input :editor, :as => :select, :collection => User.all_editors.order("users.name"), :label => I18n.t('gettext.editor')
 
-  != f.input :admin_state, :label => _("State"), :as => :select, :collection => task_states_for_select
+  != f.input :admin_state, :label => I18n.t('gettext.state'), :as => :select, :collection => task_states_for_select
 
 %br
 = f.inputs :name => s_("task section|Task Settings") do

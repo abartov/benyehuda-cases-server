@@ -9,8 +9,8 @@
     = f.inputs do
       -#!= f.fields_for :comment, @task.rejection_comment  do |comment_fields|
       != f.fields_for :comment, Comment.new  do |comment_fields|
-        != comment_fields.input :message, :as => :text, :input_html => {:id => "reject_comment_message", :class => "comment_message #{has_rejection_errors? && 'active activated'}"}, :label => _("Rejection Reason")
-    != f.submit _("Reject")
+        != comment_fields.input :message, :as => :text, :input_html => {:id => "reject_comment_message", :class => "comment_message #{has_rejection_errors? && 'active activated'}"}, :label => I18n.t('gettext.rejection_reason')
+    != f.submit I18n.t('task_event.reject')
     .gray-button
       %span
         != link_to_function _("cancel"), toggle_js, :style => "color:#565253"

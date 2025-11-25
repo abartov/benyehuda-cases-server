@@ -5,7 +5,7 @@
     = f.semantic_errors
     != render :partial => "form", :locals => { :f => f }
     %br
-    != f.submit _("Update")
+    != f.submit I18n.t('gettext.update')
     != link_to I18n.t('gettext.cancel'), "/"
 
 - when_current_user do

@@ -1,11 +1,11 @@
-= set_tab :tasks_admin, _("New Task")
+= set_tab :tasks_admin, I18n.t('gettext.new_task')
 
 = semantic_form_for(@task, :live_validations => true, :url => admin_tasks_path) do |f|
   = f.inputs do
     = f.semantic_errors
   != render(:partial => "form", :locals => {:f => f})
   = f.inputs do
-    != f.submit _("Save")
+    != f.submit I18n.t('gettext.save')
     != f.submit _("Save and New")
     != link_to I18n.t('gettext.cancel'), admin_tasks_path
 

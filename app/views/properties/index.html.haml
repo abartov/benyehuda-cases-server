@@ -7,10 +7,10 @@
   %table.list
     %tr.title
       %th= _("Parent")
-      %th= _("Name")
+      %th= I18n.t('gettext.name')
       %th= _("Type")
       %th= _("Public")
-      %th= _("Comments")
+      %th= I18n.t('gettext.comments')
       %th &nbsp;
     != render(:partial => @properties)
 

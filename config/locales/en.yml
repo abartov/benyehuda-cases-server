@@ -190,10 +190,68 @@ en:
     priority: "Priority"
     full_nikkud: "Full Nikkud"
     
+    # Form labels
+    file: "File"
+    message: "Message"
+    email: "Email"
+    password: "Password"
+    password_confirmation: "Password Confirmation"
+    avatar: "Avatar"
+    preferences: "Preferences"
+    
+    # Actions
+    upload: "Upload"
+    publish: "Publish"
+    create: "Create"
+    update: "Update"
+    assign: "Assign"
+    
     # Task related
     task_created: "Task created."
     task_updated: "Task updated"
     task_cannot_be_updated: "task cannot be updated"
+    task: "Task"
+    new_task: "New Task"
+    my_tasks: "My Tasks"
+    my_editing_tasks: "My Editing Tasks"
+    request_a_task: "Request a Task"
+    assign_a_task_title: "Assign a Task"
+    back_to_task: "back to task"
+    
+    # Comments
+    comments: "Comments"
+    add_comment: "Add Comment"
+    editor_eyes_only: "Editor eyes only"
+    
+    # Reasons
+    abandoning_reason: "Abandoning Reason"
+    rejection_reason: "Rejection Reason"
+    reason: "Reason"
+    also_request_a_new_task: "Also request a new task"
+    
+    # Admin
+    manage_kinds: "Manage Kinds"
+    hours_spent: "Hours spent"
+    
+    # Document
+    attach_new_document: "Attach New Document"
+    
+    # User
+    assignment_history: "Assignment History"
+    change_assignments: "Change Assignments"
+    waits_for: "Waits for"
+    volunteers_waiting_for_tasks: "Volunteers waiting for tasks"
+    cancel_request: "cancel_request"
+    
+    # History
+    history: "History"
+    
+    # Other
+    other: "Other"
+    empty: ""
+    hello_world: "Hello World"
+    become_volunteer: "Become Volunteer"
+    back_to_volunteer_requests: "Back to Volunteer Requests"
     
     # Messages
     search_is_not_available_at_this_moment: "Search is not available at this moment, please try again later"
@@ -259,3 +317,7 @@ en:
     paginator_previous_page:
       laquo_previous: "&laquo; Previous"
       next_raquo: "Next &raquo;"
+
+  # Task section
+  task_section:
+    general: "General"

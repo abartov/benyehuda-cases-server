@@ -5,11 +5,11 @@
     = _("Requested at:")
     = @volunteer_request.created_at.to_s(:db)
 
-  %h4= _("Preferences")
+  %h4= I18n.t('gettext.preferences')
   %p!= auto_link(h(@volunteer_request.preferences))
 
 .block
-  %h4= _("Other")
+  %h4= I18n.t('gettext.other')
   - @volunteer_request.request_properties.visible_for(current_user).each do |p|
     %p
       %strong= "#{p.property.title}:"
@@ -17,4 +17,4 @@
 
 .block
   != confirm_button(@volunteer_request)
-  != link_to _("Back to Volunteer Requestes"), volunteer_requests_path
+  != link_to I18n.t('gettext.back_to_volunteer_requests'), volunteer_requests_path
