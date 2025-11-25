@@ -1,2 +1,14 @@
-// TODO: move to ajax events for the different views calling this -- the below code is suitable for team management, but not for the individual task view, adding a team
-$('.tasks').html("<%= escape_javascript(render partial: 'teams/tasks', locals: { edit: true}) %>");
+// Handle task edit view - add the new team to the list
+if ($('#task_teams_list').length) {
+  var newItem = '<li id="task_team_<%= @task_team.id %>">' +
+    '<a href="<%= team_path(@team) %>"><%= j(@team.name) %></a> ' +
+    '<a data-confirm="<%= j(t(:are_you_sure)) %>" data-method="delete" href="<%= task_team_path(@task_team) %>" rel="nofollow" data-remote="true"><%= j(t(:remove)) %></a>' +
+    '</li>' +
+    '<br>';
+  $('#task_teams_list').append(newItem);
+  // Remove the added team from the dropdown
+  $('#add_team_id option[value="<%= @team.id %>"]').remove();
+} else {
+  // Handle teams management view
+  $('.tasks').html("<%= escape_javascript(render partial: 'teams/tasks', locals: { edit: true}) %>");
+}

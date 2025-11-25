@@ -1,12 +1,13 @@
 class TaskTeamsController < InheritedResources::Base
   def create
     tt = TaskTeam.where(task_id: task_team_params[:task_id], team_id: task_team_params[:team_id])
-    tt = if tt.present?
+    @task_team = if tt.present?
            tt.first
          else
            TaskTeam.create!(task_team_params)
          end
-    @team = tt.team
+    @team = @task_team.team
+    @task = @task_team.task
     @task_teams = @team.task_teams
     respond_to(&:js)
   end
