@@ -119,10 +119,6 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
-    capistrano3-puma (6.2.0)
-      capistrano (~> 3.7)
-      capistrano-bundler
-      puma (>= 5.1, < 7.0)
     cgi (0.4.2)
     chronic (0.10.2)
     climate_control (1.2.0)
@@ -505,7 +501,6 @@ DEPENDENCIES
   capistrano-bundler (~> 2.1)
   capistrano-rails (~> 1.6)
   capistrano-rvm
-  capistrano3-puma (~> 6.0)
   daemons
   database_cleaner-active_record
   debug

@@ -45,10 +45,6 @@ set :keep_releases, 5
 set :rvm_type, :user
 set :rvm_ruby_version, '3.2.1'
 
-# Puma configuration
-set :puma_init_active_record, true
-set :puma_preload_app, true
-
 # Bundler configuration
 set :bundle_flags, '--deployment --quiet'
 set :bundle_without, %w[test development].join(' ')
