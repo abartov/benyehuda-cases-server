@@ -29,6 +29,7 @@ c
 m
 v
 config/deploy.rb.benyehuda.org
+config/deploy.rb.vlad.backup
 old_rails_upgrade.diff
 old_locale.zip
 stats.diff

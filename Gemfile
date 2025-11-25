@@ -38,8 +38,16 @@ gem 'scrypt', '2.1.1'
 gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
-gem 'vlad', '1.4.0', require: false
 gem 'whenever', require: false
+
+group :development do
+  # Capistrano for deployment
+  gem 'capistrano', '~> 3.19', require: false
+  gem 'capistrano-rails', '~> 1.6', require: false
+  gem 'capistrano-bundler', '~> 2.1', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano3-puma', '~> 6.0', require: false
+end
 gem 'will_paginate', require: 'will_paginate'
 
 gem 'aws-sdk-s3', '~> 1'
