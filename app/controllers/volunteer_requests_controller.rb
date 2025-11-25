@@ -17,7 +17,7 @@ class VolunteerRequestsController < InheritedResources::Base
       return
     end
 
-    flash[:notice] = _("Thank you, your request has been posted.")
+    flash[:notice] = I18n.t('gettext.thank_you_your_request_has_been_posted')
     redirect_to home_path
   end
 
@@ -27,7 +27,7 @@ class VolunteerRequestsController < InheritedResources::Base
     @volunteer_requests = VolunteerRequest.pending.find(params[:id])
     @volunteer_requests.approve!(current_user)
     # XXX temporarily @volunteer_requests.user.update_attribute(:volunteer_kind_id, params[:volunteer_request][:user_attributes][:volunteer_kind_id])
-    flash[:notice] = _("Volunteer request approved!")
+    flash[:notice] = I18n.t('gettext.volunteer_request_approved')
     redirect_to volunteer_requests_path
   end
 
@@ -43,7 +43,7 @@ protected
   def check_volunteer_request
     return true if current_user.might_become_volunteer?
 
-    flash[:error] = _("Your request has already been posted.")
+    flash[:error] = I18n.t('gettext.your_request_has_already_been_posted')
     redirect_to home_path
   end
 end

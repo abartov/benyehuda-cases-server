@@ -16,9 +16,9 @@ class Audit < ActiveRecord::Base
   def long_messages
     case action
     when 1 # create
-      [s_("audit created|%{title} was created%{via_source}.") % {:title => title, :via_source => via_source}] + compose_messages
+      [I18n.t('audit_created.title_was_created_via_source', title: title, via_source: via_source)] + compose_messages
     when 2 # removed
-      [s_("audit removed|%{title} was removed.") % {:title => title}] + compose_messages
+      [I18n.t('audit_removed.title_was_removed', title: title)] + compose_messages
     when 3 # update
       compose_messages
     end
@@ -28,7 +28,7 @@ class Audit < ActiveRecord::Base
     @title ||= if auditable
       auditable.class.auditable_title.respond_to?(:call) ? auditable.class.auditable_title.call(auditable) : auditable.name
     else
-      s_(auditable_type.constantize.send(:default_title))
+      I18n.t(auditable_type.constantize.send(:default_title))
     end
   end
 
@@ -54,9 +54,9 @@ class Audit < ActiveRecord::Base
     return nil unless to
     human_attr = convert_attribute_name(attribute_name) || attribute_name.to_s.humanize
     if from.blank?
-      s_("audit set|%{attr} set to %{to}") % {:attr => human_attr, :to => escape_blanks(to.force_encoding('utf-8'))}
+      I18n.t('audit_set.attr_set_to', attr: human_attr, to: escape_blanks(to.force_encoding('utf-8')))
     else
-      s_("audit changed|%{attr} changed from %{from} to %{to}") % {:attr => human_attr, :to => escape_blanks(to.force_encoding('utf-8')), :from => escape_blanks(from.force_encoding('utf-8'))}
+      I18n.t('audit_changed.attr_changed_from_to', attr: human_attr, to: escape_blanks(to.force_encoding('utf-8')), from: escape_blanks(from.force_encoding('utf-8')))
     end
   end
 

@@ -10,8 +10,8 @@ class TasksController < InheritedResources::Base
   has_scope :order_by_state, only: :index, using: [:dir]
   has_scope :order_by_updated_at, only: :index, using: [:dir]
 
-  EVENTS_WITH_COMMENTS = { 'reject' => N_('Task rejected'), 'abandon' => N_('Task abandoned'),
-                           'finish' => N_('Task completed'), 'help_required' => N_('Help required') }
+  EVENTS_WITH_COMMENTS = { 'reject' => 'task_state.task_rejected', 'abandon' => 'task_state.task_abandoned',
+                           'finish' => 'task_state.task_completed', 'help_required' => 'task_state.help_required' }
 
   # this action is called when a volunteer clicks "finish" on a task.
   def edit
@@ -105,7 +105,7 @@ class TasksController < InheritedResources::Base
     @chained_task = @task.build_chained_task(params[:task], current_user)
     @comment = @chained_task.comments.first
     if @chained_task.save
-      flash[:notice] = _('Task created.')
+      flash[:notice] = I18n.t('gettext.task_created')
       redirect_to task_path(@chained_task)
     else
       puts "DBG: #{@chained_task.errors.full_messages}"
@@ -174,7 +174,7 @@ class TasksController < InheritedResources::Base
     resource.send(params[:event])
     resource.save
 
-    flash[:notice] = _('Task updated')
+    flash[:notice] = I18n.t('gettext.task_updated')
 
     redirect_to task_path(resource)
   end
@@ -186,7 +186,7 @@ class TasksController < InheritedResources::Base
     return true if current_user.admin_or_editor?
     return true if resource.participant?(current_user) # participant
 
-    flash[:error] = _('Only participant can see this page')
+    flash[:error] = I18n.t('gettext.only_participant_can_see_this_page')
     redirect_to '/'
     false
   end
@@ -203,7 +203,7 @@ class TasksController < InheritedResources::Base
     end
 
     resource.save
-    flash[:notice] = s_(resource.class.event_complete_message(event))
+    flash[:notice] = I18n.t(resource.class.event_complete_message(event))
     respond_to do |format|
       format.html
       format.js do
@@ -216,7 +216,7 @@ class TasksController < InheritedResources::Base
   def _allow_event?(task, event, user)
     return true if task.allow_event_for?(event, user)
 
-    flash[:error] = _("Sorry, you're not allowed to perfrom this operation")
+    flash[:error] = I18n.t('gettext.sorry_youre_not_allowed_to_perfrom_this_operation')
 
     respond_to do |wants|
       wants.html { redirect_to task_path(task) }

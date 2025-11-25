@@ -14,28 +14,28 @@ class Task < ActiveRecord::Base
                       difficulty: proc { |v| Task.textify_difficulty(v) },
                       priority: proc { |v| Task.textify_priority(v) },
                       task_state_id: proc { |v| v ? Task.textify_state(TaskState.find_by_id(v).try(:name)) : '' },
-                      full_nikkud: proc { |v| v ? _('true') : _('false') },
-                      default_title: N_('auditable|Task'),
+                      full_nikkud: proc { |v| v ? I18n.t('gettext.true') : I18n.t('gettext.false') },
+                      default_title: 'auditable.task',
                       attributes: proc { |a|
                         case a
                         when :name
-                          _('Name')
+                          I18n.t('gettext.name')
                         when :state
-                          _('State')
+                          I18n.t('gettext.state')
                         when :creator_id
-                          _('Creater')
+                          I18n.t('gettext.creater')
                         when :editor_id
-                          _('Editor')
+                          I18n.t('gettext.editor')
                         when :assignee_id
-                          _('Assignee')
+                          I18n.t('gettext.assignee')
                         when :kind_id
-                          _('Kind')
+                          I18n.t('gettext.kind')
                         when :difficulty
-                          _('Difficulty')
+                          I18n.t('gettext.difficulty')
                         when :priority
-                          _('Priority')
+                          I18n.t('gettext.priority')
                         when :full_nikkud
-                          _('Full Nikkud')
+                          I18n.t('gettext.full_nikkud')
                         end
                       }
                     }
@@ -63,16 +63,16 @@ class Task < ActiveRecord::Base
   belongs_to :kind, class_name: 'TaskKind'
 
   DIFFICULTIES = {
-    'easy' => N_('task difficulty|easy'),
-    'normal' => N_('task difficulty|normal'),
-    'hard' => N_('task difficulty|hard')
+    'easy' => 'task_difficulty.easy',
+    'normal' => 'task_difficulty.normal',
+    'hard' => 'task_difficulty.hard'
   }
   PRIORITIES = {
-    'first' => N_('First task of new volunteer'),
-    'very_old' => N_('Very old task'),
-    'expiry' => N_('Copyright expiring'),
-    'permission' => N_('Given permission'),
-    'completing' => N_('Completing an author')
+    'first' => 'task_priority.first_task_of_new_volunteer',
+    'very_old' => 'task_priority.very_old_task',
+    'expiry' => 'task_priority.copyright_expiring',
+    'permission' => 'task_priority.given_permission',
+    'completing' => 'task_priority.completing_an_author'
   }
 
   validates :difficulty, inclusion: { in: DIFFICULTIES.keys, message: 'not included in the list' }
@@ -94,7 +94,7 @@ class Task < ActiveRecord::Base
   has_many :documents, -> { where('documents.deleted_at IS NULL') }, dependent: :destroy
 
   scope :order_by_state, proc { |dir|
-    joins('left join task_states on tasks.state = task_states.name').joins('left join translation_keys on translation_keys.key = task_states.value').joins('left join translation_texts on translation_keys.id = translation_texts.translation_key_id').where("translation_texts.locale = '#{FastGettext.locale}'").order("translation_texts.text #{dir}")
+    joins('left join task_states on tasks.state = task_states.name').order("task_states.value #{dir}")
   }
 
   scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
@@ -209,7 +209,7 @@ class Task < ActiveRecord::Base
   end
 
   def parent_task_updated
-    errors.add(:base, _('task cannot be updated')) if @parent_task_cannot_be_updated
+    errors.add(:base, I18n.t('gettext.task_cannot_be_updated')) if @parent_task_cannot_be_updated
   end
 
   def participant?(user)
@@ -311,15 +311,15 @@ class Task < ActiveRecord::Base
   end
 
   def self.textify_priority(p)
-    s_(PRIORITIES[p]) if PRIORITIES[p]
+    I18n.t(PRIORITIES[p]) if PRIORITIES[p]
   end
 
   def self.textify_difficulty(dif)
-    s_(DIFFICULTIES[dif]) if DIFFICULTIES[dif]
+    I18n.t(DIFFICULTIES[dif]) if DIFFICULTIES[dif]
   end
 
   def self.textify_state(state)
-    s_(TaskState.find_by_name(state.to_s).value)
+    I18n.t(TaskState.find_by_name(state.to_s).value)
   end
 
   def possibly_related_tasks

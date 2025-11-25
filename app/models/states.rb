@@ -109,15 +109,15 @@ module States
 
         scope :visible_in_my_tasks, ->{where("tasks.state NOT IN ('unassigned', 'ready_to_publish', 'other_task_creat')")}
 
-        has_reason_comment :_reject, :rejection, :editor, N_("Task rejected")
-        has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
+        has_reason_comment :_reject, :rejection, :editor, 'task_state.task_rejected'
+        has_reason_comment(:_abandon, :abandoning, :assignee, 'task_state.task_abandoned') do |task, opts|
           task.assignee = nil
         end
-        has_reason_comment(:_help_required, :help_required, :assignee, N_("Help required")) do |task, opts|
+        has_reason_comment(:_help_required, :help_required, :assignee, 'task_state.help_required') do |task, opts|
           #task.assignee = nil
         end
 
-        has_reason_comment(:finish, :finished, :assignee, N_("Task finished"), :allow_blank_messages => true) do |task, request_new_task|
+        has_reason_comment(:finish, :finished, :assignee, 'task_state.task_finished', :allow_blank_messages => true) do |task, request_new_task|
           task.assignee.set_task_requested.save! if request_new_task.to_bool
         end
       end

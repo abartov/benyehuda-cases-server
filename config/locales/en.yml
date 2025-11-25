@@ -56,3 +56,195 @@ en:
         email: "email"
         password: "password"
         remember_me: "remember me"
+
+  # Tabs navigation
+  tabs:
+    translations: "Translations"
+    global_prefs: "Global Preferences"
+    site_notices: "Site Notice"
+    object_prefs: "Object Properties"
+    reports: "Reports"
+    profile: "Profile"
+    volunteer_requests: "Volunteer Requests"
+    teams: "Teams"
+    users: "Users"
+    tasks_admin: "Tasks Admin"
+    dashboard: "Dashboard"
+
+  # Task events
+  task_event:
+    approve: "Approve"
+    reject: "Reject"
+    mark_as_completed: "Mark as Completed"
+    create_other_task: "Create Other Task"
+    finish: "Finish"
+    abandon: "Abandon"
+    need_editors_help: "Need Editor's Help"
+    mark_as_finished_partly: "Mark as Finished Partly"
+    mark_for_technical_editing: "Mark for technical editing"
+
+  # Task difficulties
+  task_difficulty:
+    easy: "easy"
+    normal: "normal"
+    hard: "hard"
+
+  # Task priorities
+  task_priority:
+    first_task_of_new_volunteer: "First task of new volunteer"
+    very_old_task: "Very old task"
+    copyright_expiring: "Copyright expiring"
+    given_permission: "Given permission"
+    completing_an_author: "Completing an author"
+
+  # Task states
+  task_state:
+    task_rejected: "Task rejected"
+    task_abandoned: "Task abandoned"
+    help_required: "Help required"
+    task_finished: "Task finished"
+    task_completed: "Task completed"
+
+  # Task length
+  task_length:
+    short: "Short"
+    medium: "Medium"
+    long: "Long"
+
+  # User roles
+  user_role:
+    editor: "Editor"
+    volunteer: "Volunteer"
+    admin: "Admin"
+
+  # Auditable types
+  auditable:
+    task: "Task"
+    document: "Document"
+    comment: "Comment"
+
+  # Document audit
+  document_audit:
+    document_file_name: "Document %{file_name}"
+    by_user_name: " by %{user_name}"
+
+  # Comment audit
+  comment_audit:
+    comment_message: "Comment %{message}"
+    by_user_name: " by %{user_name}"
+
+  # Audit messages
+  audit_created:
+    title_was_created_via_source: "%{title} was created%{via_source}."
+  audit_removed:
+    title_was_removed: "%{title} was removed."
+  audit_set:
+    attr_set_to: "%{attr} set to %{to}"
+  audit_changed:
+    attr_changed_from_to: "%{attr} changed from %{from} to %{to}"
+
+  # Activation email
+  activation_email:
+    resend: "Resend"
+    send_activation_email: "Send Activation Email"
+
+  # Notifications
+  notifications:
+    none: "None"
+
+  # Notification subjects
+  comment_added_notification_subject:
+    task_name_snippet_new_comment: "%{task_name_snippet} - New comment"
+  state_changed_notification_subject:
+    state_domain_task_name_snippet: "%{state} (%{domain}): %{task_name_snippet}"
+  volunteer_welcome_subject:
+    welcome_to_ben_yehuda_project: "Welcome to Ben Yehuda Project"
+  your_work_added_to_site_subject:
+    your_contributions_are_now_published: "Your contributions are now published on the Ben-Yehuda site!"
+
+  # General gettext translations
+  gettext:
+    # Common words
+    "true": "true"
+    "false": "false"
+    yes: "Yes"
+    no: "No"
+    me: "me"
+    confirm: "Confirm"
+    are_you_sure: "Are you sure?"
+    cancel: "Cancel"
+    save: "Save"
+    save_and_new: "Save and New"
+    edit: "Edit"
+    delete: "Delete"
+    remove: "Remove"
+    add: "Add"
+    name: "Name"
+    state: "State"
+    creater: "Creater"
+    editor: "Editor"
+    assignee: "Assignee"
+    creator: "Creator"
+    kind: "Kind"
+    difficulty: "Difficulty"
+    priority: "Priority"
+    full_nikkud: "Full Nikkud"
+    
+    # Task related
+    task_created: "Task created."
+    task_updated: "Task updated"
+    task_cannot_be_updated: "task cannot be updated"
+    
+    # Messages
+    search_is_not_available_at_this_moment: "Search is not available at this moment, please try again later"
+    you_must_be_an_admin_or_editor_to_access_this_page: "You must be an admin or editor to access this page"
+    you_must_be_a_volunteer_to_access_this_page: "You must be a volunteer to access this page"
+    only_participant_can_see_this_page: "Only participant can see this page"
+    only_the_owner_can_see_this_page: "Only the owner can see this page"
+    only_registered_activists_allowed_to_access_this_page: "Only registered activists allowed to access this page"
+    sorry_youre_not_allowed_to_perfrom_this_operation: "Sorry, you're not allowed to perfrom this operation"
+    
+    # User related
+    youre_now_on_break_request_a_new_task_to_come_out_of_break: "You're now on break! Request a new task to come out of break."
+    your_account_has_been_created_please_check_your_email: "Your account has been created. Please check your e-mail for your account activation instructions!"
+    you_cannot_remove_your_own_account: "You cannot remove your own account"
+    user_enabled: "User enabled"
+    user_disabled: "User disabled"
+    cancelled_additional_task_request_for_user: "Cancelled additional task request for user %{user_name}"
+    
+    # Document related
+    document_deleted: "Document deleted"
+    
+    # Volunteer requests
+    thank_you_your_request_has_been_posted: "Thank you, your request has been posted."
+    volunteer_request_approved: "Volunteer request approved!"
+    your_request_has_already_been_posted: "Your request has already been posted."
+    
+    # Password related
+    change_password: "Change Password"
+    password_reset: "Password Reset"
+    activate_account: "Activate Account"
+    change: "Change"
+    reset: "Reset"
+    activate: "Activate"
+    
+    # Notification preferences
+    when_a_comment_added_to_my_task: "When a comment added to my task"
+    when_my_task_status_changed: "When my task status changed"
+    
+    # Volunteer and task kind errors
+    there_are_existing_volunteers_of_kind: "There are existing volunteers of the %{name} kind. Please remove them first in order to delete this kind."
+    there_are_existing_tasks_that_use_kind: "There are existing tasks that uses %{name} kind. Please remove them first in order to delete this kind."
+    
+    # Misc
+    assign_a_task: "Assign a Task..."
+    pending_volunteer_requests:
+      one: "There is %{count} pending volunteer request"
+      other: "There are %{count} pending volunteer requests"
+    send_activation_email_to_user_are_you_sure: "Send Activation Email to %{user}. Are you sure?"
+    volunteer_returned_from_break: "Volunteer %{volunteer_name} has returned from break"
+    
+    # WillPaginate
+    paginator_previous_page:
+      laquo_previous: "&laquo; Previous"
+      next_raquo: "Next &raquo;"
