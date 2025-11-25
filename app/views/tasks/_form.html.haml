@@ -70,8 +70,16 @@
           data: {task_team: {team_id: teamId, task_id: #{@task.id}}, add_team_id: true},
           dataType: "json",
           success: function(data) {
+            function escapeHtml(str) {
+              return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+            }
             var newItem = '<li id="task_team_' + data.task_team_id + '">' +
-              '<a href="/teams/' + data.team_id + '">' + data.team_name + '</a> ' +
+              '<a href="/teams/' + data.team_id + '">' + escapeHtml(data.team_name) + '</a> ' +
               '<a data-confirm="#{j(t(:are_you_sure))}" data-method="delete" href="/task_teams/' + data.task_team_id + '" rel="nofollow" data-remote="true">#{j(t(:remove))}</a>' +
               '</li>';
             $('#task_teams_list').append(newItem);
