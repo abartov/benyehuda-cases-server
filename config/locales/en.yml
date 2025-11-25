@@ -244,6 +244,17 @@ en:
     send_activation_email_to_user_are_you_sure: "Send Activation Email to %{user}. Are you sure?"
     volunteer_returned_from_break: "Volunteer %{volunteer_name} has returned from break"
     
+    # Additional common translations
+    supported_by: "Supported by"
+    hello: "Hello"
+    logout: "logout"
+    login: "login"
+    register: "register"
+    system_name: "Ben Yehuda Project"
+    please_wait: "Please wait..."
+    total: "total"
+    hours_estimate: "Below is an estimated calculation of hours it was likely to spend on this task, based on its number of files. We have to collect this for our reporting to our grantmakers. Please correct the estimate if you have a better estimate, or kept track yourself."
+    
     # WillPaginate
     paginator_previous_page:
       laquo_previous: "&laquo; Previous"

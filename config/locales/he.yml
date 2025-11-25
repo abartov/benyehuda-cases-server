@@ -280,6 +280,17 @@ he:
     send_activation_email_to_user_are_you_sure: "שלח מייל הפעלה ל-%{user}. האם אתה בטוח?"
     volunteer_returned_from_break: "המתנדב %{volunteer_name} חזר מהפסקה"
     
+    # Additional common translations
+    supported_by: "בתמיכת"
+    hello: "שלום"
+    logout: "יציאה"
+    login: "כניסה"
+    register: "הרשמה"
+    system_name: "פרויקט בן יהודה"
+    please_wait: "נא להמתין..."
+    total: "סה\"כ"
+    hours_estimate: "להלן חישוב משוער של שעות שהושקעו במשימה זו, על בסיס מספר הקבצים. אנו צריכים לאסוף נתונים אלו לדיווח לתורמים שלנו. אנא תקן את ההערכה אם יש לך הערכה טובה יותר, או אם ניהלת מעקב בעצמך."
+    
     # WillPaginate
     paginator_previous_page:
       laquo_previous: "&laquo; הקודם"

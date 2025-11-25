@@ -4,4 +4,4 @@
   %td= property.property_type
   %td= _("true") if property.is_public?
   %td= property.comment
-  %td!= link_to _("Delete"), property_path(property), :method => :delete, :confirm => _("Are you sure?")
+  %td!= link_to I18n.t('gettext.delete'), property_path(property), :method => :delete, :confirm => I18n.t('gettext.are_you_sure')

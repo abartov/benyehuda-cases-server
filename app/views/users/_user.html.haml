@@ -22,6 +22,6 @@
     - if user.disabled_at
       %td.delete!= link_to _("Enable"), user_path(user, :enable => true), :method => "delete"
     - else
-      %td.delete!= link_to _("Disable"), user, :method => "delete", :confirm => _("Are you sure?")
+      %td.delete!= link_to _("Disable"), user, :method => "delete", :confirm => I18n.t('gettext.are_you_sure')
   - else
     %td &nbsp;

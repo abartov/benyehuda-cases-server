@@ -7,5 +7,5 @@
   = f.inputs do
     != f.submit _("Save")
     != f.submit _("Save and New")
-    != link_to _("Cancel"), admin_tasks_path
+    != link_to I18n.t('gettext.cancel'), admin_tasks_path
 

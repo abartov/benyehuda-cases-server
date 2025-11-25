@@ -5,4 +5,4 @@
   = f.semantic_errors
   != render :partial => "form", :locals => { :f => f }
   != f.submit _("Save")
-  != link_to _("Cancel"), properties_path
+  != link_to I18n.t('gettext.cancel'), properties_path

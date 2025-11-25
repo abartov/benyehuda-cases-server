@@ -4,4 +4,4 @@
   != f.input :email, :label => _("Email")
   != f.submit _("Send Password Reset Instructions")
 
-!= link_to _("login"), login_path, :class => "login"
+!= link_to I18n.t('gettext.login'), login_path, :class => "login"

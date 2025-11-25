@@ -6,4 +6,4 @@
       != f.input :editor_eyes_only, :label => _("Editor eyes only")
   %div{ :align => :left }
     != f.submit _("Publish")
-    != link_to_function _("Cancel"), "if (confirm('#{_('Are you sure?')}')) {jQuery('#comment_message').val('').removeClass('active').css({height:'30px'});}"
+    != link_to_function I18n.t('gettext.cancel'), "if (confirm('#{I18n.t('gettext.are_you_sure')}')) {jQuery('#comment_message').val('').removeClass('active').css({height:'30px'});}"
