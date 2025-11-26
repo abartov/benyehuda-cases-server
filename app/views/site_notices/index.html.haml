@@ -1,8 +1,8 @@
 = set_tab :site_notices, (params[:all] ? _("All Site Notices") : _("Active Site Notices"))
 
-!= link_to s_("site notice|New"), new_site_notice_path
-!= link_to s_("site notice|Active"), site_notices_path
-!= link_to s_("site notice|All"), site_notices_path(:all => true)
+!= link_to I18n.t('site_notice.new'), new_site_notice_path
+!= link_to I18n.t('site_notice.active'), site_notices_path
+!= link_to I18n.t('site_notice.all'), site_notices_path(:all => true)
 
 %table.list
   %tr.title

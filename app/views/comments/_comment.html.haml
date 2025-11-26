@@ -5,4 +5,4 @@
     %p.comment-text
       != auto_link(h(comment.message).gsub("\n",'<br/>'))
       - when_admin do
-        = link_to _("Delete"), task_comment_path(comment.task_id, comment), :method => :delete, :confirm => _("Are you sure?"), :remote => true
+        = link_to I18n.t('gettext.delete'), task_comment_path(comment.task_id, comment), :method => :delete, :confirm => I18n.t('gettext.are_you_sure'), :remote => true

@@ -25,7 +25,7 @@ class Admin::TasksController < InheritedResources::Base
       success.html do
         # Create TaskTeam record if a team was selected during task creation
         TaskTeam.find_or_create_by(task_id: @task.id, team_id: add_team_id) if add_team_id.present?
-        redirect_to params[:commit] == _('Save and New') ? new_admin_task_path : task_path(@task)
+        redirect_to params[:commit] == I18n.t('gettext.save_and_new') ? new_admin_task_path : task_path(@task)
       end
     end
   end

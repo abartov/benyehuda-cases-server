@@ -7,16 +7,16 @@
   %ul.menu
     - if logged_in?
       %li
-        =_("Hello")
+        =I18n.t('gettext.hello')
         != link_to h(current_user.name), edit_user_path(current_user)
       %li
         [
-        != link_to _("logout"), user_sessions_path, :method => :delete
+        != link_to I18n.t('gettext.logout'), user_sessions_path, :method => :delete
         ]
     - else
       %li
-        != link_to _("login"), login_path
+        != link_to I18n.t('gettext.login'), login_path
       %li
-        != link_to _("register"), signup_path
+        != link_to I18n.t('gettext.register'), signup_path
   %strong.slogan
-    = _("System name")
+    = I18n.t('gettext.system_name')

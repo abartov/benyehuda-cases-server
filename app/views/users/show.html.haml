@@ -3,10 +3,10 @@
   - if current_user.might_become_volunteer?
     .box
       .boxhead
-        = _("Become Volunteer")
+        = I18n.t('gettext.become_volunteer')
       .boxcontainer
         .boxbody
-          != button_to _("Become Volunteer"), new_volunteer_request_path, :method => :get
+          != button_to I18n.t('gettext.become_volunteer'), new_volunteer_request_path, :method => :get
   
 != render(:partial => "users/public_profile")
 != render(:partial => "users/show") unless public_profile?

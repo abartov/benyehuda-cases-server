@@ -2,5 +2,5 @@
 
 = semantic_form_for @site_notice, :html => {:method => :put}, :url => site_notice_path(@site_notice) do |f|
   != render :partial => "form", :locals => { :f => f }
-  != f.submit _("Save")
-  != link_to _("Cancel"), site_notices_path
+  != f.submit I18n.t('gettext.save')
+  != link_to I18n.t('gettext.cancel'), site_notices_path

@@ -9,7 +9,7 @@ class VolunteerKind < ActiveRecord::Base
 
   def volunteer_existance
     if volunteers.size > 0
-      errors.add(:base, _("There are existing volunteers of the #{name} kind. Please remove them first in order to delete this kind."))
+      errors.add(:base, I18n.t('gettext.there_are_existing_volunteers_of_kind', name: name))
       return false
     end
   end

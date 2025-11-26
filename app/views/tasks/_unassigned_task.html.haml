@@ -5,4 +5,4 @@
   %td= unassigned_task.kind.try(:name)
   %td= Task.textify_state(unassigned_task.state)
   %td= unassigned_task.documents_count
-  %td!= link_to _("Assign"), task_assignment_path(unassigned_task, :assignee_id => @assignee.id), :method => :post
+  %td!= link_to I18n.t('gettext.assign'), task_assignment_path(unassigned_task, :assignee_id => @assignee.id), :method => :post

@@ -12,7 +12,7 @@ protected
     begin
       index!
     rescue Riddle::ConnectionError
-      flash[:error] = _("Search is not available at this moment, please try again later")
+      flash[:error] = I18n.t('gettext.search_is_not_available_at_this_moment')
       redirect_to "/"
     end
   end
@@ -45,7 +45,7 @@ protected
     return false if false == require_user
     return true if current_user.admin_or_editor?
 
-    flash[:error] = _("You must be an admin or editor to access this page")
+    flash[:error] = I18n.t('gettext.you_must_be_an_admin_or_editor_to_access_this_page')
     redirect_to home_path
     return false
   end
@@ -54,7 +54,7 @@ protected
     return false if false == require_user
     return true if current_user.is_volunteer? || current_user.admin_or_editor?
 
-    flash[:error] = _("You must be a volunteer to access this page")
+    flash[:error] = I18n.t('gettext.you_must_be_a_volunteer_to_access_this_page')
     redirect_to home_path
     return false
   end
@@ -68,7 +68,7 @@ protected
     return true if current_user.try(:is_admin?)
     return true if task.participant?(current_user) # participant
 
-    flash[:error] = _("Only participant can see this page")
+    flash[:error] = I18n.t('gettext.only_participant_can_see_this_page')
     redirect_to task_path(task)
     return false
   end
@@ -78,11 +78,10 @@ protected
  # before_action :setup_will_paginate
   before_action :set_locale
  # def setup_will_paginate
-#    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
-#    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+#    WillPaginate::ViewHelpers.pagination_options[:previous_label] = I18n.t('gettext.paginator_previous_page.laquo_previous')
+#    WillPaginate::ViewHelpers.pagination_options[:next_label] = I18n.t('gettext.paginator_previous_page.next_raquo')
  # end
   def set_locale
-    FastGettext.locale = 'he'
     I18n.locale = :he
     I18n.default_locale = :he
   end

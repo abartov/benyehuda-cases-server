@@ -1,12 +1,12 @@
 #popup-content
   %p
-    = _("Manage Kinds")
+    = I18n.t('gettext.manage_kinds')
   #new_kind_msg
   %ul
     - TaskKind.all.each do |k|
       %li[k]
         = k.name
-        = link_to _("Delete"), admin_task_kind_path(k), :remote => true, :method => :delete
+        = link_to I18n.t('gettext.delete'), admin_task_kind_path(k), :remote => true, :method => :delete
   %br
   #link_to_new_kind
     = link_to _("New"), new_admin_task_kind_path, :remote => true, :method => :get

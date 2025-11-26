@@ -18,13 +18,13 @@ class Document < ActiveRecord::Base
   acts_as_auditable :file_file_name,
                     name: :file_file_name,
                     auditable_title: proc { |d|
-                      format(s_('document audit|Document %<file_name>s'), file_name: d.file_file_name)
+                      format(I18n.t('document_audit.document_file_name', file_name: d.file_file_name))
                     },
                     audit_source: proc { |d|
-                      format(s_('document audit| by %<user_name>s'), user_name: d.user.try(:name))
+                      format(I18n.t('document_audit.by_user_name', user_name: d.user.try(:name)))
                     },
                     auditable_user_id: proc { |d| d.user.try(:id) },
-                    default_title: N_('auditable|Document')
+                    default_title: 'auditable.document'
 
   has_attached_file :file,
                     storage: :s3,

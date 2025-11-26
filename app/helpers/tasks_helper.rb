@@ -1,16 +1,16 @@
 module TasksHelper
   TASK_EVENTS = {
     # editor
-    'approve' => N_('task event|Approve'),
-    'reject' => N_('task event|Reject'),
-    'complete' => N_('task event|Mark as Completed'),
-    'create_other_task' => N_('task event|Create Other Task'),
+    'approve' => 'task_event.approve',
+    'reject' => 'task_event.reject',
+    'complete' => 'task_event.mark_as_completed',
+    'create_other_task' => 'task_event.create_other_task',
     # assignee
-    'finish' => N_('task event|Finish'),
-    'abandon' => N_('task event|Abandon'),
-    'help_required' => N_("task event|Need Editor's Help"),
-    'finish_partially' => N_('task event|Mark as Finished Partly'),
-    'to_techedit' => N_('task event|Mark for technical editing')
+    'finish' => 'task_event.finish',
+    'abandon' => 'task_event.abandon',
+    'help_required' => 'task_event.need_editors_help',
+    'finish_partially' => 'task_event.mark_as_finished_partly',
+    'to_techedit' => 'task_event.mark_for_technical_editing'
   }
 
   def order_direction(param)
@@ -33,16 +33,15 @@ module TasksHelper
   end
 
   def textify_event(event)
-    # TODO: gettext here
-    s_(TASK_EVENTS[event])
+    I18n.t(TASK_EVENTS[event])
   end
 
   def textify_full_nikud(task)
-    task.full_nikkud ? _('Full Nikkud') : _('No')
+    task.full_nikkud ? I18n.t('gettext.full_nikkud') : I18n.t('gettext.no')
   end
 
   def textify_rashi(task)
-    [true, 1, '1'].include?(task.rashi) ? _('Yes') : _('No')
+    [true, 1, '1'].include?(task.rashi) ? I18n.t('gettext.yes') : I18n.t('gettext.no')
   end
 
   def has_rejection_errors?
@@ -80,7 +79,7 @@ module TasksHelper
   end
 
   def task_length_for_select
-    [[s_('task length|Short'), 'short'], [s_('task length|Medium'), 'medium'], [s_('task length|Long'), 'long']]
+    [[I18n.t('task_length.short'), 'short'], [I18n.t('task_length.medium'), 'medium'], [I18n.t('task_length.long'), 'long']]
   end
 
   def task_priorities_for_select

@@ -4,11 +4,11 @@
   = f.inputs do
     != f.fields_for :comment, @task.finished_comment  do |comment_fields|
       != comment_fields.input :message, :as => :text, required: false, :input_html => {:id => "finish_comment_message", :class => "comment_message #{has_abandoning_errors? && 'active activated'}"}, :label => _("Task Finishing Comments")
-    != f.input :request_new_task, :as => :boolean, :label => _("Also request a new task")
+    != f.input :request_new_task, :as => :boolean, :label => I18n.t('gettext.also_request_a_new_task')
     %p
     %p= _('Below is an estimated calculation of hours it was likely to spend on this task, based on its number of files.  We have to collect this for our reporting to our grantmakers.  Please correct the estimate if you have a better estimate, or kept track yourself.')
-    != f.input :hours, label: _("Hours spent")+' '
-  != f.submit _("Finish"), class: 'purple-button gradient finish_task_button', id: 'actual_finish_button'
+    != f.input :hours, label: I18n.t('gettext.hours_spent')+' '
+  != f.submit I18n.t('task_event.finish'), class: 'purple-button gradient finish_task_button', id: 'actual_finish_button'
   .gray-button
     %span
       != link_to _("cancel"), task_path(@task), :style => "color:#565253"

@@ -5,10 +5,10 @@ class Comment < ActiveRecord::Base
   include ActsAsAuditable
   acts_as_auditable :message,
     :name => :message,
-    :auditable_title => proc {|c| s_("comment audit|Comment %{message}") % {:message => c.message}},
-    :audit_source => proc {|c| s_("comment audit| by %{user_name}") % {:user_name => c.user.try(:name)}},
+    :auditable_title => proc {|c| I18n.t('comment_audit.comment_message', message: c.message)},
+    :audit_source => proc {|c| I18n.t('comment_audit.by_user_name', user_name: c.user.try(:name))},
     :auditable_user_id => proc {|c| c.user.try(:id)},
-    :default_title => N_("auditable|Comment")
+    :default_title => 'auditable.comment'
 
   validates :message, :length => {:in => 2..4096}, :allow_nil => false, :allow_blank => false
   # was: validates_presence_of :task, but - http://agaskar.com/post/396150446/has-many-through-accepts-nested-attributes-for-and

@@ -24,7 +24,7 @@ class UsersController < InheritedResources::Base
     @user = User.find(params[:id])
     if @user.is_volunteer?
       @user.on_break = true
-      flash[:notice] = s_("You're now on break! Request a new task to come out of break.")
+      flash[:notice] = I18n.t('gettext.youre_now_on_break_request_a_new_task_to_come_out_of_break')
       @user.save!
     end
     redirect_to action: :show
@@ -39,7 +39,7 @@ class UsersController < InheritedResources::Base
     if @user.save_without_session_maintenance
       @user.deliver_activation_instructions!
       flash[:notice] =
-        s_('Your account has been created. Please check your e-mail for your account activation instructions!')
+        I18n.t('gettext.your_account_has_been_created_please_check_your_email')
       redirect_to '/'
     else
       render action: :new
@@ -65,17 +65,17 @@ class UsersController < InheritedResources::Base
   def destroy
     @user = User.find(params[:id])
     if @user.id == current_user.id
-      flash[:error] = _('You cannot remove your own account')
+      flash[:error] = I18n.t('gettext.you_cannot_remove_your_own_account')
       redirect_to users_path
       return
     end
     if 'true' == params[:enable]
       @user.update_attribute(:disabled_at, nil)
-      flash[:notice] = _('User enabled')
+      flash[:notice] = I18n.t('gettext.user_enabled')
       redirect_to user_path(@user)
     else
       @user.update_attribute(:disabled_at, Time.zone.now)
-      flash[:notice] = _('User disabled')
+      flash[:notice] = I18n.t('gettext.user_disabled')
       redirect_to users_path
     end
   end
@@ -85,7 +85,7 @@ class UsersController < InheritedResources::Base
     return unless current_user.is_admin? or current_user == @user
 
     @user.clear_task_requested!
-    flash[:notice] = _("Cancelled additional task request for user #{@user.name}")
+    flash[:notice] = I18n.t('gettext.cancelled_additional_task_request_for_user', user_name: @user.name)
     redirect_to '/'
   end
 
@@ -108,7 +108,7 @@ class UsersController < InheritedResources::Base
     # allow users to see own profiles
     return true if resource.id == current_user.id
 
-    flash[:error] = _('Only registered activists allowed to access this page')
+    flash[:error] = I18n.t('gettext.only_registered_activists_allowed_to_access_this_page')
     redirect_to '/'
     false
   end
@@ -119,7 +119,7 @@ class UsersController < InheritedResources::Base
     return true if current_user.try(:is_admin?)
     return true if resource == current_user # owner
 
-    flash[:error] = _('Only the owner can see this page')
+    flash[:error] = I18n.t('gettext.only_the_owner_can_see_this_page')
     redirect_to '/'
     false
   end

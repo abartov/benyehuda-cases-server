@@ -18,7 +18,7 @@ class DocumentsController < InheritedResources::Base
       response = HTTParty.get(document.file.url)
       send_data response.body, type: document.file_content_type, disposition: 'inline'
     else
-      flash[:error] = _('Only participant can see this page')
+      flash[:error] = I18n.t('gettext.only_participant_can_see_this_page')
       redirect_to task_path(task)
     end
   end
@@ -46,7 +46,7 @@ class DocumentsController < InheritedResources::Base
 
     respond_to do |wants|
       wants.html do
-        flash[:notice] = _('Document deleted')
+        flash[:notice] = I18n.t('gettext.document_deleted')
         redirect_to task_path(task)
       end
       wants.js
@@ -59,7 +59,7 @@ class DocumentsController < InheritedResources::Base
       document.toggle! :done
       head :ok
     else
-      flash[:error] = _('Only participant can see this page')
+      flash[:error] = I18n.t('gettext.only_participant_can_see_this_page')
       redirect_to task_path(task)
     end
   end
@@ -72,7 +72,7 @@ class DocumentsController < InheritedResources::Base
     return true unless resource # let it fail
     return true if resource.user_id == current_user.id # owner
 
-    flash[:error] = _('Only the owner can see this page')
+    flash[:error] = I18n.t('gettext.only_the_owner_can_see_this_page')
     redirect_to task_path(task)
     false
   end
@@ -82,7 +82,7 @@ class DocumentsController < InheritedResources::Base
     return true if current_user.admin_or_editor?
     return true if task.participant?(current_user) # participant
 
-    flash[:error] = _('Only participant can see this page')
+    flash[:error] = I18n.t('gettext.only_participant_can_see_this_page')
     redirect_to '/'
     false
   end

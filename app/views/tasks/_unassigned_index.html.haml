@@ -13,24 +13,24 @@
       %strong= t(:volunteer_prefs)+': '
       %span{style: 'background-color: blanchedalmond'}= prefs
     = form_tag(tasks_path, params.merge(:method => :get, :remote => true)) do
-      = label_tag :kind, _("Kind")
+      = label_tag :kind, I18n.t('gettext.kind')
       = select_tag :kind, options_for_select([""] + task_kinds_for_select(:name), params[:kind] || 'הקלדה')
       = label_tag :genre, 'סוגה'
       = select_tag :genre, options_for_select([""] + Task.genres.keys.map{|x| [x,x]}, params[:genre])
       = label_tag :team, 'צוות'
       = select_tag :team, options_for_select([""] + Team.all.map{|x| [x.name, x.id]}, params[:team])
-      = label_tag :full_nikkud, _("Full Nikkud")
-      = select_tag :full_nikkud, options_for_select({"" => "", _("true") => "true", _("false") => "false"}, params[:full_nikkud])
+      = label_tag :full_nikkud, I18n.t('gettext.full_nikkud')
+      = select_tag :full_nikkud, options_for_select({"" => "", I18n.t('gettext.true') => "true", I18n.t('gettext.false') => "false"}, params[:full_nikkud])
       != '<input type="hidden" name="assignee_id" value="%{a}"/>' % {:a => @assignee.id}
       != '<input type="hidden" name="per_page" value="15"/>'
       = submit_tag _("Filter")
   %table.list
     %tr
       %th &nbsp;
-      %th= _("Name")
+      %th= I18n.t('gettext.name')
       %th= 'סוגה'
-      %th= _("Kind")
-      %th= _("State")
+      %th= I18n.t('gettext.kind')
+      %th= I18n.t('gettext.state')
       %th= _("Files")
       %th &nbsp;
 

@@ -12,9 +12,9 @@
       %span
         = _("Reassign")
   %li
-    %a{ :href => admin_task_path(task), "remote" => "true", "data-method" => :delete, "data-confirm" => _('Are you sure?') }
+    %a{ :href => admin_task_path(task), "remote" => "true", "data-method" => :delete, "data-confirm" => I18n.t('gettext.are_you_sure') }
       %span
-        = _("Delete")
+        = I18n.t('gettext.delete')
   %li
     %a{ :href => task_path(task) }
       %span

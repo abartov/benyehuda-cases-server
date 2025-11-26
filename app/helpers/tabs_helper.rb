@@ -1,20 +1,18 @@
-require "fast_gettext/translation_repository/db"
-
 module TabsHelper
   I18n.locale = 'he'
 
   TABS = [
-    {:name => :translations, :title => N_("Translations"), :path => "/translation_keys", :if => :is_admin?},
-    {:name => :global_prefs, :title => N_("Global Preferences"), :path => "/global_preferences", :if => :is_admin?},
-    {:name => :site_notices, :title => N_("Site Notice"), :path => "/site_notices", :if => :is_admin?},
-    {:name => :object_prefs, :title => N_("Object Properties"), :path => "/properties", :if => :is_admin?},
-    {:name => :reports, :title => N_("Reports"), :path => "/report", :if => :is_admin?},
-    {:name => :profile, :title => N_("Profile"), :path => "/profile"},
-    {:name => :volunteer_requests, :title => N_("Volunteer Requests"), :path => "/volunteer_requests", :if => :admin_or_editor?},
-    {name: :teams, title: I18n.t(:teams), path: "/teams", if: :is_admin?},
-    {:name => :users, :title => N_("Users"), :path => "/users", :if => :is_admin?}, 
-    {:name => :tasks_admin, :title => N_("Tasks Admin"), :path => "/admin/tasks", :if => :admin_or_editor?},
-    {:name => :dashboard, :title => N_("Dashboard"), :path => "/dashboard"},
+    {:name => :translations, :title => 'tabs.translations', :path => "/translation_keys", :if => :is_admin?},
+    {:name => :global_prefs, :title => 'tabs.global_prefs', :path => "/global_preferences", :if => :is_admin?},
+    {:name => :site_notices, :title => 'tabs.site_notices', :path => "/site_notices", :if => :is_admin?},
+    {:name => :object_prefs, :title => 'tabs.object_prefs', :path => "/properties", :if => :is_admin?},
+    {:name => :reports, :title => 'tabs.reports', :path => "/report", :if => :is_admin?},
+    {:name => :profile, :title => 'tabs.profile', :path => "/profile"},
+    {:name => :volunteer_requests, :title => 'tabs.volunteer_requests', :path => "/volunteer_requests", :if => :admin_or_editor?},
+    {name: :teams, title: 'tabs.teams', path: "/teams", if: :is_admin?},
+    {:name => :users, :title => 'tabs.users', :path => "/users", :if => :is_admin?}, 
+    {:name => :tasks_admin, :title => 'tabs.tasks_admin', :path => "/admin/tasks", :if => :admin_or_editor?},
+    {:name => :dashboard, :title => 'tabs.dashboard', :path => "/dashboard"},
   ].freeze
 
   def tabs_by_name
@@ -32,7 +30,7 @@ module TabsHelper
       @page_title = page_title
       render_page_title
     when NilClass
-      @page_title ||= s_(tabs_by_name[name][:title])
+      @page_title ||= I18n.t(tabs_by_name[name][:title])
       render_page_title
     end
   end

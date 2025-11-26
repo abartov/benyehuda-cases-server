@@ -25,20 +25,20 @@
                 %tr
                   %th.first.style4
                     %a.up{ :href => sorting_path_for_current_context(:order_by => {:property => "name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
-                      = _("Name")
+                      = I18n.t('gettext.name')
                   - if editing
                     %th.style12
-                      = _("Assignee")
+                      = I18n.t('gettext.assignee')
                   %th.style12
                     %a.up{ :href => sorting_path_for_current_context(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
-                      = _("Kind")
+                      = I18n.t('gettext.kind')
                   %th.style7
                     - if defined? stalled and stalled
                       %a.up{ :href=> sorting_path_for_current_context(:order_by_updated_at => {:dir => order_direction(params[:order_by_updated_at].try(:[], :dir))})}
                         = _("Last Updated")
                     - else
                       %a.up{ :href => sorting_path_for_current_context(:order_by_state => {:dir => order_direction(params[:order_by_state].try(:[], :dir))}) }
-                        = _("State")
+                        = I18n.t('gettext.state')
                   %th.style12
                     %a.up{ :href => sorting_path_for_current_context(:order_by => {:property => "documents_count", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Files")

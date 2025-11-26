@@ -2,7 +2,7 @@
   %tr
     %td.vtop
       %b
-        = _("Comments")
+        = I18n.t('gettext.comments')
     %td.left3
       %ol
         #comments
@@ -10,7 +10,7 @@
   %tr
     %td.vtop
       %b
-        = _("Add Comment")
+        = I18n.t('gettext.add_comment')
     %td.left3
       #new_comment
         != render(:partial => "comments/new")
