@@ -23,7 +23,7 @@ class Task < ActiveRecord::Base
                         when :state
                           I18n.t('gettext.state')
                         when :creator_id
-                          I18n.t('gettext.creater')
+                          I18n.t('gettext.creator')
                         when :editor_id
                           I18n.t('gettext.editor')
                         when :assignee_id

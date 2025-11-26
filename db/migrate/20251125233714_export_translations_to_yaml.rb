@@ -38,10 +38,12 @@ class ExportTranslationsToYaml < ActiveRecord::Migration[6.1]
     translations = {}
 
     # Query all translations for this locale
+    # Using ActiveRecord's quote to escape the locale parameter to prevent SQL injection
+    escaped_locale = connection.quote(locale)
     results = execute(<<-SQL)
       SELECT tk.key, tt.text
       FROM translation_keys tk
-      LEFT JOIN translation_texts tt ON tk.id = tt.translation_key_id AND tt.locale = '#{locale}'
+      LEFT JOIN translation_texts tt ON tk.id = tt.translation_key_id AND tt.locale = #{escaped_locale}
       ORDER BY tk.key
     SQL
 

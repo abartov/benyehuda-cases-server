@@ -181,7 +181,7 @@ en:
     add: "Add"
     name: "Name"
     state: "State"
-    creater: "Creater"
+    creator: "Creator"
     editor: "Editor"
     assignee: "Assignee"
     creator: "Creator"
@@ -260,7 +260,7 @@ en:
     only_participant_can_see_this_page: "Only participant can see this page"
     only_the_owner_can_see_this_page: "Only the owner can see this page"
     only_registered_activists_allowed_to_access_this_page: "Only registered activists allowed to access this page"
-    sorry_youre_not_allowed_to_perfrom_this_operation: "Sorry, you're not allowed to perfrom this operation"
+    sorry_youre_not_allowed_to_perform_this_operation: "Sorry, you're not allowed to perform this operation"
     
     # User related
     youre_now_on_break_request_a_new_task_to_come_out_of_break: "You're now on break! Request a new task to come out of break."
