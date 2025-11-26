@@ -306,6 +306,12 @@ he:
     user_disabled: "המשתמש הושבת"
     cancelled_additional_task_request_for_user: "בקשת משימה נוספת למשתמש %{user_name} בוטלה"
     
+    on_break: "בהפסקה"
+    time_ago: "לפני %{time}"
+    take_a_break: "צא להפסקה"
+    enable: "הפעל"
+    disable: "השבת"
+
     # Document related
     document_deleted: "המסמך נמחק"
     
@@ -356,4 +362,56 @@ he:
 
   # Task section
   task_section:
+    task_settings: "הגדרות משימה"
     general: "כללי"
+  # Notification email templates
+  notification:
+    comment_added_email: |
+      שלום,
+
+      הערה חדשה נוספה למשימה '%{task_name}' על ידי %{user_name}:
+
+      %{comment}
+
+      מייל זה נוצר אוטומטית. אנא אל תענה עליו. כדי להגיב, אנא הוסף הערה חדשה בדף המשימה עצמו בכתובת הזו -
+      %{task_url}
+
+      צוות פרויקט בן-יהודה.
+    task_state_changed_email: |
+      שלום,
+
+      מצב המשימה '%{task_name}' השתנה ל-%{new_state}.
+
+      %{task_url}
+
+      מייל זה נוצר אוטומטית. אנא אל תענה עליו.
+
+      צוות פרויקט בן-יהודה.
+    tasks_added_to_site_email: |
+      שלום %{user_name},
+
+      משימה שעבדת עליה הועלתה לאתר!
+
+      לך להסתכל על http://benyehuda.org
+    volunteer_welcome_email: |
+      שלום %{user_name},
+
+      ברוכים הבאים לפרויקט בן יהודה!
+      הוראות: לעשות
+
+
+      צוות %{domain}
+
+  # Site notices
+  site_notice:
+    new: "חדש"
+    active: "פעיל"
+    all: "הכל"
+
+  # Last login
+  last_login:
+    never: "אף פעם"
+
+  # Additional gettext keys
+  foo:
+    bar: "bar"

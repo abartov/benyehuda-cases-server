@@ -7,7 +7,7 @@
   != f.input :admin_state, :label => I18n.t('gettext.state'), :as => :select, :collection => task_states_for_select
 
 %br
-= f.inputs :name => s_("task section|Task Settings") do
+= f.inputs :name => I18n.t('task_section.task_settings') do
   - custom_properties_fields(f, "task")
 
 :javascript

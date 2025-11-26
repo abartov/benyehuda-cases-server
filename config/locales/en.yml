@@ -270,6 +270,12 @@ en:
     user_disabled: "User disabled"
     cancelled_additional_task_request_for_user: "Cancelled additional task request for user %{user_name}"
     
+    on_break: "on break"
+    time_ago: "%{time} ago"
+    take_a_break: "take a break"
+    enable: "Enable"
+    disable: "Disable"
+
     # Document related
     document_deleted: "Document deleted"
     
@@ -320,4 +326,56 @@ en:
 
   # Task section
   task_section:
+    task_settings: "Task Settings"
     general: "General"
+  # Notification email templates
+  notification:
+    comment_added_email: |
+      Hello,
+
+      New comment to the task '%{task_name}' added by %{user_name}:
+
+      %{comment}
+
+      This email was generated automatically. Please do not reply to it. In order to reply, please add a new comment on the task page itself via this address -
+      %{task_url}
+
+      Project Ben-Yehuda Team.
+    task_state_changed_email: |
+      Hello,
+
+      The task '%{task_name}' state is changed to %{new_state}.
+
+      %{task_url}
+
+      This email was generated automatically. Please do not reply to it.
+
+      Project Ben-Yehuda Team.
+    tasks_added_to_site_email: |
+      Hello %{user_name},
+
+      A task you have worked on has now been uploaded to the site!
+
+      Go take a look at http://benyehuda.org
+    volunteer_welcome_email: |
+      Hello %{user_name},
+
+      Welcome to Ben Yehuda Project!
+      Instructions: TODO
+
+
+      %{domain} Team
+
+  # Site notices
+  site_notice:
+    new: "New"
+    active: "Active"
+    all: "All"
+
+  # Last login
+  last_login:
+    never: "never"
+
+  # Additional gettext keys
+  foo:
+    bar: "bar"
