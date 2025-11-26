@@ -49,6 +49,11 @@ set :rvm_ruby_version, '3.2.1'
 set :bundle_flags, '--deployment --quiet'
 set :bundle_without, %w[test development].join(' ')
 
+# Puma systemd configuration
+set :puma_service_unit_name, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
+set :puma_systemctl_user, :user
+set :puma_enable_socket_service, false
+
 namespace :deploy do
   after :finishing, 'deploy:cleanup'
   after :publishing, 'sphinx:rebuild'

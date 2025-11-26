@@ -46,6 +46,7 @@ group :development do
   gem 'capistrano-rails', '~> 1.6', require: false
   gem 'capistrano-bundler', '~> 2.1', require: false
   gem 'capistrano-rvm', require: false
+  gem 'capistrano3-puma', '~> 6.0', require: false
   gem 'ed25519'
   gem 'bcrypt_pbkdf'
 end
@@ -94,5 +95,4 @@ end
 
 group :production do
   gem 'lograge'
-  gem 'puma-daemon'
 end

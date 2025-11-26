@@ -19,8 +19,10 @@ require 'capistrano/bundler'
 # Load Rails support (includes migrations and assets)
 require 'capistrano/rails'
 
-# Note: We use custom puma.rake tasks instead of capistrano3-puma
-# because the original deployment uses daemon mode with puma-daemon gem
+# Load Puma support with systemd
+require 'capistrano/puma'
+install_plugin Capistrano::Puma
+install_plugin Capistrano::Puma::Systemd
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }
