@@ -2,7 +2,7 @@
 
 # Staging server configuration
 set :stage, :staging
-set :rails_env, :production  # Staging uses production Rails environment
+set :rails_env, :production # Staging uses production Rails environment
 set :rack_env, :production
 
 # Server configuration

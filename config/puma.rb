@@ -1,7 +1,9 @@
-app_dir = File.expand_path("../..", __FILE__)
+require 'puma/daemon'
+
+app_dir = File.expand_path('..', __dir__)
 shared_dir = "#{app_dir}"
 rackup(File.expand_path('../config.ru', __dir__))
-if ENV['RACK_ENV'] == 'production'
+if ENV['RACK_ENV'] == 'production' || ENV['RAILS_ENV'] == 'production'
   require 'puma/daemon'
   environment 'production'
   workers Integer(ENV['WEB_CONCURRENCY'] || 3)
@@ -18,7 +20,4 @@ threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
 threads 1, threads_count
 
 preload_app!
-
 # port        ENV['PORT']     || 3000
-
-
