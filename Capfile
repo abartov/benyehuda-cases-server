@@ -19,10 +19,14 @@ require 'capistrano/bundler'
 # Load Rails support (includes migrations and assets)
 require 'capistrano/rails'
 
-# Load Puma support with systemd
+# Load Puma support with systemd (must be after rvm)
 require 'capistrano/puma'
 install_plugin Capistrano::Puma
 install_plugin Capistrano::Puma::Systemd
+
+# Load thinking-sphinx support
+require 'thinking_sphinx/capistrano'
+# require 'capistrano/thinking_sphinx'
 
 # Load custom tasks from `lib/capistrano/tasks` if you have any defined
 Dir.glob('lib/capistrano/tasks/*.rake').each { |r| import r }

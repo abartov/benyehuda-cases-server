@@ -27,7 +27,8 @@ set :pty, true
 append :linked_files, 'config/database.yml', 'config/credentials.yml.enc', 'config/master.key'
 
 # Default value for linked_dirs is []
-append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/attachments', 'vendor/bundle', 'db/sphinx'
+append :linked_dirs, 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'public/system', 'public/attachments',
+       'vendor/bundle', 'db/sphinx'
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
@@ -51,8 +52,10 @@ set :bundle_without, %w[test development].join(' ')
 
 # Puma systemd configuration
 set :puma_service_unit_name, -> { "puma_#{fetch(:application)}_#{fetch(:stage)}" }
-set :puma_systemctl_user, :user
-set :puma_enable_socket_service, false
+set :puma_systemctl_user, fetch(:user)
+# set :puma_systemctl_user, :user
+# set :puma_enable_socket_service, false
+set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
 
 namespace :deploy do
   after :finishing, 'deploy:cleanup'
