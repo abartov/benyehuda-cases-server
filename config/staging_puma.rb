@@ -1,7 +1,7 @@
-app_dir = File.expand_path("../..", __FILE__)
+app_dir = File.expand_path('..', __dir__)
 shared_dir = "#{app_dir}"
 rackup(File.expand_path('../config.ru', __dir__))
-if ENV['RACK_ENV'] == 'production'
+if ENV['RACK_ENV'] == 'production' || ENV['RAILS_ENV'] == 'production'
   require 'puma/daemon'
   environment 'production'
   workers 0
@@ -21,5 +21,3 @@ preload_app!
 
 # port        ENV['PORT']     || 3000
 stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
-
-
