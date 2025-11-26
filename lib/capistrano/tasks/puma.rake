@@ -34,7 +34,10 @@ namespace :puma do
       within release_path do
         pid_file = "#{shared_path}/tmp/pids/puma.pid"
         if test("[ -f #{pid_file} ]")
-          execute :kill, "-SIGUSR2 $(cat #{pid_file})"
+          # temoprarily using full restart to avoid issues with phased restart
+          invoke 'puma:stop'
+          invoke 'puma:start'
+          # execute :kill, "-SIGUSR2 $(cat #{pid_file})"
         else
           info 'Puma is not running, starting it'
           invoke 'puma:start'
