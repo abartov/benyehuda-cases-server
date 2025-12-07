@@ -1,9 +1,10 @@
 class ReportController < InheritedResources::Base
   before_action :require_editor_or_admin # , :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
   actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
-  has_scope :order_by, :only => [:stalled, :few_tasks_left], :using => [:includes, :property, :dir]
-  has_scope :order_by_state, :only => [:stalled, :few_tasks_left], :using => [:dir]
-  has_scope :order_by_updated_at, :only => [:stalled, :few_tasks_left], :using => [:dir]
+  before_action :permit_report_params, only: %i[stalled few_tasks_left]
+  has_scope :order_by, only: %i[stalled few_tasks_left], using: %i[includes property dir]
+  has_scope :order_by_state, only: %i[stalled few_tasks_left], using: [:dir]
+  has_scope :order_by_updated_at, only: %i[stalled few_tasks_left], using: [:dir]
 
   def index
     @current_tab = :reports
@@ -49,7 +50,7 @@ class ReportController < InheritedResources::Base
   def few_tasks_left
     @current_tab = :reports
     base_query = Task.includes(:parent).where(kind_id: [1, 21], state: 'unassigned',
-                                          parent: { kind_id: 71 }).group('parent_id').having('count(tasks.id) < 3')
+                                              parent: { kind_id: 71 }).group('parent_id').having('count(tasks.id) < 3')
     @tasks = apply_scopes(base_query)
   end
 
@@ -142,5 +143,12 @@ class ReportController < InheritedResources::Base
       flash[:notice] = _('E-mails sent to volunteers')
     end
     redirect_to report_path
+  end
+
+  private
+
+  def permit_report_params
+    @permitted_report_params = params.permit(:page, :per_page, :dir, :includes, :property,
+                                             :order_by, :order_by_state, :order_by_updated_at, :q)
   end
 end
