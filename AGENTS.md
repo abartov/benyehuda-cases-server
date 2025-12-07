@@ -34,6 +34,29 @@ If you accidentally pushed to master/main:
 5. Push the branch: `git push -u origin feature/your-feature`
 6. Create a PR: `gh pr create --title "..." --body "..."`
 
+### Git Hooks Protection (Automated Safeguards)
+
+This repository includes git hooks to **automatically prevent** accidental commits/pushes to protected branches.
+
+**Installation (Required for AI Agents and New Contributors):**
+```bash
+./.githooks/install.sh
+```
+
+**What the hooks do:**
+- **pre-commit**: Blocks commits to master, main, dragula, production, staging
+- **pre-push**: Blocks pushes to protected branches
+- **Both**: Show clear error messages with correct workflow steps
+
+**First thing when starting work:**
+1. Run `./.githooks/install.sh` to install hooks
+2. Verify installation: `ls -la .git/hooks/pre-commit .git/hooks/pre-push`
+3. Create your feature branch: `git checkout -b feature/name`
+
+**The hooks will catch mistakes before they reach the remote, saving everyone time.**
+
+Note: Hooks are stored in `.githooks/` (version controlled) but must be installed to `.git/hooks/` (not version controlled) to take effect. Run the install script in every clone of the repository.
+
 ### Technologies and Preferred Tools
 
 * we use HAML for views, not ERB
