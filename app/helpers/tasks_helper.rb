@@ -25,10 +25,10 @@ module TasksHelper
     when 'dashboards'
       dashboard_path(params_to_merge)
     when 'report'
-      url_for(params.merge(params_to_merge))
+      url_for(params.to_unsafe_h.merge(params_to_merge))
     else
       # For other contexts, default to current path with params
-      url_for(params.merge(params_to_merge))
+      url_for(params.to_unsafe_h.merge(params_to_merge))
     end
   end
 
