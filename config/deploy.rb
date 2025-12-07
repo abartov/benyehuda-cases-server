@@ -59,6 +59,7 @@ set :puma_bind, "unix://#{shared_path}/tmp/sockets/puma.sock"
 
 namespace :deploy do
   after :finishing, 'deploy:cleanup'
+  after :publishing, 'sphinx:configure'
   after :publishing, 'sphinx:rebuild'
   after :publishing, 'whenever:update'
   after :publishing, 'delayed_job:restart'
