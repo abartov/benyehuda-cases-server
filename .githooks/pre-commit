@@ -36,8 +36,8 @@ if [ -f "AGENTS.md" ]; then
   # Check if this is likely an AI agent (look for common indicators)
   if [ -n "$ANTHROPIC_API_KEY" ] || [ -n "$OPENAI_API_KEY" ]; then
     # Only show reminder for AI agents on first commit of branch
-    COMMIT_COUNT=$(git rev-list --count HEAD 2>/dev/null || echo "0")
-    if [ "$COMMIT_COUNT" -eq "0" ] || ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+    if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+      # No commits yet (new branch)
       echo ""
       echo "📋 Reminder: This project has specific workflow requirements in AGENTS.md"
       echo "   Key rule: All work must be submitted via Pull Requests"
