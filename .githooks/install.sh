@@ -22,6 +22,7 @@ fi
 for hook in pre-commit pre-push; do
   if [ -f "$HOOKS_DIR/$hook" ]; then
     echo "  Installing $hook..."
+    chmod +x "$HOOKS_DIR/$hook"
     cp "$HOOKS_DIR/$hook" "$GIT_HOOKS_DIR/$hook"
     chmod +x "$GIT_HOOKS_DIR/$hook"
     echo "  ✓ $hook installed"
