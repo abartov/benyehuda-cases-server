@@ -24,9 +24,26 @@ fi
 # Check if overcommit is available
 if ! command -v overcommit &> /dev/null; then
   # Try via bundler first
-  if command -v bundle &> /dev/null && bundle show overcommit &> /dev/null; then
-    echo "Using Overcommit via Bundler..."
-    OVERCOMMIT_CMD="bundle exec overcommit"
+  if command -v bundle &> /dev/null; then
+    if [ ! -f "Gemfile.lock" ]; then
+      echo "❌ Error: Bundler dependencies have not been installed."
+      echo ""
+      echo "Please run 'bundle install' first to install required gems."
+      echo ""
+      exit 1
+    fi
+    if bundle show overcommit &> /dev/null; then
+      echo "Using Overcommit via Bundler..."
+      OVERCOMMIT_CMD="bundle exec overcommit"
+    else
+      echo "❌ Error: Overcommit gem is not installed via Bundler."
+      echo ""
+      echo "Please install Overcommit first:"
+      echo "  Option 1 (Recommended): bundle install"
+      echo "  Option 2: gem install overcommit"
+      echo ""
+      exit 1
+    fi
   else
     echo "❌ Error: Overcommit is not installed"
     echo ""
