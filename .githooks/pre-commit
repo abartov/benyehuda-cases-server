@@ -1,0 +1,57 @@
+#!/bin/bash
+# DEPRECATED: This script is no longer used.
+# 
+# Protected branch checks are now integrated into Overcommit.
+# The hooks are defined as Ruby classes in .git-hooks/ and configured in .overcommit.yml
+#
+# This file is kept for reference only.
+# Use ./.githooks/install.sh to install hooks via Overcommit.
+
+# Pre-commit hook to prevent commits to protected branches
+
+# Get current branch
+CURRENT_BRANCH=$(git branch --show-current)
+
+# List of protected branches
+PROTECTED_BRANCHES=("master" "main" "dragula" "production" "staging")
+
+# Check if current branch is protected
+for BRANCH in "${PROTECTED_BRANCHES[@]}"; do
+  if [ "$CURRENT_BRANCH" = "$BRANCH" ]; then
+    echo ""
+    echo "❌ ERROR: Direct commits to '$CURRENT_BRANCH' are not allowed!"
+    echo ""
+    echo "Please follow the proper workflow:"
+    echo "  1. Create a feature branch:"
+    echo "     git checkout -b feature/your-feature-name"
+    echo "  2. Make your commits on the feature branch"
+    echo "  3. Push the feature branch:"
+    echo "     git push -u origin feature/your-feature-name"
+    echo "  4. Create a Pull Request:"
+    echo "     gh pr create --title \"Title\" --body \"Description\""
+    echo ""
+    echo "If you need to move your changes to a new branch:"
+    echo "  git stash"
+    echo "  git checkout -b feature/your-feature-name"
+    echo "  git stash pop"
+    echo ""
+    exit 1
+  fi
+done
+
+# Check for AGENTS.md compliance reminder
+if [ -f "AGENTS.md" ]; then
+  # Check if this is likely an AI agent (look for common indicators)
+  if [ -n "$ANTHROPIC_API_KEY" ] || [ -n "$OPENAI_API_KEY" ]; then
+    # Only show reminder for AI agents on first commit of branch
+    if ! git rev-parse --verify HEAD >/dev/null 2>&1; then
+      # No commits yet (new branch)
+      echo ""
+      echo "📋 Reminder: This project has specific workflow requirements in AGENTS.md"
+      echo "   Key rule: All work must be submitted via Pull Requests"
+      echo ""
+    fi
+  fi
+fi
+
+exit 0

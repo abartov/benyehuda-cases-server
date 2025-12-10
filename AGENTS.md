@@ -34,6 +34,37 @@ If you accidentally pushed to master/main:
 5. Push the branch: `git push -u origin feature/your-feature`
 6. Create a PR: `gh pr create --title "..." --body "..."`
 
+### Git Hooks Protection (Automated Safeguards)
+
+This repository uses [Overcommit](https://github.com/sds/overcommit) to manage git hooks, which **automatically prevent** accidental commits/pushes to protected branches while also enforcing code quality checks.
+
+**Installation (Required for AI Agents and New Contributors):**
+```bash
+./.githooks/install.sh
+```
+
+**What the hooks do:**
+- **ProtectedBranchCheck (pre-commit)**: Blocks commits to master, main, dragula, production, staging
+- **ProtectedBranchCheck (pre-push)**: Blocks pushes to protected branches
+- **TrailingWhitespace**: Detects trailing whitespace in files
+- **RuboCop**: (currently disabled) Ruby code style checking
+- **All hooks**: Show clear error messages with correct workflow steps
+
+**First thing when starting work:**
+1. Install Overcommit if not already: `gem install overcommit`
+2. Run `./.githooks/install.sh` to install all hooks via Overcommit
+3. Verify installation: `ls -la .git/hooks/` (look for `pre-commit`, `pre-push`, etc.)
+4. Create your feature branch: `git checkout -b feature/name`
+
+**The hooks will catch mistakes before they reach the remote, saving everyone time.**
+
+**Note:** This repository uses Overcommit to manage hooks, which means:
+- All hooks are configured in `.overcommit.yml`
+- Custom protected branch checks are in `.git-hooks/` directory
+- Overcommit integrates all checks (branch protection + code quality) seamlessly
+- Hooks must be installed via `overcommit --install` (done by `.githooks/install.sh`)
+- Bypass with `OVERCOMMIT_DISABLE=1 git commit` (emergency only!)
+
 ### Technologies and Preferred Tools
 
 * we use HAML for views, not ERB
