@@ -23,21 +23,26 @@ fi
 
 # Check if overcommit is available
 if ! command -v overcommit &> /dev/null; then
-  echo "❌ Error: Overcommit is not installed"
-  echo ""
-  echo "Please install Overcommit first:"
-  echo "  gem install overcommit"
-  echo ""
-  echo "Or if using Bundler:"
-  echo "  bundle install  # (if overcommit is in Gemfile)"
-  echo "  gem install overcommit  # (if not)"
-  echo ""
-  exit 1
+  # Try via bundler first
+  if command -v bundle &> /dev/null && bundle show overcommit &> /dev/null; then
+    echo "Using Overcommit via Bundler..."
+    OVERCOMMIT_CMD="bundle exec overcommit"
+  else
+    echo "❌ Error: Overcommit is not installed"
+    echo ""
+    echo "Please install Overcommit first:"
+    echo "  Option 1 (Recommended): bundle install"
+    echo "  Option 2: gem install overcommit"
+    echo ""
+    exit 1
+  fi
+else
+  OVERCOMMIT_CMD="overcommit"
 fi
 
 # Install Overcommit hooks
-echo "Running: overcommit --install"
-overcommit --install
+echo "Running: $OVERCOMMIT_CMD --install"
+$OVERCOMMIT_CMD --install
 
 if [ $? -eq 0 ]; then
   echo ""

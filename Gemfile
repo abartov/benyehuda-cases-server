@@ -71,6 +71,7 @@ group :test, :development do
   # gem 'ZenTest', '4.0.0'
   gem 'grape-entity-matchers'
   gem 'mocha'
+  gem 'overcommit', require: false
   gem 'rspec'
   gem 'rspec-rails'
   gem 'test-unit'
