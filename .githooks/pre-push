@@ -1,4 +1,12 @@
 #!/bin/bash
+# DEPRECATED: This script is no longer used.
+# 
+# Protected branch checks are now integrated into Overcommit.
+# The hooks are defined as Ruby classes in .git-hooks/ and configured in .overcommit.yml
+#
+# This file is kept for reference only.
+# Use ./.githooks/install.sh to install hooks via Overcommit.
+
 # Pre-push hook to prevent pushing to protected branches
 
 # Read STDIN to get the refs being pushed

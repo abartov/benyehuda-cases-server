@@ -1,10 +1,12 @@
 #!/bin/bash
-# Install git hooks to prevent accidental pushes to protected branches
+# Install git hooks via Overcommit to prevent accidental pushes to protected branches
+#
+# This script installs hooks using Overcommit, which manages all git hooks for this repository.
+# This ensures that both protected branch checks AND existing code quality checks (TrailingWhitespace,
+# RuboCop, etc.) all work together seamlessly.
 
-HOOKS_DIR=".githooks"
-GIT_HOOKS_DIR=".git/hooks"
-
-echo "Installing git hooks..."
+echo "Installing git hooks via Overcommit..."
+echo ""
 
 # Check if we're in a git repository
 if [ ! -d ".git" ]; then
@@ -12,34 +14,70 @@ if [ ! -d ".git" ]; then
   exit 1
 fi
 
-# Check if hooks directory exists
-if [ ! -d "$HOOKS_DIR" ]; then
-  echo "❌ Error: $HOOKS_DIR directory not found"
+# Check if .overcommit.yml exists
+if [ ! -f ".overcommit.yml" ]; then
+  echo "❌ Error: .overcommit.yml not found"
+  echo "   This repository requires Overcommit for hook management"
   exit 1
 fi
 
-# Install each hook
-for hook in pre-commit pre-push; do
-  if [ -f "$HOOKS_DIR/$hook" ]; then
-    echo "  Installing $hook..."
-    chmod +x "$HOOKS_DIR/$hook"
-    cp "$HOOKS_DIR/$hook" "$GIT_HOOKS_DIR/$hook"
-    chmod +x "$GIT_HOOKS_DIR/$hook"
-    echo "  ✓ $hook installed"
+# Check if overcommit is available
+if ! command -v overcommit &> /dev/null; then
+  # Try via bundler first
+  if command -v bundle &> /dev/null; then
+    if [ ! -f "Gemfile.lock" ]; then
+      echo "❌ Error: Bundler dependencies have not been installed."
+      echo ""
+      echo "Please run 'bundle install' first to install required gems."
+      echo ""
+      exit 1
+    fi
+    if bundle show overcommit &> /dev/null; then
+      echo "Using Overcommit via Bundler..."
+      OVERCOMMIT_CMD="bundle exec overcommit"
+    else
+      echo "❌ Error: Overcommit gem is not installed via Bundler."
+      echo ""
+      echo "Please install Overcommit first:"
+      echo "  Option 1 (Recommended): bundle install"
+      echo "  Option 2: gem install overcommit"
+      echo ""
+      exit 1
+    fi
   else
-    echo "  ⚠️  $hook not found in $HOOKS_DIR"
+    echo "❌ Error: Overcommit is not installed"
+    echo ""
+    echo "Please install Overcommit first:"
+    echo "  Option 1 (Recommended): bundle install"
+    echo "  Option 2: gem install overcommit"
+    echo ""
+    exit 1
   fi
-done
+else
+  OVERCOMMIT_CMD="overcommit"
+fi
 
-echo ""
-echo "✓ Git hooks installed successfully!"
-echo ""
-echo "These hooks will:"
-echo "  • Prevent commits to master, main, and other protected branches"
-echo "  • Prevent pushes to protected branches"
-echo "  • Remind you to follow the proper PR workflow"
-echo ""
-echo "To bypass hooks in emergencies (use with caution):"
-echo "  git commit --no-verify"
-echo "  git push --no-verify"
-echo ""
+# Install Overcommit hooks
+echo "Running: $OVERCOMMIT_CMD --install"
+$OVERCOMMIT_CMD --install
+
+if [ $? -eq 0 ]; then
+  echo ""
+  echo "✓ Git hooks installed successfully via Overcommit!"
+  echo ""
+  echo "These hooks will:"
+  echo "  • Prevent commits to master, main, and other protected branches"
+  echo "  • Prevent pushes to protected branches"
+  echo "  • Check for trailing whitespace"
+  echo "  • Run other configured code quality checks"
+  echo "  • Remind you to follow the proper PR workflow"
+  echo ""
+  echo "To bypass hooks in emergencies (use with caution):"
+  echo "  OVERCOMMIT_DISABLE=1 git commit"
+  echo "  git push --no-verify"
+  echo ""
+else
+  echo ""
+  echo "❌ Error: Failed to install Overcommit hooks"
+  exit 1
+fi
