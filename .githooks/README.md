@@ -63,9 +63,6 @@ The protected branch checks are implemented as custom Overcommit hooks in `.git-
 The following branches are protected by these hooks:
 - `master`
 - `main`
-- `dragula`
-- `production`
-- `staging`
 
 ## Bypassing Hooks (Emergency Use Only)
 

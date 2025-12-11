@@ -13,7 +13,7 @@
 CURRENT_BRANCH=$(git branch --show-current)
 
 # List of protected branches
-PROTECTED_BRANCHES=("master" "main" "dragula" "production" "staging")
+PROTECTED_BRANCHES=("master" "main")
 
 # Check if current branch is protected
 for BRANCH in "${PROTECTED_BRANCHES[@]}"; do
