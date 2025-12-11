@@ -1,64 +1,83 @@
 #!/bin/bash
-# Install git hooks from .githooks/ to .git/hooks/
+# Install git hooks via Overcommit to prevent accidental pushes to protected branches
+#
+# This script installs hooks using Overcommit, which manages all git hooks for this repository.
+# This ensures that both protected branch checks AND existing code quality checks (TrailingWhitespace,
+# RuboCop, etc.) all work together seamlessly.
 
-set -e
-
-HOOKS_DIR=".githooks"
-GIT_HOOKS_DIR=".git/hooks"
-
-echo "Installing git hooks..."
+echo "Installing git hooks via Overcommit..."
+echo ""
 
 # Check if we're in a git repository
 if [ ! -d ".git" ]; then
-  echo "Error: Not in a git repository root"
+  echo "❌ Error: Not in a git repository root directory"
   exit 1
 fi
 
-# Check if .githooks directory exists
-if [ ! -d "$HOOKS_DIR" ]; then
-  echo "Error: $HOOKS_DIR directory not found"
+# Check if .overcommit.yml exists
+if [ ! -f ".overcommit.yml" ]; then
+  echo "❌ Error: .overcommit.yml not found"
+  echo "   This repository requires Overcommit for hook management"
   exit 1
 fi
 
-# Install each hook
-for hook in "$HOOKS_DIR"/*; do
-  # Skip install.sh and README.md
-  if [[ "$hook" == *"install.sh" ]] || [[ "$hook" == *"README.md" ]]; then
-    continue
+# Check if overcommit is available
+if ! command -v overcommit &> /dev/null; then
+  # Try via bundler first
+  if command -v bundle &> /dev/null; then
+    if [ ! -f "Gemfile.lock" ]; then
+      echo "❌ Error: Bundler dependencies have not been installed."
+      echo ""
+      echo "Please run 'bundle install' first to install required gems."
+      echo ""
+      exit 1
+    fi
+    if bundle show overcommit &> /dev/null; then
+      echo "Using Overcommit via Bundler..."
+      OVERCOMMIT_CMD="bundle exec overcommit"
+    else
+      echo "❌ Error: Overcommit gem is not installed via Bundler."
+      echo ""
+      echo "Please install Overcommit first:"
+      echo "  Option 1 (Recommended): bundle install"
+      echo "  Option 2: gem install overcommit"
+      echo ""
+      exit 1
+    fi
+  else
+    echo "❌ Error: Overcommit is not installed"
+    echo ""
+    echo "Please install Overcommit first:"
+    echo "  Option 1 (Recommended): bundle install"
+    echo "  Option 2: gem install overcommit"
+    echo ""
+    exit 1
   fi
+else
+  OVERCOMMIT_CMD="overcommit"
+fi
 
-  hook_name=$(basename "$hook")
+# Install Overcommit hooks
+echo "Running: $OVERCOMMIT_CMD --install"
+$OVERCOMMIT_CMD --install
 
-  # Skip if not a file
-  if [ ! -f "$hook" ]; then
-    continue
-  fi
-
-  # Create backup if hook already exists
-  if [ -f "$GIT_HOOKS_DIR/$hook_name" ]; then
-    echo "  Backing up existing $hook_name to $hook_name.backup"
-    cp "$GIT_HOOKS_DIR/$hook_name" "$GIT_HOOKS_DIR/$hook_name.backup"
-  fi
-
-  # Copy hook and make executable
-  echo "  Installing $hook_name"
-  cp "$hook" "$GIT_HOOKS_DIR/$hook_name"
-  chmod +x "$GIT_HOOKS_DIR/$hook_name"
-done
-
-echo ""
-echo "✅ Git hooks installed successfully!"
-echo ""
-echo "Installed hooks:"
-for hook in "$HOOKS_DIR"/*; do
-  if [[ "$hook" != *"install.sh" ]] && [[ "$hook" != *"README.md" ]] && [ -f "$hook" ]; then
-    hook_name=$(basename "$hook")
-    echo "  - $hook_name"
-  fi
-done
-echo ""
-echo "These hooks prevent direct commits/pushes to protected branches."
-echo "To override when needed, use:"
-echo "  SKIP_HOOKS=1 git commit -m \"message\""
-echo "  SKIP_HOOKS=1 git push"
-echo ""
+if [ $? -eq 0 ]; then
+  echo ""
+  echo "✓ Git hooks installed successfully via Overcommit!"
+  echo ""
+  echo "These hooks will:"
+  echo "  • Prevent commits to master, main, and other protected branches"
+  echo "  • Prevent pushes to protected branches"
+  echo "  • Check for trailing whitespace"
+  echo "  • Run other configured code quality checks"
+  echo "  • Remind you to follow the proper PR workflow"
+  echo ""
+  echo "To bypass hooks in emergencies (use with caution):"
+  echo "  OVERCOMMIT_DISABLE=1 git commit"
+  echo "  git push --no-verify"
+  echo ""
+else
+  echo ""
+  echo "❌ Error: Failed to install Overcommit hooks"
+  exit 1
+fi

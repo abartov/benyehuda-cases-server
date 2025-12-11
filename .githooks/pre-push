@@ -1,11 +1,13 @@
 #!/bin/bash
-# Pre-push hook to prevent pushing to protected branches
+# DEPRECATED: This script is no longer used.
+# 
+# Protected branch checks are now integrated into Overcommit.
+# The hooks are defined as Ruby classes in .git-hooks/ and configured in .overcommit.yml
+#
+# This file is kept for reference only.
+# Use ./.githooks/install.sh to install hooks via Overcommit.
 
-# Allow override with environment variable
-if [ -n "$SKIP_HOOKS" ] || [ -n "$FORCE_PUSH" ]; then
-  echo "⚠️  WARNING: Bypassing pre-push hook (SKIP_HOOKS or FORCE_PUSH set)"
-  exit 0
-fi
+# Pre-push hook to prevent pushing to protected branches
 
 # Read STDIN to get the refs being pushed
 while read local_ref local_sha remote_ref remote_sha; do
@@ -43,11 +45,6 @@ while read local_ref local_sha remote_ref remote_sha; do
         echo "     git checkout feature/your-feature-name"
         echo "     git push -u origin feature/your-feature-name"
         echo "  4. Create a PR from the feature branch"
-        echo ""
-        echo "To override this protection (use with caution):"
-        echo "  SKIP_HOOKS=1 git push"
-        echo "  or"
-        echo "  FORCE_PUSH=1 git push"
         echo ""
         echo "See AGENTS.md for complete workflow details."
         echo ""
