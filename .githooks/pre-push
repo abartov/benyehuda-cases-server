@@ -1,0 +1,60 @@
+#!/bin/bash
+# Pre-push hook to prevent pushing to protected branches
+
+# Allow override with environment variable
+if [ -n "$SKIP_HOOKS" ] || [ -n "$FORCE_PUSH" ]; then
+  echo "⚠️  WARNING: Bypassing pre-push hook (SKIP_HOOKS or FORCE_PUSH set)"
+  exit 0
+fi
+
+# Read STDIN to get the refs being pushed
+while read local_ref local_sha remote_ref remote_sha; do
+  # Extract the branch name from the remote ref
+  if [[ "$remote_ref" =~ refs/heads/(.+) ]]; then
+    REMOTE_BRANCH="${BASH_REMATCH[1]}"
+
+    # List of protected branches
+    PROTECTED_BRANCHES=("master" "main" "dragula" "production" "staging")
+
+    # Check if pushing to a protected branch
+    for BRANCH in "${PROTECTED_BRANCHES[@]}"; do
+      if [ "$REMOTE_BRANCH" = "$BRANCH" ]; then
+        echo ""
+        echo "❌ ERROR: Direct push to '$REMOTE_BRANCH' is not allowed!"
+        echo ""
+        echo "You are trying to push to a protected branch."
+        echo ""
+        echo "Please follow the proper workflow:"
+        echo "  1. Create a feature branch:"
+        echo "     git checkout -b feature/your-feature-name"
+        echo "  2. Cherry-pick or commit your changes to the feature branch"
+        echo "  3. Push the feature branch:"
+        echo "     git push -u origin feature/your-feature-name"
+        echo "  4. Create a Pull Request:"
+        echo "     gh pr create --title \"Title\" --body \"Description\""
+        echo ""
+        echo "If you already committed to $REMOTE_BRANCH by mistake:"
+        echo "  1. Create a feature branch from current state:"
+        echo "     git checkout -b feature/your-feature-name"
+        echo "  2. Reset $REMOTE_BRANCH to origin:"
+        echo "     git checkout $REMOTE_BRANCH"
+        echo "     git reset --hard origin/$REMOTE_BRANCH"
+        echo "  3. Go back to your feature branch and push:"
+        echo "     git checkout feature/your-feature-name"
+        echo "     git push -u origin feature/your-feature-name"
+        echo "  4. Create a PR from the feature branch"
+        echo ""
+        echo "To override this protection (use with caution):"
+        echo "  SKIP_HOOKS=1 git push"
+        echo "  or"
+        echo "  FORCE_PUSH=1 git push"
+        echo ""
+        echo "See AGENTS.md for complete workflow details."
+        echo ""
+        exit 1
+      fi
+    done
+  fi
+done
+
+exit 0
