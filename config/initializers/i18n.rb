@@ -1,14 +1,13 @@
-require "fast_gettext/translation_repository/db"
-FastGettext::TranslationRepository::Db.require_models
-
-FastGettext.add_text_domain 'app', :type => :db, :model => TranslationKey
-
-FastGettext.default_text_domain = 'app'
-FastGettext.locale = 'he'
-AVAILABLE_LOCALES = FastGettext.available_locales = ['en', 'he', 'ru']
-I18n.locale = 'he'
-#I18n.locale = :he
+# Standard Rails I18n configuration
+# Migrated from FastGettext::TranslationRepository::Db
+AVAILABLE_LOCALES = ['en', 'he', 'ru'].freeze
+I18n.available_locales = AVAILABLE_LOCALES
+I18n.default_locale = :he
+I18n.locale = :he
 I18n.enforce_available_locales = false
 
-WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
-WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+# Load all locale files from config/locales
+I18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
+
+WillPaginate::ViewHelpers.pagination_options[:previous_label] = I18n.t('gettext.paginator_previous_page.laquo_previous', default: '&laquo; Previous')
+WillPaginate::ViewHelpers.pagination_options[:next_label] = I18n.t('gettext.paginator_previous_page.next_raquo', default: 'Next &raquo;')

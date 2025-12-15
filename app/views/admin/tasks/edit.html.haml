@@ -5,6 +5,6 @@
     = f.semantic_errors
   != render(:partial => "form", :locals => {:f => f})
   = f.inputs do
-    != f.submit _("Save")
-    != link_to _("Cancel"), admin_tasks_path
+    != f.submit I18n.t('gettext.save')
+    != link_to I18n.t('gettext.cancel'), admin_tasks_path
 

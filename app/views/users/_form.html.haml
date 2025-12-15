@@ -1,7 +1,7 @@
 = f.inputs :name => _("User Settings") do
-  = f.input :name, :label => _("Name")
-  = f.input :email, :input_html => {:disabled => !f.object.allow_email_change?(current_user && current_user.is_admin?)}, :required => f.object.new_record?, :label => _("Email"), :input_html => { :cols => 40 }
-  = f.input :avatar, :as => :file, :label => _("Avatar")
+  = f.input :name, :label => I18n.t('gettext.name')
+  = f.input :email, :input_html => {:disabled => !f.object.allow_email_change?(current_user && current_user.is_admin?)}, :required => f.object.new_record?, :label => I18n.t('gettext.email'), :input_html => { :cols => 40 }
+  = f.input :avatar, :as => :file, :label => I18n.t('gettext.avatar')
   - when_admin do
     = f.input :is_admin, :label => _("Is Admin")
     = f.input :is_editor, :label => _("Is Editor")

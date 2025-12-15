@@ -105,3 +105,313 @@ he:
   maintext: גוף המשימה
   front: שער ותוכן עניינים (אם ישנו)
   footnotes_and_corrigenda: הערות או לוח תיקונים
+  remove: הסר
+
+  # Task events
+  task_event:
+    approve: "אישור"
+    reject: "דחייה"
+    mark_as_completed: "סמן כהושלם"
+    create_other_task: "צור משימה אחרת"
+    finish: "סיום"
+    abandon: "נטישה"
+    need_editors_help: "צריך עזרת עורך"
+    mark_as_finished_partly: "סמן כהושלם חלקית"
+    mark_for_technical_editing: "סמן לעריכה טכנית"
+
+  # Task difficulties
+  task_difficulty:
+    easy: "קל"
+    normal: "רגיל"
+    hard: "קשה"
+
+  # Task priorities
+  task_priority:
+    first_task_of_new_volunteer: "משימה ראשונה למתנדב חדש"
+    very_old_task: "משימה ישנה מאוד"
+    copyright_expiring: "זכויות יוצרים פגות"
+    given_permission: "ניתנה רשות"
+    completing_an_author: "השלמת מחבר"
+
+  # Task states
+  task_state:
+    task_rejected: "המשימה נדחתה"
+    task_abandoned: "המשימה ננטשה"
+    help_required: "נדרשת עזרה"
+    task_finished: "המשימה הסתיימה"
+    task_completed: "המשימה הושלמה"
+
+  # Task length
+  task_length:
+    short: "קצר"
+    medium: "בינוני"
+    long: "ארוך"
+
+  # User roles
+  user_role:
+    editor: "עורך"
+    volunteer: "מתנדב"
+    admin: "מנהל"
+
+  # Auditable types
+  auditable:
+    task: "משימה"
+    document: "מסמך"
+    comment: "הערה"
+
+  # Document audit
+  document_audit:
+    document_file_name: "מסמך %{file_name}"
+    by_user_name: " על ידי %{user_name}"
+
+  # Comment audit
+  comment_audit:
+    comment_message: "הערה %{message}"
+    by_user_name: " על ידי %{user_name}"
+
+  # Audit messages
+  audit_created:
+    title_was_created_via_source: "%{title} נוצר%{via_source}."
+  audit_removed:
+    title_was_removed: "%{title} הוסר."
+  audit_set:
+    attr_set_to: "%{attr} הוגדר ל-%{to}"
+  audit_changed:
+    attr_changed_from_to: "%{attr} שונה מ-%{from} ל-%{to}"
+
+  # Activation email
+  activation_email:
+    resend: "שלח שוב"
+    send_activation_email: "שלח מייל הפעלה"
+
+  # Notifications
+  notifications:
+    none: "ללא"
+
+  # Notification subjects
+  comment_added_notification_subject:
+    task_name_snippet_new_comment: "%{task_name_snippet} - הערה חדשה"
+  state_changed_notification_subject:
+    state_domain_task_name_snippet: "%{state} (%{domain}): %{task_name_snippet}"
+  volunteer_welcome_subject:
+    welcome_to_ben_yehuda_project: "ברוכים הבאים לפרויקט בן יהודה"
+  your_work_added_to_site_subject:
+    your_contributions_are_now_published: "תרומותיך פורסמו כעת באתר בן-יהודה!"
+
+  # General gettext translations
+  gettext:
+    # Common words
+    "true": "כן"
+    "false": "לא"
+    yes: "כן"
+    no: "לא"
+    me: "אני"
+    confirm: "אישור"
+    are_you_sure: "האם אתה בטוח?"
+    cancel: "ביטול"
+    save: "שמור"
+    save_and_new: "שמור וחדש"
+    edit: "עריכה"
+    delete: "מחק"
+    remove: "הסר"
+    add: "הוסף"
+    name: "שם"
+    state: "מצב"
+    creator: "יוצר"
+    editor: "עורך"
+    assignee: "מבצע"
+    creator: "יוצר"
+    kind: "סוג"
+    difficulty: "קושי"
+    priority: "עדיפות"
+    full_nikkud: "ניקוד מלא"
+    
+    # Form labels
+    file: "קובץ"
+    message: "הודעה"
+    email: "דוא\"ל"
+    password: "סיסמה"
+    password_confirmation: "אישור סיסמה"
+    avatar: "תמונה"
+    preferences: "העדפות"
+    
+    # Actions
+    upload: "העלה"
+    publish: "פרסם"
+    create: "צור"
+    update: "עדכן"
+    assign: "הקצה"
+    
+    # Task related
+    task_created: "המשימה נוצרה."
+    task_updated: "המשימה עודכנה"
+    task_cannot_be_updated: "לא ניתן לעדכן את המשימה"
+    task: "משימה"
+    new_task: "משימה חדשה"
+    my_tasks: "המשימות שלי"
+    my_editing_tasks: "משימות העריכה שלי"
+    request_a_task: "בקש משימה"
+    assign_a_task_title: "הקצה משימה"
+    back_to_task: "חזרה למשימה"
+    
+    # Comments
+    comments: "הערות"
+    add_comment: "הוסף הערה"
+    editor_eyes_only: "לעיני עורך בלבד"
+    
+    # Reasons
+    abandoning_reason: "סיבת נטישה"
+    rejection_reason: "סיבת דחייה"
+    reason: "סיבה"
+    also_request_a_new_task: "בקש גם משימה חדשה"
+    
+    # Admin
+    manage_kinds: "נהל סוגים"
+    hours_spent: "שעות שהושקעו"
+    
+    # Document
+    attach_new_document: "צרף מסמך חדש"
+    
+    # User
+    assignment_history: "היסטוריית הקצאות"
+    change_assignments: "שנה הקצאות"
+    waits_for: "ממתין ל"
+    volunteers_waiting_for_tasks: "מתנדבים הממתינים למשימות"
+    cancel_request: "בטל בקשה"
+    
+    # History
+    history: "היסטוריה"
+    
+    # Other
+    other: "אחר"
+    empty: ""
+    hello_world: "שלום עולם"
+    become_volunteer: "הפוך למתנדב"
+    back_to_volunteer_requests: "חזרה לבקשות מתנדבים"
+    
+    # Messages
+    search_is_not_available_at_this_moment: "החיפוש אינו זמין כעת, אנא נסה שוב מאוחר יותר"
+    you_must_be_an_admin_or_editor_to_access_this_page: "עליך להיות מנהל או עורך כדי לגשת לדף זה"
+    you_must_be_a_volunteer_to_access_this_page: "עליך להיות מתנדב כדי לגשת לדף זה"
+    only_participant_can_see_this_page: "רק משתתף יכול לראות את הדף הזה"
+    only_the_owner_can_see_this_page: "רק הבעלים יכול לראות את הדף הזה"
+    only_registered_activists_allowed_to_access_this_page: "רק פעילים רשומים מורשים לגשת לדף זה"
+    sorry_youre_not_allowed_to_perfrom_this_operation: "מצטערים, אינך מורשה לבצע פעולה זו"
+    
+    # User related
+    youre_now_on_break_request_a_new_task_to_come_out_of_break: "אתה כעת בהפסקה! בקש משימה חדשה כדי לצאת מהפסקה."
+    your_account_has_been_created_please_check_your_email: "חשבונך נוצר. אנא בדוק את הדוא\"ל שלך להוראות הפעלת החשבון!"
+    you_cannot_remove_your_own_account: "אינך יכול להסיר את החשבון שלך"
+    user_enabled: "המשתמש הופעל"
+    user_disabled: "המשתמש הושבת"
+    cancelled_additional_task_request_for_user: "בקשת משימה נוספת למשתמש %{user_name} בוטלה"
+    
+    on_break: "בהפסקה"
+    time_ago: "לפני %{time}"
+    take_a_break: "צא להפסקה"
+    enable: "הפעל"
+    disable: "השבת"
+
+    # Document related
+    document_deleted: "המסמך נמחק"
+    
+    # Volunteer requests
+    thank_you_your_request_has_been_posted: "תודה, בקשתך נשלחה."
+    volunteer_request_approved: "בקשת המתנדב אושרה!"
+    your_request_has_already_been_posted: "בקשתך כבר נשלחה."
+    
+    # Password related
+    change_password: "שנה סיסמה"
+    password_reset: "איפוס סיסמה"
+    activate_account: "הפעלת חשבון"
+    change: "שנה"
+    reset: "אפס"
+    activate: "הפעל"
+    
+    # Notification preferences
+    when_a_comment_added_to_my_task: "כשמתווספת הערה למשימה שלי"
+    when_my_task_status_changed: "כשסטטוס המשימה שלי משתנה"
+    
+    # Volunteer and task kind errors
+    there_are_existing_volunteers_of_kind: "ישנם מתנדבים קיימים מסוג %{name}. אנא הסר אותם קודם על מנת למחוק סוג זה."
+    there_are_existing_tasks_that_use_kind: "ישנן משימות קיימות שמשתמשות בסוג %{name}. אנא הסר אותן קודם על מנת למחוק סוג זה."
+    
+    # Misc
+    assign_a_task: "הקצה משימה..."
+    pending_volunteer_requests:
+      one: "יש בקשת מתנדב אחת ממתינה"
+      other: "יש %{count} בקשות מתנדבים ממתינות"
+    send_activation_email_to_user_are_you_sure: "שלח מייל הפעלה ל-%{user}. האם אתה בטוח?"
+    volunteer_returned_from_break: "המתנדב %{volunteer_name} חזר מהפסקה"
+    
+    # Additional common translations
+    supported_by: "בתמיכת"
+    hello: "שלום"
+    logout: "יציאה"
+    login: "כניסה"
+    register: "הרשמה"
+    system_name: "פרויקט בן יהודה"
+    please_wait: "נא להמתין..."
+    total: "סה\"כ"
+    hours_estimate: "להלן חישוב משוער של שעות שהושקעו במשימה זו, על בסיס מספר הקבצים. אנו צריכים לאסוף נתונים אלו לדיווח לתורמים שלנו. אנא תקן את ההערכה אם יש לך הערכה טובה יותר, או אם ניהלת מעקב בעצמך."
+    
+    # WillPaginate
+    paginator_previous_page:
+      laquo_previous: "&laquo; הקודם"
+      next_raquo: "הבא &raquo;"
+
+  # Task section
+  task_section:
+    task_settings: "הגדרות משימה"
+    general: "כללי"
+  # Notification email templates
+  notification:
+    comment_added_email: |
+      שלום,
+
+      הערה חדשה נוספה למשימה '%{task_name}' על ידי %{user_name}:
+
+      %{comment}
+
+      מייל זה נוצר אוטומטית. אנא אל תענה עליו. כדי להגיב, אנא הוסף הערה חדשה בדף המשימה עצמו בכתובת הזו -
+      %{task_url}
+
+      צוות פרויקט בן-יהודה.
+    task_state_changed_email: |
+      שלום,
+
+      מצב המשימה '%{task_name}' השתנה ל-%{new_state}.
+
+      %{task_url}
+
+      מייל זה נוצר אוטומטית. אנא אל תענה עליו.
+
+      צוות פרויקט בן-יהודה.
+    tasks_added_to_site_email: |
+      שלום %{user_name},
+
+      משימה שעבדת עליה הועלתה לאתר!
+
+      לך להסתכל על http://benyehuda.org
+    volunteer_welcome_email: |
+      שלום %{user_name},
+
+      ברוכים הבאים לפרויקט בן יהודה!
+      הוראות: לעשות
+
+
+      צוות %{domain}
+
+  # Site notices
+  site_notice:
+    new: "חדש"
+    active: "פעיל"
+    all: "הכל"
+
+  # Last login
+  last_login:
+    never: "אף פעם"
+
+  # Additional gettext keys
+  foo:
+    bar: "bar"

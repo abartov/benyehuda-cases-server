@@ -11,12 +11,12 @@ class AssignmentHistory < ActiveRecord::Base
   scope :rev_order, ->{order("id DESC")}
 
   ROLES = {
-    "assignee" => N_("Assignee"),
-    "creator" => N_("Creator"),
-    "editor" => N_("Editor")
+    "assignee" => 'gettext.assignee',
+    "creator" => 'gettext.creator',
+    "editor" => 'gettext.editor'
   }
 
   def role_txt
-    s_(ROLES[role])
+    I18n.t(ROLES[role])
   end
 end

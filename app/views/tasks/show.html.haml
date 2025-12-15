@@ -9,7 +9,7 @@
   - when_admin do
     %a.purple-button.gradient{ :href => edit_admin_task_path(@task) }
       %span
-        != _("Edit")
+        != I18n.t('gettext.edit')
     %a.purple-button.gradient{ href: split_task_path(@task)}
       %span!= "פיצול"
     %a.purple-button.gradient{ href: classify_scans_path(@task)}
@@ -57,7 +57,7 @@
 != render(:partial => "comments/index", :locals => {:comments => @comments})
 %hr
 - if @task.editor?(current_user) or current_user.is_editor?
-  %h3= _("Hours spent")
+  %h3= I18n.t('gettext.hours_spent')
   %p= @task.hours
   != render(:partial => "editor_events")
 %br

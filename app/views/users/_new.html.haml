@@ -3,4 +3,4 @@
   != render :partial => "users/form", :locals => { :f => f }
   != f.submit _("Signup")
 
-!= link_to _("login"), login_path
+!= link_to I18n.t('gettext.login'), login_path

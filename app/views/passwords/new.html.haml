@@ -1,7 +1,7 @@
-= set_tab :profile, _("Change Password")
+= set_tab :profile, I18n.t('gettext.change_password')
 
 = semantic_form_for(@user ||= User.new, :url => passwords_path) do |f|
-  != f.input :email, :label => _("Email")
+  != f.input :email, :label => I18n.t('gettext.email')
   != f.submit _("Send Password Reset Instructions")
 
-!= link_to _("login"), login_path, :class => "login"
+!= link_to I18n.t('gettext.login'), login_path, :class => "login"

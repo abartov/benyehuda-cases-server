@@ -45,21 +45,21 @@ module ApplicationHelper
   end
   def password_edit_title
     if logged_in?
-      _("Change Password")
+      I18n.t('gettext.change_password')
     elsif @user.active?
-      _("Password Reset")
+      I18n.t('gettext.password_reset')
     else
-      _("Activate Account")
+      I18n.t('gettext.activate_account')
     end
   end
 
   def password_edit_submit
     if logged_in?
-      _("Change")
+      I18n.t('gettext.change')
     elsif @user.active?
-      _("Reset")
+      I18n.t('gettext.reset')
     else
-      _("Activate")
+      I18n.t('gettext.activate')
     end
   end
 end

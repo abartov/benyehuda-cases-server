@@ -1,8 +1,1 @@
-<%=raw _("Hello %{user_name},
-
-Welcome to Ben Yehuda Project!
-Instructions: TODO
-
-
-%{domain} Team") % {:user_name => @user.name, :domain => @domain}
-%>
+<%=raw I18n.t('notification.volunteer_welcome_email', user_name: @user.name, domain: @domain) %>

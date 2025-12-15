@@ -1,10 +1,10 @@
 = semantic_form_for(@user_session, :url => user_sessions_path) do |f|
   = f.semantic_errors
   = f.inputs do
-    != f.input :email, :label => _("Email")
-    != f.input :password, :label => _("Password")
+    != f.input :email, :label => I18n.t('gettext.email')
+    != f.input :password, :label => I18n.t('gettext.password')
     != f.input :remember_me, :label => _("Remember me"), :as => :boolean, :input_html => {:checked => true}, :required => false
-  != f.submit _("login"), {:class => "purple-button gradient" }
+  != f.submit I18n.t('gettext.login'), {:class => "purple-button gradient" }
 
 %br
 %br

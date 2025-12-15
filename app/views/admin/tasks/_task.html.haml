@@ -9,7 +9,7 @@
   %td!= link_to h(task.assignee.name), user_path(task.assignee) if task.assignee
   %td= Task.textify_state(task.state)
   %td= task.documents_count
-  %td!= link_to _("Edit"), edit_admin_task_path(task)
+  %td!= link_to I18n.t('gettext.edit'), edit_admin_task_path(task)
   %td!= link_to _("Assignments"), edit_task_assignment_path(task)
-  %td!= link_to _("Delete"), admin_task_path(task), :remote => true, :method => :delete, data: {confirm: _("Are you sure?")}
+  %td!= link_to I18n.t('gettext.delete'), admin_task_path(task), :remote => true, :method => :delete, data: {confirm: I18n.t('gettext.are_you_sure')}
 

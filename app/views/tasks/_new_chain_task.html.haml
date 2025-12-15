@@ -5,10 +5,10 @@
   != render(:partial => "tasks/form", :locals => {:f => f, :newkind => TaskKind.find_by_name('הגהה').id})
   = f.inputs do
     != f.semantic_fields_for :comments, (@comment ||= child_task.comments.build) do |comment|
-      != comment.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => _("Message")
+      != comment.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => I18n.t('gettext.message')
       - when_editor_or_admin do
-        != comment.input :editor_eyes_only, :label => _("Editor eyes only")
-  != f.submit _("Create"), :id => "create_chained", :disable_with => _("Please wait..."), :class => 'purple-button gradient finish_task_button'
+        != comment.input :editor_eyes_only, :label => I18n.t('gettext.editor_eyes_only')
+  != f.submit I18n.t('gettext.create'), :id => "create_chained", :disable_with => _("Please wait..."), :class => 'purple-button gradient finish_task_button'
   %span.sp20
     &nbsp;
   .gray-button

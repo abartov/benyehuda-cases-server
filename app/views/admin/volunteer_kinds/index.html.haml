@@ -5,7 +5,7 @@
     #new_kind_msg
     %table.list
       %tr.title
-        %th= _("Name")
+        %th= I18n.t('gettext.name')
         %th= _("Volunteers Count")
         %th &nbsp;
       = render(:partial => "admin/volunteer_kinds/volunteer_kind", :collection => VolunteerKind.all)

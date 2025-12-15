@@ -1,7 +1,7 @@
-%h3= _("Attach New Document")
+%h3= I18n.t('gettext.attach_new_document')
 - @document ||= @task.documents.build
 = semantic_form_for(@document, :live_validations => false, :url => task_documents_path(@task), :html => { :multipart => true }) do |f|
   != render(:partial => "new", :locals => {:f => f})
-  != f.submit _("Upload")
-  != link_to _("Cancel"), task_path(@task)
+  != f.submit I18n.t('gettext.upload')
+  != link_to I18n.t('gettext.cancel'), task_path(@task)
   

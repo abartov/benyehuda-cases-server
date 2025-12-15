@@ -13,15 +13,15 @@
   %td
     = user.activated_at
     - if user.on_break
-      = ' '+_("on break")
-  %td= user.current_login_at ? (_("%{time} ago") % {:time => time_ago_in_words(user.current_login_at).dup}) : s_("last login|never")
-  %td.edit!= link_to _("Edit"), edit_user_path(user)
+      = ' '+I18n.t('gettext.on_break')
+  %td= user.current_login_at ? (I18n.t('gettext.time_ago', time: time_ago_in_words(user.current_login_at))) : I18n.t('last_login.never')
+  %td.edit!= link_to I18n.t('gettext.edit'), edit_user_path(user)
   - if user.is_volunteer?
-    %td.delete!= link_to _("take a break"), url_for(controller: :users, action: :take_break, id: user.id)
+    %td.delete!= link_to I18n.t('gettext.take_a_break'), url_for(controller: :users, action: :take_break, id: user.id)
   - if user.activated_at
     - if user.disabled_at
-      %td.delete!= link_to _("Enable"), user_path(user, :enable => true), :method => "delete"
+      %td.delete!= link_to I18n.t('gettext.enable'), user_path(user, :enable => true), :method => "delete"
     - else
-      %td.delete!= link_to _("Disable"), user, :method => "delete", :confirm => _("Are you sure?")
+      %td.delete!= link_to I18n.t('gettext.disable'), user, :method => "delete", :confirm => I18n.t('gettext.are_you_sure')
   - else
     %td &nbsp;

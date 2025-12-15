@@ -8,7 +8,7 @@ module DashboardsHelper
     pending_count = VolunteerRequest.pending.count
     if pending_count > 0
       content_tag(:span, style: 'background-color: lightblue; color: yellow;') do
-        concat link_to((n_('There is %d pending volunter request', 'There are %d pending volunter requests', pending_count) % pending_count), volunteer_requests_path)
+        concat link_to(I18n.t('gettext.pending_volunteer_requests', count: pending_count), volunteer_requests_path)
       end
     end
   end
@@ -16,7 +16,7 @@ module DashboardsHelper
   def link_to_assign_a_task(user)
     link_to tasks_path(:assignee_id => user.id, :per_page => 10, :kind => 'הקלדה').html_safe, :class => "ico", :method => :get,
       :onclick => "jQuery('#assign_now').html(#{I18n.t(:loading).to_json}).dialog('open');", :remote => true do
-        content_tag(:span, _("Assign a Task..."))
+        content_tag(:span, I18n.t('gettext.assign_a_task'))
     end
   end
 end
