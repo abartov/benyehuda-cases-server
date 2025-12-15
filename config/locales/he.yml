@@ -105,3 +105,4 @@ he:
   maintext: גוף המשימה
   front: שער ותוכן עניינים (אם ישנו)
   footnotes_and_corrigenda: הערות או לוח תיקונים
+  total: "סך הכל: %{count}"
