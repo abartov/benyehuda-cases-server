@@ -49,9 +49,16 @@ class ReportController < InheritedResources::Base
 
   def few_tasks_left
     @current_tab = :reports
-    base_query = Task.includes(:parent, :kind, :documents).where(kind_id: [1, 21],
-                                              state: 'unassigned').group('parent_id').having('count(tasks.id) < 3').order(:name)
-    @tasks = apply_scopes(base_query)
+    # For TaskKind 1, group by parent_id
+    # For TaskKind 21, group by grandparent (parent's parent_id)
+    base_query = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
+                     .includes(:parent, :kind, :documents)
+                     .where(kind_id: [1, 21], state: 'unassigned')
+                     .group("CASE WHEN tasks.kind_id = 21 THEN parent_tasks.parent_id ELSE tasks.parent_id END")
+                     .having('count(tasks.id) < 3')
+                     .order(:name)
+    @total = base_query.count.count # total number of parents with few tasks left
+    @tasks = apply_scopes(base_query).paginate(page: params[:page], per_page: params[:per_page])
   end
 
   def missing_metadata
