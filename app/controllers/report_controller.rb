@@ -49,8 +49,8 @@ class ReportController < InheritedResources::Base
 
   def few_tasks_left
     @current_tab = :reports
-    base_query = Task.includes(:parent).where(kind_id: [1, 21], state: 'unassigned',
-                                              parent: { kind_id: 71 }).group('parent_id').having('count(tasks.id) < 3').order(:name)
+    base_query = Task.includes(:parent).where(kind_id: [1, 21],
+                                              state: 'unassigned').group('parent_id').having('count(tasks.id) < 3').order(:name)
     @tasks = apply_scopes(base_query)
   end
 
