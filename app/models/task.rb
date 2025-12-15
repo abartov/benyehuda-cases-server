@@ -113,7 +113,7 @@ class Task < ActiveRecord::Base
   end
 
   SEARCH_INCLUDES = {
-    include: %i[creator assignee editor kind]
+    include: %i[creator assignee editor kind documents]
   }
 
   TASK_LENGTH = {
