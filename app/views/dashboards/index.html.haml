@@ -36,7 +36,20 @@
               =_("New Task")
 
 - when_admin do
-  / anniversary block
+  .block
+    .head
+      .l
+        .c
+          %h2= _("Volunteers waiting for tasks")+" (#{@waiting_volunteers.nil? ? "0" : @waiting_volunteers.length.to_s})"
+    .container
+      .t
+        %span.l
+          %span.c
+      .m
+        != render(:partial => 'waiting_volunteers')
+      .b
+        %span.l
+          %span.c
   - if @anniversary_users && !@anniversary_users.empty?
     .block
       .head{style: 'cursor: pointer;', onclick: 'toggleAnniversarySection();'}
@@ -62,21 +75,6 @@
         toggle.text(toggle.text() === '▶' ? '▼' : '▶');
       }
 
-  / block
-  .block
-    .head
-      .l
-        .c
-          %h2= _("Volunteers waiting for tasks")+" (#{@waiting_volunteers.nil? ? "0" : @waiting_volunteers.length.to_s})"
-    .container
-      .t
-        %span.l
-          %span.c
-      .m
-        != render(:partial => 'waiting_volunteers')
-      .b
-        %span.l
-          %span.c
 
 != render(:partial => "tasks/index", :locals => {:tasks => collection, :title => _("My Tasks"), :editing => false})
 
