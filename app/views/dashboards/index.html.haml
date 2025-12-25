@@ -39,11 +39,13 @@
   / anniversary block
   - if @anniversary_users && !@anniversary_users.empty?
     .block
-      .head
+      .head{style: 'cursor: pointer;', onclick: 'toggleAnniversarySection();'}
         .l
           .c
-            %h2= I18n.t('anniversary.section_title', count: @anniversary_users.length)
-      .container
+            %h2
+              %span{id: 'anniversary-toggle', style: 'margin-left: 5px;'}= '▶'
+              = I18n.t('anniversary.section_title', count: @anniversary_users.length)
+      .container{id: 'anniversary-container', style: 'display: none;'}
         .t
           %span.l
             %span.c
@@ -52,6 +54,13 @@
         .b
           %span.l
             %span.c
+
+    :javascript
+      function toggleAnniversarySection() {
+        $("#anniversary-container").slideToggle(300);
+        var toggle = $("#anniversary-toggle");
+        toggle.text(toggle.text() === '▶' ? '▼' : '▶');
+      }
 
   / block
   .block
