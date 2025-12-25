@@ -41,12 +41,12 @@
   :javascript
     function showAnniversaryGreetingDialog(userId, userName, years, prefs) {
       // Set user info
-      $('#anniversary_user_info').html('#{I18n.t('anniversary.greeting_for')} ' + userName + ' (#{I18n.t('anniversary.years_count', count: 'XX').gsub('XX', '')}' + years + ')');
+      $('#anniversary_user_info').html('#{I18n.t('anniversary.greeting_for')} ' + userName + ' (#{I18n.t('anniversary.years_count', count: 'XX')})'.replace('XX', years));
       $('#anniversary_volunteer_prefs').html(prefs || '#{I18n.t('anniversary.no_preferences')}');
       $('#anniversary_user_id').val(userId);
 
       // Set default message
-      var defaultMessage = '#{I18n.t('anniversary.default_message', years: 'XX').gsub('XX', '')}' + years + '!';
+      var defaultMessage = '#{I18n.t('anniversary.default_message', years: 'XX')}'.replace('XX', years);
       $('#anniversary_message').val(defaultMessage);
 
       // Load recent tasks
