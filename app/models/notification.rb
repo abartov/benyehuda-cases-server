@@ -46,6 +46,15 @@ class Notification < ActionMailer::Base
     mail to: editor.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("Volunteer %{volunteer_name} has returned from break") % { volunteer_name: volunteer.name }
   end
 
+  def anniversary_greeting(user, sender, message)
+    @user = user
+    @sender = sender
+    @message = message
+    @years = user.years_since_joining
+    @domain = domain
+    mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: I18n.t('anniversary.email_subject', years: @years)
+  end
+
 protected
 
   def domain

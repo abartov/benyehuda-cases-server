@@ -77,6 +77,7 @@ protected
 
  # before_action :setup_will_paginate
   before_action :set_locale
+  before_action :check_anniversary
  # def setup_will_paginate
 #    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
 #    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
@@ -85,5 +86,20 @@ protected
     FastGettext.locale = 'he'
     I18n.locale = :he
     I18n.default_locale = :he
+  end
+
+  def check_anniversary
+    return unless current_user
+    return unless current_user.activated_at.present?
+    return unless current_user.near_anniversary?
+    return if current_user.disabled?
+    return if current_user.on_break?
+
+    # Only show the message once per session
+    return if session[:anniversary_shown]
+
+    years = current_user.years_since_joining
+    flash.now[:notice] = I18n.t('anniversary.user_message', years: years)
+    session[:anniversary_shown] = true
   end
 end

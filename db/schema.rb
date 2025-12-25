@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_05_12_202000) do
+ActiveRecord::Schema.define(version: 2025_12_25_005804) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -174,7 +174,7 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.datetime "updated_at"
   end
 
-  create_table "task_teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "task_teams", charset: "latin1", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "task_id"
     t.datetime "created_at", precision: 6, null: false
@@ -211,7 +211,7 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.index ["state"], name: "index_tasks_on_state"
   end
 
-  create_table "team_memberships", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "team_memberships", charset: "latin1", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "user_id"
     t.datetime "joined"
@@ -223,10 +223,10 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
 
-  create_table "teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
+  create_table "teams", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+    t.string "name", collation: "utf8mb4_bin"
     t.boolean "open"
-    t.text "description", size: :medium
+    t.text "description", size: :medium, collation: "utf8mb4_bin"
     t.integer "status"
     t.date "targetdate"
     t.datetime "created_at", precision: 6, null: false
@@ -290,6 +290,7 @@ ActiveRecord::Schema.define(version: 2025_05_12_202000) do
     t.boolean "on_break"
     t.date "last_reminder"
     t.string "zehut"
+    t.datetime "congratulated_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["perishable_token"], name: "index_users_on_perishable_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"

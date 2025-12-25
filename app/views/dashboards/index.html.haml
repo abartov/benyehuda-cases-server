@@ -36,6 +36,23 @@
               =_("New Task")
 
 - when_admin do
+  / anniversary block
+  - if @anniversary_users && !@anniversary_users.empty?
+    .block
+      .head
+        .l
+          .c
+            %h2= I18n.t('anniversary.section_title', count: @anniversary_users.length)
+      .container
+        .t
+          %span.l
+            %span.c
+        .m
+          != render(:partial => 'anniversary_users')
+        .b
+          %span.l
+            %span.c
+
   / block
   .block
     .head

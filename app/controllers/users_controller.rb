@@ -89,6 +89,31 @@ class UsersController < InheritedResources::Base
     redirect_to '/'
   end
 
+  def recent_tasks
+    @user = User.find(params[:id])
+    return unless current_user.admin_or_editor?
+
+    @recent_tasks = @user.assigned_tasks.order('updated_at DESC').limit(10)
+    render partial: 'recent_tasks', locals: { tasks: @recent_tasks }
+  end
+
+  def send_anniversary_greeting
+    @user = User.find(params[:id])
+    return unless current_user.admin_or_editor?
+
+    message = params[:message]
+
+    # Send email
+    Notification.anniversary_greeting(@user, current_user, message).deliver_now
+
+    # Update congratulated_at timestamp
+    @user.update_attribute(:congratulated_at, Time.zone.now)
+
+    render json: { success: true }
+  rescue => e
+    render json: { success: false, error: e.message }, status: :unprocessable_entity
+  end
+
   protected
 
   def public_profile?

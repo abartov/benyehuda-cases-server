@@ -37,6 +37,10 @@ Rails.application.routes.draw do
   resources :users do
     resources :activation_instructions
     resources :assignment_histories
+    member do
+      get :recent_tasks
+      post :send_anniversary_greeting
+    end
   end
   get '/users/:id/cancel_task_request', controller: 'users', action: 'cancel_task_request'
   match '/tasks/:id/split_task', controller: 'admin/tasks', action: 'split_task', as: 'split_task', via: %i[get post]

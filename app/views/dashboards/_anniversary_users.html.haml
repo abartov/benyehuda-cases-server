@@ -1,0 +1,97 @@
+- if !@anniversary_users.blank?
+  .l
+    .holder
+      /
+        data-table
+      %table.data-table
+        %tbody
+          %tr
+            %th.first.style4= I18n.t('anniversary.name')
+            %th.style3= I18n.t('anniversary.email')
+            %th.style2= I18n.t('anniversary.years')
+            %th.style2= I18n.t('anniversary.preferences')
+            %th.first.style1= I18n.t('anniversary.actions')
+          - @anniversary_users.each_with_index do |user, index|
+            - theclass = cycle("odd", "even")
+            - if index == @anniversary_users.length - 1
+              - theclass += " last-line"
+            %tr{class: theclass, id: "anniversary-user-#{user.id}"}
+              %td.first.style4!= link_to(user.name, profiles_path(user))
+              %td.style3!= mail_to user.email
+              %td.style2= I18n.t('anniversary.years_count', count: user.years_since_joining)
+              %td.style2= user.volunteer_preferences.truncate(50)
+              %td.first.style1
+                %ul.links
+                  %li
+                    %a.edit{href: "#", onclick: "showAnniversaryGreetingDialog(#{user.id}, '#{escape_javascript(user.name)}', #{user.years_since_joining}, '#{escape_javascript(user.volunteer_preferences)}'); return false;"}
+                      %span
+                        = I18n.t('anniversary.send_greeting')
+
+  #anniversary_greeting_dialog{title: I18n.t('anniversary.dialog_title'), style: 'display:none;'}
+    %p#anniversary_user_info
+    %h4= I18n.t('anniversary.volunteer_preferences')
+    %p#anniversary_volunteer_prefs
+    %h4= I18n.t('anniversary.recent_tasks')
+    %div#anniversary_recent_tasks
+    %h4= I18n.t('anniversary.message')
+    %p.hint= I18n.t('anniversary.personalize_hint')
+    %textarea#anniversary_message{rows: 8, cols: 60}
+    %input{type: 'hidden', id: 'anniversary_user_id'}
+
+  :javascript
+    function showAnniversaryGreetingDialog(userId, userName, years, prefs) {
+      // Set user info
+      $('#anniversary_user_info').html('#{I18n.t('anniversary.greeting_for')} ' + userName + ' (#{I18n.t('anniversary.years_count', count: 'XX').gsub('XX', '')}' + years + ')');
+      $('#anniversary_volunteer_prefs').html(prefs || '#{I18n.t('anniversary.no_preferences')}');
+      $('#anniversary_user_id').val(userId);
+
+      // Set default message
+      var defaultMessage = '#{I18n.t('anniversary.default_message', years: 'XX').gsub('XX', '')}' + years + '!';
+      $('#anniversary_message').val(defaultMessage);
+
+      // Load recent tasks
+      $.get('/users/' + userId + '/recent_tasks', function(data) {
+        $('#anniversary_recent_tasks').html(data);
+      });
+
+      // Show dialog
+      $('#anniversary_greeting_dialog').dialog('open');
+    }
+
+    function sendAnniversaryGreeting() {
+      var userId = $('#anniversary_user_id').val();
+      var message = $('#anniversary_message').val();
+
+      $.ajax({
+        url: '/users/' + userId + '/send_anniversary_greeting',
+        type: 'POST',
+        data: {
+          message: message,
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+          // Remove user from list
+          $('#anniversary-user-' + userId).fadeOut();
+          $('#anniversary_greeting_dialog').dialog('close');
+          alert('#{I18n.t('anniversary.greeting_sent')}');
+        },
+        error: function() {
+          alert('#{I18n.t('anniversary.greeting_error')}');
+        }
+      });
+    }
+
+    jQuery(window).ready(function() {
+      jQuery('#anniversary_greeting_dialog').dialog({
+        draggable: true,
+        modal: true,
+        resizable: true,
+        autoOpen: false,
+        position: ['top', 20],
+        width: 700,
+        buttons: {
+          "#{I18n.t('anniversary.send')}": function() { sendAnniversaryGreeting(); },
+          "#{I18n.t('anniversary.cancel')}": function() { $(this).dialog("close"); }
+        }
+      });
+    });
