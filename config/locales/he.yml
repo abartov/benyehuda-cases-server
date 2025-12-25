@@ -108,8 +108,8 @@ he:
   total: "סך הכל: %{count}"
   anniversary:
     section_title:
-      one: "מתנדבים עם יום נרשמות (%{count})"
-      other: "מתנדבים עם יום נרשמות (%{count})"
+      one: "מתנדבים שחוגגים שנות התנדבות (%{count})"
+      other: "מתנדבים שחוגגים שנות התנדבות (%{count})"
     name: שם
     email: דואר אלקטרוני
     years: שנים
@@ -119,7 +119,7 @@ he:
     preferences: העדפות
     actions: פעולות
     send_greeting: שלח ברכה
-    dialog_title: שליחת ברכה ליום נרשמות
+    dialog_title: שליחת ברכה לרגל שנות ההתנדבות
     greeting_for: ברכה עבור
     volunteer_preferences: העדפות המתנדב
     no_preferences: לא צוינו העדפות
