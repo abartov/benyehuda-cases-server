@@ -3,6 +3,6 @@
     - tasks.each do |task|
       %li
         = link_to task.name.truncate(60), task_path(task)
-        %small= "(#{I18n.t("tasks.state.#{task.state}")})"
+        %small= "(#{Task.textify_state(task.state)})"
 - else
   %p.no-tasks= I18n.t('anniversary.no_recent_tasks')
