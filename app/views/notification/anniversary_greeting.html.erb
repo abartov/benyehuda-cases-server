@@ -1,0 +1,13 @@
+<div dir="rtl" align="right">
+<p><%= I18n.t('anniversary.email_greeting', name: @user.name) %></p>
+
+<p><%= I18n.t('anniversary.email_intro', sender: @sender.name, years: @years) %></p>
+
+<div style="margin: 20px 0; padding: 15px; background-color: #f5f5f5; border-right: 3px solid #4CAF50;">
+<%=raw @message.gsub("\n", "<br>") %>
+</div>
+
+<p><%= I18n.t('anniversary.email_closing') %></p>
+
+<p><%= I18n.t('anniversary.email_signature', domain: @domain) %></p>
+</div>

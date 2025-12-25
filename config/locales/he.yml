@@ -106,3 +106,37 @@ he:
   front: שער ותוכן עניינים (אם ישנו)
   footnotes_and_corrigenda: הערות או לוח תיקונים
   total: "סך הכל: %{count}"
+  anniversary:
+    section_title:
+      one: "מתנדבים שחוגגים שנות התנדבות (%{count})"
+      other: "מתנדבים שחוגגים שנות התנדבות (%{count})"
+    name: שם
+    email: דואר אלקטרוני
+    years: שנים
+    years_count:
+      one: "שנה אחת"
+      other: "%{count} שנים"
+    preferences: העדפות
+    actions: פעולות
+    send_greeting: שלח ברכה
+    dialog_title: שליחת ברכה לרגל שנות ההתנדבות
+    greeting_for: ברכה עבור
+    volunteer_preferences: העדפות המתנדב
+    no_preferences: לא צוינו העדפות
+    recent_tasks: משימות אחרונות
+    no_recent_tasks: אין משימות אחרונות
+    message: הודעה
+    personalize_hint: "ניתן לערוך את ההודעה ולהוסיף מגע אישי"
+    default_message: "שמנו לב שאת/ה מתנדב/ת אצלנו כבר %{years} שנים! זה נהדר!"
+    send: שלח
+    cancel: ביטול
+    greeting_sent: הברכה נשלחה בהצלחה
+    greeting_error: אירעה שגיאה בשליחת הברכה
+    user_message: "עברו כבר כ־%{years} שנים מאז שהצטרפת אלינו! אנחנו מאוד מעריכים את תרומתך המתמשכת!"
+    email_subject:
+      one: "שנה של התנדבות בפרויקט בן־יהודה!"
+      other: "%{years} שנים של התנדבות בפרויקט בן־יהודה!"
+    email_greeting: "שלום %{name},"
+    email_intro: "%{sender} שלח/ה לך ברכה לרגל %{years} שנות ההתנדבות שלך בפרויקט:"
+    email_closing: "תודה על תרומתך החשובה לפרויקט בן־יהודה!"
+    email_signature: "בברכה,\nצוות פרויקט בן־יהודה\n%{domain}"

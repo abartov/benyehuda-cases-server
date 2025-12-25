@@ -36,7 +36,6 @@
               =_("New Task")
 
 - when_admin do
-  / block
   .block
     .head
       .l
@@ -51,6 +50,31 @@
       .b
         %span.l
           %span.c
+  - if @anniversary_users && !@anniversary_users.empty?
+    .block
+      .head{style: 'cursor: pointer;', onclick: 'toggleAnniversarySection();'}
+        .l
+          .c
+            %h2
+              %span{id: 'anniversary-toggle', style: 'margin-left: 5px;'}= '▶'
+              = I18n.t('anniversary.section_title', count: @anniversary_users.length)
+      .container{id: 'anniversary-container', style: 'display: none;'}
+        .t
+          %span.l
+            %span.c
+        .m
+          != render(:partial => 'anniversary_users')
+        .b
+          %span.l
+            %span.c
+
+    :javascript
+      function toggleAnniversarySection() {
+        $("#anniversary-container").slideToggle(300);
+        var toggle = $("#anniversary-toggle");
+        toggle.text(toggle.text() === '▶' ? '▼' : '▶');
+      }
+
 
 != render(:partial => "tasks/index", :locals => {:tasks => collection, :title => _("My Tasks"), :editing => false})
 

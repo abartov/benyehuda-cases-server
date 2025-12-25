@@ -65,6 +65,17 @@ class User < ActiveRecord::Base
 
   scope :waiting_for_tasks, -> { where('users.task_requested_at IS NOT NULL').order('users.task_requested_at DESC') }
 
+  # Anniversary-related scopes
+  scope :near_anniversary, lambda {
+    # Find users whose created_at is within 1 week of their anniversary
+    # and who are active (activated, not on break, not disabled, not already congratulated this year)
+    where('users.activated_at IS NOT NULL')
+      .where('users.disabled_at IS NULL')
+      .where('users.on_break = 0 OR users.on_break IS NULL')
+      .where('(users.congratulated_at IS NULL OR users.congratulated_at < ?)', 1.year.ago)
+      .select { |u| u.near_anniversary? }
+  }
+
   has_one :volunteer_request
   has_many :confirmed_volunteer_requests, class_name: 'VolunteerRequest', foreign_key: :approver_id
   # has_many :volunteers_approved, :through => :volunteer_confirmations, :source => :user
@@ -218,6 +229,28 @@ class User < ActiveRecord::Base
     else
       volunteer_properties.create(property_id: PROP_VOL_PREFERENCES, custom_value: buf)
     end
+  end
+
+  # Anniversary-related methods
+  def years_since_joining
+    return 0 if created_at.nil?
+    ((Time.zone.now - created_at) / 1.year).floor
+  end
+
+  def near_anniversary?
+    return false if created_at.nil?
+
+    # Get the anniversary date for this year
+    anniversary_this_year = created_at.change(year: Time.zone.now.year)
+
+    # Check if we're within 1 week (7 days) in either direction
+    days_until_anniversary = (anniversary_this_year.to_date - Time.zone.now.to_date).to_i
+    days_until_anniversary.abs <= 7
+  end
+
+  def anniversary_date_this_year
+    return nil if created_at.nil?
+    created_at.change(year: Time.zone.now.year)
   end
 
   protected
