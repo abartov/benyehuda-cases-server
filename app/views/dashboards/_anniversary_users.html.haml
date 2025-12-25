@@ -27,7 +27,7 @@
                       %span
                         = I18n.t('anniversary.send_greeting')
 
-  #anniversary_greeting_dialog{title: I18n.t('anniversary.dialog_title'), style: 'display:none;'}
+  #anniversary_greeting_dialog{title: I18n.t('anniversary.dialog_title'), style: 'display:none;', dir: 'rtl'}
     %p#anniversary_user_info
     %h4= I18n.t('anniversary.volunteer_preferences')
     %p#anniversary_volunteer_prefs
@@ -35,7 +35,7 @@
     %div#anniversary_recent_tasks
     %h4= I18n.t('anniversary.message')
     %p.hint= I18n.t('anniversary.personalize_hint')
-    %textarea#anniversary_message{rows: 8, cols: 60}
+    %textarea#anniversary_message{rows: 8, cols: 60, dir: 'rtl'}
     %input{type: 'hidden', id: 'anniversary_user_id'}
 
   :javascript
