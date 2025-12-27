@@ -96,16 +96,30 @@ namespace :tasks do
     # Group tasks by editor
     tasks_by_editor = idle_tasks.select { |t| t.editor.present? }.group_by(&:editor)
 
+    # Preload all relevant reminders to avoid N+1 queries
+    task_ids = idle_tasks.map(&:id)
+    assignee_ids = idle_tasks.map(&:assignee_id).compact
+
+    reminders = if task_ids.any? && assignee_ids.any?
+      TaskIdleReminder.where(task_id: task_ids, user_id: assignee_ids)
+    else
+      []
+    end
+
+    reminders_index = reminders.group_by { |r| [r.task_id, r.user_id] }
+                               .transform_values { |rs| rs.max_by(&:sent_at) }
+
     reports_sent = 0
     tasks_by_editor.each do |editor, tasks|
       next unless editor.email.present?
 
       # Build task data for the report
       idle_tasks_data = tasks.map do |task|
-        last_reminder = TaskIdleReminder.last_reminder_for(task.id, task.assignee.id) if task.assignee
+        assignee = task.assignee
+        last_reminder = assignee && reminders_index[[task.id, assignee.id]]
         {
           task: task,
-          assignee: task.assignee,
+          assignee: assignee,
           last_reminder_date: last_reminder&.sent_at
         }
       end
