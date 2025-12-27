@@ -9,7 +9,11 @@
 <% @idle_tasks_data.each do |task_data| %>
 ---
 משימה: <%= task_data[:task].name %>
+<% if task_data[:assignee] %>
 מתנדב: <%= task_data[:assignee].name %> (<%= task_data[:assignee].email %>)
+<% else %>
+מתנדב: לא הוקצה מתנדב
+<% end %>
 תאריך תזכורת אחרונה למתנדב: <%= task_data[:last_reminder_date] ? task_data[:last_reminder_date].strftime('%d/%m/%Y') : 'לא נשלחה תזכורת' %>
 זמן מאז עדכון אחרון: <%= ((Time.zone.now - task_data[:task].updated_at) / 1.month).round %> חודשים
 קישור למשימה: <%= task_url(task_data[:task]) %>
