@@ -164,12 +164,12 @@ namespace :tasks do
       recent_upload = task.documents.where('created_at >= ?', idle_since).exists?
 
       # Check for recent "done" markings on documents
-      # We need to check the audits table for document done field changes
+      # We need to check the audits table for document done field changes.
+      # Use indexable predicates in SQL, then inspect changed_attrs in Ruby.
       recent_done_change = Audit.where(auditable_type: 'Document')
                                 .where(auditable_id: task.documents.pluck(:id))
                                 .where('created_at >= ?', idle_since)
-                                .where("changed_attrs LIKE ?", "%done%")
-                                .exists?
+                                .any? { |audit| audit.changed_attrs.to_s.include?('done') }
 
       # Task is idle if it has no recent uploads AND no recent done changes
       !recent_upload && !recent_done_change
