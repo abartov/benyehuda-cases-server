@@ -52,7 +52,9 @@ namespace :tasks do
           puts "  [DRY RUN] Would unassign task ##{task.id} - assignee #{task.assignee.name} is disabled"
         else
           puts "  Unassigning task ##{task.id} - assignee #{task.assignee.name} is disabled"
-          task.update_columns(assignee_id: nil, state: 'unassigned')
+          task.assignee_id = nil
+          task._abandon!
+          task.save!
         end
         next
       end
