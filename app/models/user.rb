@@ -192,11 +192,67 @@ class User < ActiveRecord::Base
   end
 
   def self.vols_active_in_last_n_months(n)
-    User.not_on_break.distinct.joins(:audits).where('audits.created_at > ?', n.months.ago)
+    cutoff = n.months.ago
+
+    # A user is active if they have done ANY of:
+    # 1. Logged in
+    # 2. Left a comment on a Task
+    # 3. Changed a Task's status (audits)
+    # 4. Uploaded a Document to a Task
+    # 5. Are an admin or editor (always considered active)
+
+    # Use UNION ALL to avoid cartesian product from multiple LEFT JOINs
+    # This finds user IDs from each activity source separately, then combines them
+    active_user_ids = User.not_on_break
+      .where('users.is_admin = ? OR users.is_editor = ? OR users.current_login_at > ?', true, true, cutoff)
+      .pluck(:id)
+      .to_set
+
+    # Add users who have commented recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:comments)
+        .where('comments.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have uploaded documents recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins('INNER JOIN documents ON documents.user_id = users.id')
+        .where('documents.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have audits (status changes) recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:audits)
+        .where('audits.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Return the users matching these IDs
+    User.where(id: active_user_ids.to_a)
   end
 
   def self.vols_inactive_in_last_n_months(n)
-    User.not_on_break.distinct.joins(:audits).where.not('audits.created_at > ?', n.months.ago)
+    cutoff = n.months.ago
+
+    # A user is inactive if they have done NONE of:
+    # 1. Logged in
+    # 2. Left a comment on a Task
+    # 3. Changed a Task's status (audits)
+    # 4. Uploaded a Document to a Task
+    # 5. Are an admin or editor
+
+    User.not_on_break
+      .where(is_admin: [false, nil])
+      .where(is_editor: [false, nil])
+      .where('users.current_login_at IS NULL OR users.current_login_at <= ?', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM comments WHERE comments.user_id = users.id AND comments.created_at > ?)', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM documents WHERE documents.user_id = users.id AND documents.created_at > ?)', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM audits WHERE audits.user_id = users.id AND audits.created_at > ?)', cutoff)
   end
 
   def self.vols_newer_than(t)
