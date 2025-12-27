@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   end
 
   has_many :assignment_histories, dependent: :destroy
+  has_many :task_idle_reminders, dependent: :destroy
 
   validates :name, presence: true
 

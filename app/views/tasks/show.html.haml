@@ -63,5 +63,24 @@
 %br
 %br
 - when_editor_or_admin do
+  - if @task.task_idle_reminders.any?
+    .box
+      .boxhead
+        %b= I18n.t('tasks.idle_reminders_sent')
+      .boxcontainer
+        .boxbody
+          %table.data-table
+            %thead
+              %tr
+                %th= I18n.t('tasks.date_sent')
+                %th= I18n.t('tasks.recipient')
+                %th= I18n.t('tasks.days_ago')
+            %tbody
+              - @task.task_idle_reminders.order(sent_at: :desc).each do |reminder|
+                %tr
+                  %td= reminder.sent_at.strftime('%d/%m/%Y %H:%M')
+                  %td= reminder.user.name
+                  %td= "#{((Time.now - reminder.sent_at) / 1.day).round} days ago"
+          %br
   .box
     != render(:partial => "audits/index")
