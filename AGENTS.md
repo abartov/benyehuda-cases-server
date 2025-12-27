@@ -170,13 +170,16 @@ end
    - The `-u` flag sets up tracking for the new branch
    - This is your branch, so pushing it is safe
 
-5. **Create a Pull Request (PR)** using GitHub CLI:
+5. **MANDATORY: Create a Pull Request (PR)** using GitHub CLI:
    ```bash
    gh pr create --title "Title" --body "Description"
    ```
+   - **This step is REQUIRED - work is NOT complete without a PR**
    - Or specify base branch explicitly: `gh pr create --base master --title "..." --body "..."`
    - Include summary of changes, test plan, and related issue numbers
    - The PR body should explain what changed and why
+   - **AI Agents**: ALWAYS create a PR after completing ANY feature, fix, or improvement
+   - Do NOT wait to be asked - PR creation is part of "completing" the work
 
 6. **Close the bead** after PR is created:
    ```bash
@@ -186,7 +189,13 @@ end
    - Close the bead AFTER creating the PR, not after merge
    - Include the PR number in the close reason
 
-**The outcome of working on ANY issue should ALWAYS be a GitHub pull request (PR), never a direct push to an existing branch.**
+**The outcome of working on ANY issue MUST ALWAYS be a GitHub pull request (PR), never a direct push to an existing branch.**
+
+**For AI Agents: When you complete a feature or fix, you MUST:**
+1. Push your branch
+2. Create a PR (without being prompted)
+3. Close the bead with PR reference
+4. Report completion to user with PR link
 
 Once a PR has been produced for an issue (a bead), you may close the bead as complete. The PR will be reviewed and possibly merged by a human.
 
@@ -197,9 +206,23 @@ Before running ANY git command, verify:
 - [ ] If not, have I created a new feature/fix branch?
 - [ ] Am I about to push to my own branch, not master/main?
 - [ ] Have I run `bd sync` before and after committing?
-- [ ] Will I create a PR after pushing?
+- [ ] Will I create a PR immediately after pushing? (REQUIRED)
 
 **If any answer is NO, do NOT proceed with git push!**
+
+### Completion Checklist (for AI agents)
+
+When finishing ANY piece of work, you MUST complete ALL these steps:
+- [ ] All tests pass (`bundle exec rspec`)
+- [ ] Code committed to feature/fix branch
+- [ ] `bd sync` run before and after commit
+- [ ] Branch pushed to origin
+- [ ] **PR created via `gh pr create`** (MANDATORY - do not skip!)
+- [ ] Bead closed with PR reference
+- [ ] `bd sync` run after closing bead
+- [ ] User informed with PR link
+
+**Work is NOT complete until a PR exists. Do not wait to be asked.**
 
 ## Issue Tracking with bd (beads)
 
@@ -262,11 +285,15 @@ bd close bd-42 --reason "Completed" --json
 5. **Discover new work?** Create linked issue:
    - `bd create "Found bug" -p 1 --deps discovered-from:<parent-id>`
 6. **Commit changes**: See "Git Workflow" section above for complete commit/push/PR process
-7. **Create PR**: Always submit work via Pull Request, never push directly
-8. **Complete**: `bd close <id>` after PR is created (not after merge)
+7. **MANDATORY: Create PR**: `gh pr create --title "..." --body "..."` (do NOT skip this step!)
+8. **Complete**: `bd close <id> --reason "Created PR #123"` after PR is created (not after merge)
 9. **Sync beads**: Run `bd sync` after closing bead
+10. **Report to user**: Provide PR link and summary
 
-**CRITICAL**: Always follow the Git Workflow section above. Never push to existing branches!
+**CRITICAL**:
+- Always follow the Git Workflow section above. Never push to existing branches!
+- **ALWAYS create a PR after completing work - this is NOT optional**
+- Work is incomplete without a PR, even if tests pass and code is committed
 
 ### Auto-Sync
 
