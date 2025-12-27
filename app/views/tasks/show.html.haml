@@ -80,7 +80,7 @@
                 %tr
                   %td= reminder.sent_at.strftime('%d/%m/%Y %H:%M')
                   %td= reminder.user.name
-                  %td= "#{((Time.now - reminder.sent_at) / 1.day).round} days ago"
+                  %td= "#{((Time.zone.now - reminder.sent_at) / 1.day).round} days ago"
           %br
   .box
     != render(:partial => "audits/index")
