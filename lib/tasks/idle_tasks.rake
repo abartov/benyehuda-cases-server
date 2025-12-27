@@ -76,7 +76,7 @@ namespace :tasks do
           TaskIdleReminder.create!(
             task_id: task.id,
             user_id: task.assignee.id,
-            sent_at: Time.now
+            sent_at: Time.zone.now
           )
 
           puts "  ✓ Sent reminder for task ##{task.id} (#{task.name.utf_snippet(30)}) to #{task.assignee.name}"
