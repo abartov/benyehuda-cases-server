@@ -201,13 +201,39 @@ class User < ActiveRecord::Base
     # 4. Uploaded a Document to a Task
     # 5. Are an admin or editor (always considered active)
 
-    User.not_on_break.distinct
-      .left_joins(:comments, :audits)
-      .joins('LEFT JOIN documents ON documents.user_id = users.id')
-      .where(
-        'users.is_admin = ? OR users.is_editor = ? OR users.current_login_at > ? OR comments.created_at > ? OR documents.created_at > ? OR audits.created_at > ?',
-        true, true, cutoff, cutoff, cutoff, cutoff
-      )
+    # Use UNION ALL to avoid cartesian product from multiple LEFT JOINs
+    # This finds user IDs from each activity source separately, then combines them
+    active_user_ids = User.not_on_break
+      .where('users.is_admin = ? OR users.is_editor = ? OR users.current_login_at > ?', true, true, cutoff)
+      .pluck(:id)
+      .to_set
+
+    # Add users who have commented recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:comments)
+        .where('comments.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have uploaded documents recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins('INNER JOIN documents ON documents.user_id = users.id')
+        .where('documents.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have audits (status changes) recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:audits)
+        .where('audits.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Return the users matching these IDs
+    User.where(id: active_user_ids.to_a)
   end
 
   def self.vols_inactive_in_last_n_months(n)
