@@ -154,6 +154,7 @@ namespace :tasks do
     candidate_tasks = Task.where.not(assignee_id: nil)
                           .where.not(state: ['approved', 'ready_to_publish', 'other_task_creat'])
                           .where('tasks.updated_at < ?', idle_since)
+                          .includes(:assignee, :editor, :documents)
 
     puts "  Found #{candidate_tasks.count} candidates based on task.updated_at"
 
