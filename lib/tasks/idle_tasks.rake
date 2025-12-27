@@ -176,12 +176,13 @@ namespace :tasks do
 
     recent_done_task_ids = if doc_id_to_task_id.any?
       # Find audits for "done" changes on these documents
-      # Match YAML serialized format where 'done' is a key (e.g., "done:\n" or ":done:")
-      # This prevents false matches like 'undone' or 'abandoned'
+      # Match YAML serialized format where 'done' is a key with proper delimiters
+      # Patterns: ":done:" for symbol keys or "done: " for string keys in YAML
+      # This prevents false matches like 'undone' or 'abandoned' or values containing 'done'
       audits = Audit.where(auditable_type: 'Document')
                     .where(auditable_id: doc_id_to_task_id.keys)
                     .where('audits.created_at >= ?', idle_since)
-                    .where("changed_attrs LIKE ? OR changed_attrs LIKE ?", "%:done:%", "%done:\n%")
+                    .where("changed_attrs LIKE ? OR changed_attrs LIKE ?", "%\n:done:%", "%\ndone: %")
                     .pluck(:auditable_id)
 
       # Map document IDs back to task IDs
@@ -196,11 +197,7 @@ namespace :tasks do
     active_task_ids = (recent_upload_task_ids + recent_done_task_ids).uniq
 
     # Get idle tasks (exclude those with recent activity) with associations preloaded
-    idle_tasks = if active_task_ids.empty?
-                   candidate_tasks.includes(:assignee, :editor, :documents)
-                 else
-                   candidate_tasks.where.not(id: active_task_ids).includes(:assignee, :editor, :documents)
-                 end
+    idle_tasks = candidate_tasks.where.not(id: active_task_ids).includes(:assignee, :editor, :documents)
 
     puts "  After filtering document activity: #{idle_tasks.count} truly idle tasks"
     idle_tasks
