@@ -176,10 +176,12 @@ namespace :tasks do
 
     recent_done_task_ids = if doc_id_to_task_id.any?
       # Find audits for "done" changes on these documents
+      # Match YAML serialized format where 'done' is a key (e.g., "done:\n" or ":done:")
+      # This prevents false matches like 'undone' or 'abandoned'
       audits = Audit.where(auditable_type: 'Document')
                     .where(auditable_id: doc_id_to_task_id.keys)
                     .where('audits.created_at >= ?', idle_since)
-                    .where("changed_attrs LIKE ?", "%done%")
+                    .where("changed_attrs LIKE ? OR changed_attrs LIKE ?", "%:done:%", "%done:\n%")
                     .pluck(:auditable_id)
 
       # Map document IDs back to task IDs
