@@ -182,6 +182,7 @@ module States
     parent.documents.each do |doc|
       d = doc.dup
       d.task_id = self.id
+      d.done = false
       d.file = Paperclip.io_adapters.for(doc.file)
       d.save
     end
