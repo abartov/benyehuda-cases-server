@@ -3,6 +3,7 @@ class VolunteerRequest < ActiveRecord::Base
   belongs_to :approver, class_name: 'User'
 
   validates :user_id, presence: true
+  validates :preferences, length: { within: 8..4096 }, allow_blank: true
 
   accepts_nested_attributes_for :user, allow_destroy: false
 
