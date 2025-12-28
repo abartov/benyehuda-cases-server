@@ -50,6 +50,7 @@ class Task < ActiveRecord::Base
   has_many :task_audits, class_name: 'Audit', dependent: :destroy
 
   has_many :assignment_histories, dependent: :destroy
+  has_many :task_idle_reminders, dependent: :destroy
   has_and_belongs_to_many :teams, join_table: :task_teams
   has_many :task_teams, dependent: :destroy
 
@@ -114,7 +115,7 @@ class Task < ActiveRecord::Base
   end
 
   SEARCH_INCLUDES = {
-    include: %i[creator assignee editor kind]
+    include: %i[creator assignee editor kind documents]
   }
 
   TASK_LENGTH = {

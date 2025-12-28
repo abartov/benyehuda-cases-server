@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_11_23_041200) do
+ActiveRecord::Schema.define(version: 2025_12_28_010000) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -51,6 +51,7 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.integer "task_id"
     t.text "changed_attrs"
     t.boolean "hidden", default: false
+    t.index ["auditable_type", "auditable_id", "created_at"], name: "index_audits_on_type_id_and_created_at"
     t.index ["task_id"], name: "index_audits_on_task_id"
     t.index ["user_id", "created_at"], name: "index_audits_on_user_id_and_created_at"
   end
@@ -67,6 +68,7 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.boolean "is_finished_reason"
     t.boolean "is_help_required_reason", default: false
     t.index ["task_id", "created_at", "editor_eyes_only"], name: "task_created_eyes"
+    t.index ["user_id", "created_at"], name: "index_comments_on_user_id_and_created_at"
   end
 
   create_table "custom_properties", id: :integer, charset: "utf8mb3", force: :cascade do |t|
@@ -104,7 +106,9 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.datetime "deleted_at"
     t.boolean "done"
     t.integer "document_type", default: 0
+    t.index ["task_id", "created_at"], name: "index_documents_on_task_id_and_created_at"
     t.index ["task_id"], name: "index_documents_on_task_id"
+    t.index ["user_id", "created_at"], name: "index_documents_on_user_id_and_created_at"
   end
 
   create_table "global_preferences", id: :integer, charset: "utf8mb3", force: :cascade do |t|
@@ -161,6 +165,18 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.index ["start_displaying_at", "end_displaying_at"], name: "index_site_notices_on_start_displaying_at_and_end_displaying_at"
   end
 
+  create_table "task_idle_reminders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "task_id", null: false
+    t.integer "user_id", null: false
+    t.datetime "sent_at", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["sent_at"], name: "index_task_idle_reminders_on_sent_at"
+    t.index ["task_id", "user_id"], name: "index_task_idle_reminders_on_task_id_and_user_id"
+    t.index ["task_id"], name: "index_task_idle_reminders_on_task_id"
+    t.index ["user_id"], name: "index_task_idle_reminders_on_user_id"
+  end
+
   create_table "task_kinds", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at"
@@ -174,7 +190,7 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.datetime "updated_at"
   end
 
-  create_table "task_teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "task_teams", charset: "latin1", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "task_id"
     t.datetime "created_at", precision: 6, null: false
@@ -212,9 +228,10 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.index ["kind_id"], name: "index_tasks_on_kind_id"
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
     t.index ["state"], name: "index_tasks_on_state"
+    t.index ["updated_at"], name: "index_tasks_on_updated_at"
   end
 
-  create_table "team_memberships", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+  create_table "team_memberships", charset: "latin1", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "user_id"
     t.datetime "joined"
@@ -226,10 +243,10 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
 
-  create_table "teams", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name"
+  create_table "teams", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+    t.string "name", collation: "utf8mb4_bin"
     t.boolean "open"
-    t.text "description", size: :medium
+    t.text "description", size: :medium, collation: "utf8mb4_bin"
     t.integer "status"
     t.date "targetdate"
     t.datetime "created_at", precision: 6, null: false
@@ -294,6 +311,8 @@ ActiveRecord::Schema.define(version: 2025_11_23_041200) do
     t.date "last_reminder"
     t.string "zehut"
     t.text "volunteer_preferences"
+    t.datetime "congratulated_at"
+    t.index ["current_login_at"], name: "index_users_on_current_login_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["perishable_token"], name: "index_users_on_perishable_token"
     t.index ["persistence_token"], name: "index_users_on_persistence_token"

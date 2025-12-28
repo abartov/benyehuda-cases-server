@@ -5,11 +5,12 @@
     = @task.kind.try(:name)
     %br
     - if @task.teams.present?
-      - @task.teams.each do |team|
-        %b
-          = t(:team)+": "
-        = link_to team.name, team
-        %br
+      #teams
+        - @task.teams.each do |team|
+          %b
+            = t(:team)+": "
+          = link_to team.name, team
+          %br
     - if @task.project.present?
       %b
         = 'מיזם: '

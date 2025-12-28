@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   end
 
   has_many :assignment_histories, dependent: :destroy
+  has_many :task_idle_reminders, dependent: :destroy
 
   validates :name, presence: true
 
@@ -64,6 +65,17 @@ class User < ActiveRecord::Base
   scope :by_last_login, -> { order('users.current_login_at DESC') }
 
   scope :waiting_for_tasks, -> { where('users.task_requested_at IS NOT NULL').order('users.task_requested_at DESC') }
+
+  # Anniversary-related scopes
+  scope :near_anniversary, lambda {
+    # Find users whose created_at is within 1 week of their anniversary
+    # and who are active (activated, not on break, not disabled, not already congratulated this year)
+    where('users.activated_at IS NOT NULL')
+      .where('users.disabled_at IS NULL')
+      .where('users.on_break = 0 OR users.on_break IS NULL')
+      .where('(users.congratulated_at IS NULL OR users.congratulated_at < ?)', 1.year.ago)
+      .select { |u| u.near_anniversary? }
+  }
 
   has_one :volunteer_request
   has_many :confirmed_volunteer_requests, class_name: 'VolunteerRequest', foreign_key: :approver_id
@@ -183,11 +195,67 @@ class User < ActiveRecord::Base
   end
 
   def self.vols_active_in_last_n_months(n)
-    User.not_on_break.distinct.joins(:audits).where('audits.created_at > ?', n.months.ago)
+    cutoff = n.months.ago
+
+    # A user is active if they have done ANY of:
+    # 1. Logged in
+    # 2. Left a comment on a Task
+    # 3. Changed a Task's status (audits)
+    # 4. Uploaded a Document to a Task
+    # 5. Are an admin or editor (always considered active)
+
+    # Use UNION ALL to avoid cartesian product from multiple LEFT JOINs
+    # This finds user IDs from each activity source separately, then combines them
+    active_user_ids = User.not_on_break
+      .where('users.is_admin = ? OR users.is_editor = ? OR users.current_login_at > ?', true, true, cutoff)
+      .pluck(:id)
+      .to_set
+
+    # Add users who have commented recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:comments)
+        .where('comments.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have uploaded documents recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins('INNER JOIN documents ON documents.user_id = users.id')
+        .where('documents.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Add users who have audits (status changes) recently
+    active_user_ids.merge(
+      User.not_on_break
+        .joins(:audits)
+        .where('audits.created_at > ?', cutoff)
+        .pluck(:id)
+    )
+
+    # Return the users matching these IDs
+    User.where(id: active_user_ids.to_a)
   end
 
   def self.vols_inactive_in_last_n_months(n)
-    User.not_on_break.distinct.joins(:audits).where.not('audits.created_at > ?', n.months.ago)
+    cutoff = n.months.ago
+
+    # A user is inactive if they have done NONE of:
+    # 1. Logged in
+    # 2. Left a comment on a Task
+    # 3. Changed a Task's status (audits)
+    # 4. Uploaded a Document to a Task
+    # 5. Are an admin or editor
+
+    User.not_on_break
+      .where(is_admin: [false, nil])
+      .where(is_editor: [false, nil])
+      .where('users.current_login_at IS NULL OR users.current_login_at <= ?', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM comments WHERE comments.user_id = users.id AND comments.created_at > ?)', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM documents WHERE documents.user_id = users.id AND documents.created_at > ?)', cutoff)
+      .where('NOT EXISTS (SELECT 1 FROM audits WHERE audits.user_id = users.id AND audits.created_at > ?)', cutoff)
   end
 
   def self.vols_newer_than(t)
@@ -213,6 +281,28 @@ class User < ActiveRecord::Base
 
     self.volunteer_preferences = buf
     save
+  end
+
+  # Anniversary-related methods
+  def years_since_joining
+    return 0 if created_at.nil?
+    ((Time.zone.now - created_at) / 1.year).floor
+  end
+
+  def near_anniversary?
+    return false if created_at.nil?
+
+    # Get the anniversary date for this year
+    anniversary_this_year = created_at.change(year: Time.zone.now.year)
+
+    # Check if we're within 1 week (7 days) in either direction
+    days_until_anniversary = (anniversary_this_year.to_date - Time.zone.now.to_date).to_i
+    days_until_anniversary.abs <= 7
+  end
+
+  def anniversary_date_this_year
+    return nil if created_at.nil?
+    created_at.change(year: Time.zone.now.year)
   end
 
   protected

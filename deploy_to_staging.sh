@@ -1,1 +1,3 @@
-RAILS_ENV=production bundle exec rake staging deploy
+#!/bin/bash
+# Deploy to staging using Capistrano
+bundle exec cap staging deploy

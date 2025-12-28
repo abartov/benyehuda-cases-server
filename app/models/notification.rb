@@ -46,6 +46,33 @@ class Notification < ActionMailer::Base
     mail to: editor.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: s_("Volunteer %{volunteer_name} has returned from break") % { volunteer_name: volunteer.name }
   end
 
+  def anniversary_greeting(user, sender, message)
+    @user = user
+    @sender = sender
+    @message = message
+    @years = user.years_since_joining
+    @domain = domain
+    mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: I18n.t('anniversary.email_subject', years: @years)
+  end
+
+  def task_idle(task, assignee, editor)
+    @task = task
+    @assignee = assignee
+    @editor = editor
+    @task_url = task_url(task)
+    @domain = domain
+    recipients = [assignee.email_recipient]
+    recipients << editor.email_recipient if editor && editor.email_recipient != assignee.email_recipient
+    mail to: recipients, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: "תזכורת: משימה #{task.name.utf_snippet(30)} ממתינה להשלמה"
+  end
+
+  def editor_idle_tasks_report(editor, idle_tasks_data)
+    @editor = editor
+    @idle_tasks_data = idle_tasks_data
+    @domain = domain
+    mail to: editor.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: "דו\"ח שבועי: משימות ללא התקדמות"
+  end
+
 protected
 
   def domain

@@ -27,6 +27,133 @@ RSpec.describe User, type: :model do
     end
   end
 
+  describe '.vols_active_in_last_n_months' do
+    let!(:admin) { create(:user, :admin, :active_user, is_volunteer: true, on_break: false) }
+    let!(:editor) { create(:user, :editor, :active_user, is_volunteer: true, on_break: false) }
+    let!(:volunteer_with_login) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 3.months.ago) }
+    let!(:volunteer_with_comment) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 2.years.ago) }
+    let!(:volunteer_with_document) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 2.years.ago) }
+    let!(:volunteer_with_audit) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 2.years.ago) }
+    let!(:inactive_volunteer) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 2.years.ago) }
+
+    before do
+      # Create a task for testing
+      task = create(:task)
+
+      # Volunteer with recent comment
+      comment = create(:comment, user: volunteer_with_comment, task: task)
+      comment.update_column(:created_at, 3.months.ago)
+
+      # Volunteer with recent document upload
+      document = create(:document, user: volunteer_with_document, task: task)
+      document.update_column(:created_at, 3.months.ago)
+
+      # Volunteer with recent audit (task status change)
+      audit = create(:audit, user: volunteer_with_audit, task: task)
+      audit.update_column(:created_at, 3.months.ago)
+    end
+
+    it 'includes admins regardless of activity' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(admin)
+    end
+
+    it 'includes editors regardless of activity' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(editor)
+    end
+
+    it 'includes volunteers who logged in recently' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(volunteer_with_login)
+    end
+
+    it 'includes volunteers who left comments recently' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(volunteer_with_comment)
+    end
+
+    it 'includes volunteers who uploaded documents recently' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(volunteer_with_document)
+    end
+
+    it 'includes volunteers who changed task status recently' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).to include(volunteer_with_audit)
+    end
+
+    it 'excludes volunteers with no recent activity' do
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).not_to include(inactive_volunteer)
+    end
+
+    it 'excludes volunteers on break' do
+      volunteer_with_login.update(on_break: true)
+      result = User.vols_active_in_last_n_months(6)
+      expect(result).not_to include(volunteer_with_login)
+    end
+  end
+
+  describe '.vols_inactive_in_last_n_months' do
+    let!(:admin) { create(:user, :admin, :active_user, is_volunteer: true, on_break: false, current_login_at: 2.years.ago) }
+    let!(:editor) { create(:user, :editor, :active_user, is_volunteer: true, on_break: false, current_login_at: 2.years.ago) }
+    let!(:active_volunteer) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 3.months.ago) }
+    let!(:inactive_volunteer) { create(:user, :volunteer, :active_user, on_break: false, current_login_at: 2.years.ago) }
+
+    it 'excludes admins' do
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(admin)
+    end
+
+    it 'excludes editors' do
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(editor)
+    end
+
+    it 'excludes volunteers with recent login' do
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(active_volunteer)
+    end
+
+    it 'includes volunteers with no recent activity' do
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).to include(inactive_volunteer)
+    end
+
+    it 'excludes volunteers on break' do
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(inactive_volunteer.tap { |v| v.update(on_break: true) })
+    end
+
+    it 'excludes volunteers with recent comments' do
+      task = create(:task)
+      comment = create(:comment, user: inactive_volunteer, task: task)
+      comment.update_column(:created_at, 3.months.ago)
+
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(inactive_volunteer)
+    end
+
+    it 'excludes volunteers with recent document uploads' do
+      task = create(:task)
+      document = create(:document, user: inactive_volunteer, task: task)
+      document.update_column(:created_at, 3.months.ago)
+
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(inactive_volunteer)
+    end
+
+    it 'excludes volunteers with recent audits' do
+      task = create(:task)
+      audit = create(:audit, user: inactive_volunteer, task: task)
+      audit.update_column(:created_at, 3.months.ago)
+
+      result = User.vols_inactive_in_last_n_months(6)
+      expect(result).not_to include(inactive_volunteer)
+    end
+  end
+
   describe 'returning from break notification' do
     let(:volunteer) { create(:user, :volunteer, :active_user, on_break: true) }
     let(:person_not_on_break) { create(:user, :volunteer, on_break: false) }
