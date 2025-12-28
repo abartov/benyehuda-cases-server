@@ -18,14 +18,6 @@
         %strong= _("Email Notifications")
         = email_notifications(@user)
 
-    .midtitle
-      = _("User Properties")
-    .boxbody
-      - @user.user_properties.visible_for(current_user).each do |p|
-        %p
-          %strong= "#{p.property.title}:"
-          != property_value(p)
-
     - when_user_volunteer do
       .midtitle.teams
         %h4= t('tabs.teams')
@@ -41,24 +33,6 @@
         = select_tag :team_ids, options_from_collection_for_select(Team.open.where.not(id: @user.teams.pluck(:id)).order(:name), :id, :name), include_blank: t('teams.choose_team')
         = button_tag t('teams.join'), id: "add_team", type: :button
         #team_description{style: 'background-color:lightgreen;'}
-
-    - when_user_volunteer do
-      .midtitle
-        = _("Volunteer Properties")
-      .boxbody
-        - @user.volunteer_properties.visible_for(current_user).each do |p|
-          %p
-            %strong= "#{p.property.title}:"
-            != property_value(p)
-
-    - when_user_editor do
-      .midtitle
-        = _("Editor Properties")
-      .boxbody
-        - @user.editor_properties.visible_for(current_user).each do |p|
-          %p
-            %strong= "#{p.property.title}:"
-            != property_value(p)
 
 .box
   .boxhead
