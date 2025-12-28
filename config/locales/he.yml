@@ -18,6 +18,11 @@ he:
         targetdate: תאריך יעד
         open: פתוח לכל?
   tasks:
+    idle_reminders_sent: תזכורות שנשלחו על משימה לא פעילה
+    date_sent: תאריך שליחה
+    recipient: נמען
+    days_ago: לפני כמה ימים
+    days_ago_value: לפני %{count} ימים
     form:
       manage_teams: ניהול צוותים
       teams: צוותים

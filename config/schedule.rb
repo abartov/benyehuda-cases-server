@@ -8,6 +8,11 @@ every 5.minutes do
   rake "ts:index"
 end
 
+# Send idle task notifications every Sunday at 9:00 AM
+every :sunday, at: '9:00 am' do
+  rake "tasks:send_idle_notifications"
+end
+
 # Example:
 #
 # set :output, "/path/to/my/cron_log.log"
