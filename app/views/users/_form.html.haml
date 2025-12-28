@@ -15,11 +15,6 @@
 
   = render(:partial => "users/user_form", :locals => {:f => f})
 
-  - when_user_volunteer do
-    = render(:partial => "users/volunteer_form", :locals => {:f => f})
-  - when_user_editor do
-    = render(:partial => "users/editor_form", :locals => {:f => f})
-
 :javascript
   $(function(){
     if($("#user_is_volunteer").is(':checked')){
