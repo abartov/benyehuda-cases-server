@@ -138,30 +138,28 @@
         }
         var image = document.getElementById('crop-image');
 
-        // Get actual dialog element and its dimensions
-        var dialogElement = jQuery('#image-crop-modal').parent('.ui-dialog');
-        var dialogHeight = dialogElement.height();
-        var dialogPadding = parseInt(dialogElement.css('padding-top')) + parseInt(dialogElement.css('padding-bottom'));
+        // Use the maxHeight we set, not the current dialog height
+        var viewportHeight = jQuery(window).height();
+        var targetModalHeight = Math.floor(viewportHeight * 0.75);
 
         // Get actual title bar height
         var titleBar = jQuery('#image-crop-modal').prev('.ui-dialog-titlebar');
-        var titleBarHeight = titleBar.outerHeight(true);
+        var titleBarHeight = titleBar.outerHeight(true) || 40;
 
         // Get buttons height
-        var buttonsHeight = jQuery('.crop-buttons').outerHeight(true);
+        var buttonsHeight = jQuery('.crop-buttons').outerHeight(true) || 50;
 
-        // Get modal content padding
-        var modalContent = jQuery('#image-crop-modal');
-        var contentPadding = parseInt(modalContent.css('padding-top')) + parseInt(modalContent.css('padding-bottom'));
+        // Account for jQuery UI dialog padding/margins (typically 10-20px)
+        var dialogOverhead = 30;
 
-        // Calculate available height conservatively
-        var availableHeight = dialogHeight - titleBarHeight - buttonsHeight - contentPadding - dialogPadding - 20;
+        // Calculate available height from viewport, not from dialog element
+        var availableHeight = targetModalHeight - titleBarHeight - buttonsHeight - dialogOverhead;
 
-        console.log('Dialog height:', dialogHeight);
+        console.log('Viewport height:', viewportHeight);
+        console.log('Target modal height (75%):', targetModalHeight);
         console.log('Title bar height:', titleBarHeight);
         console.log('Buttons height:', buttonsHeight);
-        console.log('Content padding:', contentPadding);
-        console.log('Dialog padding:', dialogPadding);
+        console.log('Dialog overhead:', dialogOverhead);
         console.log('Available height for image:', availableHeight);
 
         // Set container to exact calculated height
