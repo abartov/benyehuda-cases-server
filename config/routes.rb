@@ -51,6 +51,8 @@ Rails.application.routes.draw do
   get '/tasks/:id/start_ingestion', controller: 'admin/tasks', action: 'start_ingestion', as: 'task_start_ingestion'
   get '/tasks/:id/workaround_document/:document', controller: 'documents', action: 'workaround_download',
                                                   as: 'workaround_task_document'
+  get '/tasks/:task_id/documents/:id/proxy_image', controller: 'documents', action: 'proxy_image',
+                                                    as: 'proxy_task_document_image'
 
   match '/tick_file/:id' => 'documents#tick_file', :via => :get
 

@@ -6,7 +6,7 @@
       %a{ :href => task_document_path(document.task, document), :target => "_blank"}
         != document.file_file_name
       != '&nbsp;&nbsp;'
-      %a.crop-image-link{ href: "#", title: I18n.t('documents.crop_and_download'), 'data-image-url' => document.file.url, 'data-image-name' => document.file_file_name }
+      %a.crop-image-link{ href: "#", title: I18n.t('documents.crop_and_download'), 'data-image-url' => proxy_task_document_image_path(document.task, document), 'data-image-name' => document.file_file_name }
         %strong{style: 'font-size: 125%'}= "[✂]"
     - else
       %a{ :href => document.file.url, :target => "_blank"}
