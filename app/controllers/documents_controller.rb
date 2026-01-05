@@ -26,10 +26,11 @@ class DocumentsController < InheritedResources::Base
   def proxy_image
     document = Document.find(params[:id])
     if (require_user && document.task.participant?(current_user)) || (require_user && current_user.try(:is_admin?))
-      response = HTTParty.get(document.file.url)
+      http_response = HTTParty.get(document.file.url)
       # Set CORS headers to allow canvas manipulation
-      response_headers['Access-Control-Allow-Origin'] = '*'
-      send_data response.body, type: document.file_content_type, disposition: 'inline'
+      response.headers['Access-Control-Allow-Origin'] = '*'
+      content_type = document.file_content_type || 'image/jpeg'
+      send_data http_response.body, type: content_type, disposition: 'inline'
     else
       head :forbidden
     end
