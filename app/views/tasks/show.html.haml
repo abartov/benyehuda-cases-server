@@ -102,12 +102,12 @@
   var currentImageName;
 
   jQuery(document).ready(function() {
-    // Calculate optimal modal size based on viewport with safety margins
+    // Maximize modal size - use as much viewport as possible
     // Use native innerWidth/innerHeight to get actual viewport, not document size
     var viewportWidth = window.innerWidth;
     var viewportHeight = window.innerHeight;
-    var modalWidth = Math.floor(viewportWidth * 0.9);
-    var modalHeight = Math.floor(viewportHeight * 0.75);
+    var modalWidth = Math.floor(viewportWidth * 0.95);
+    var modalHeight = Math.floor(viewportHeight * 0.90);
 
     jQuery('#image-crop-modal').dialog({
       draggable: true,
@@ -164,7 +164,7 @@
         // Use the maxHeight we set, not the current dialog height
         // Use native innerHeight to get actual viewport, not document height
         var viewportHeight = window.innerHeight;
-        var targetModalHeight = Math.floor(viewportHeight * 0.75);
+        var targetModalHeight = Math.floor(viewportHeight * 0.90);
 
         // Get actual title bar height
         var titleBar = jQuery('#image-crop-modal').prev('.ui-dialog-titlebar');
