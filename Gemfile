@@ -88,6 +88,8 @@ group :test do
   # gem 'inaction_mailer', :require => 'inaction_mailer/force_load'
   gem 'database_cleaner-active_record'
   gem 'rspec2-rails-views-matchers'
+  gem 'capybara'
+  gem 'selenium-webdriver'
 end
 
 group :development do
