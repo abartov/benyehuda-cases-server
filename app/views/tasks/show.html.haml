@@ -86,8 +86,8 @@
     != render(:partial => "audits/index")
 
 #image-crop-modal{ :title => I18n.t('documents.crop_image'), :style => "display:none;" }
-  .crop-container
-    %img#crop-image{ :style => "max-width: 100%; max-height: 100%;" }
+  .crop-container{ :style => "overflow: hidden;" }
+    %img#crop-image{ :style => "display: block; max-width: 100%;" }
   .crop-buttons{ :style => "margin-top: 10px; text-align: center;" }
     %button#download-cropped.purple-button.gradient
       %span= I18n.t('documents.download_cropped_image')
@@ -105,8 +105,8 @@
     // Calculate optimal modal size based on viewport
     var viewportWidth = jQuery(window).width();
     var viewportHeight = jQuery(window).height();
-    var modalWidth = Math.min(Math.floor(viewportWidth * 0.9), 1200);
-    var modalHeight = Math.floor(viewportHeight * 0.85);
+    var modalWidth = Math.floor(viewportWidth * 0.95);
+    var modalHeight = Math.min(Math.floor(viewportHeight * 0.8), viewportHeight - 100);
 
     jQuery('#image-crop-modal').dialog({
       draggable: true,
@@ -138,13 +138,17 @@
         }
         var image = document.getElementById('crop-image');
 
-        // Calculate available height for image (modal height - buttons - padding)
+        // Calculate available height for image (modal height - buttons - title bar - padding)
         var modalHeight = jQuery('#image-crop-modal').dialog('option', 'height');
         var buttonsHeight = jQuery('.crop-buttons').outerHeight(true) || 60;
-        var availableHeight = modalHeight - buttonsHeight - 60; // 60px for padding/margins
+        var titleBarHeight = jQuery('#image-crop-modal').prev('.ui-dialog-titlebar').outerHeight(true) || 40;
+        var availableHeight = modalHeight - buttonsHeight - titleBarHeight - 40; // 40px for padding
 
-        // Set container max-height to prevent scrolling
-        jQuery('.crop-container').css('max-height', availableHeight + 'px');
+        // Set container dimensions to prevent scrolling
+        jQuery('.crop-container').css({
+          'max-height': availableHeight + 'px',
+          'height': availableHeight + 'px'
+        });
 
         cropper = new Cropper(image, {
           aspectRatio: NaN,
