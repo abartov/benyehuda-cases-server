@@ -36,6 +36,33 @@ class DocumentsController < InheritedResources::Base
     end
   end
 
+  def download_cropped
+    document = Document.find(params[:id])
+    if (require_user && document.task.participant?(current_user)) || (require_user && current_user.try(:is_admin?))
+      # Receive base64-encoded image data from client
+      image_data = params[:image_data]
+
+      # Extract the base64 data (remove data:image/jpeg;base64, prefix)
+      base64_data = image_data.split(',')[1]
+      binary_data = Base64.decode64(base64_data)
+
+      # Determine content type and extension from data URL prefix
+      content_type = image_data.match(/data:(image\/[^;]+)/)[1]
+      extension = content_type.split('/')[1]
+      extension = 'jpg' if extension == 'jpeg'
+
+      # Generate filename
+      filename = params[:filename] || "cropped_#{document.id}.#{extension}"
+
+      send_data binary_data,
+                type: content_type,
+                disposition: 'attachment',
+                filename: filename
+    else
+      head :forbidden
+    end
+  end
+
   # create
   def create
     #    @document = task.prepare_document(current_user, params.permit(document: :file)['document'])

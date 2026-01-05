@@ -100,6 +100,8 @@
 :javascript
   var cropper;
   var currentImageName;
+  var currentTaskId;
+  var currentDocumentId;
 
   jQuery(document).ready(function() {
     // Maximize modal size - use as much viewport as possible
@@ -151,6 +153,8 @@
       e.preventDefault();
       var imageUrl = jQuery(this).data('image-url');
       currentImageName = jQuery(this).data('image-name');
+      currentTaskId = jQuery(this).data('task-id');
+      currentDocumentId = jQuery(this).data('document-id');
 
       jQuery('#crop-image').attr('src', imageUrl);
       jQuery('#image-crop-modal').dialog('open');
@@ -211,45 +215,61 @@
         console.error('Cropper not initialized');
         return;
       }
-      console.log('Cropper exists:', cropper);
 
       var canvas = cropper.getCroppedCanvas();
-      console.log('Canvas obtained:', canvas);
-
       if (!canvas) {
         console.error('getCroppedCanvas() returned null/undefined');
         return;
       }
 
-      // Determine format from filename extension
+      // Determine format and filename
       var nameParts = currentImageName.split('.');
       var extension = (nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'png').toLowerCase();
       var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
-      console.log('Image extension:', extension);
+      var filename = baseName + '_cropped.' + extension;
 
-      // Use toDataURL for better browser compatibility with downloads
+      // Convert canvas to data URL
       var mimeType = 'image/' + (extension === 'jpg' ? 'jpeg' : extension);
-      console.log('Converting canvas to data URL with MIME type:', mimeType);
-
       var dataURL = canvas.toDataURL(mimeType);
       console.log('Data URL created, length:', dataURL.length);
 
-      var a = document.createElement('a');
-      a.href = dataURL;
-      a.download = baseName + '_cropped.' + extension;
-      console.log('Download filename:', a.download);
-      console.log('Anchor href (first 100 chars):', a.href.substring(0, 100));
-      console.log('Anchor href length:', a.href.length);
+      // Get CSRF token
+      var csrfToken = jQuery('meta[name="csrf-token"]').attr('content');
 
-      document.body.appendChild(a);
-      console.log('After appending to body, href (first 100 chars):', a.href.substring(0, 100));
-      console.log('Triggering click on download link');
-      a.click();
-      console.log('Download triggered');
+      // Construct download URL
+      var downloadUrl = '/tasks/' + currentTaskId + '/documents/' + currentDocumentId + '/download_cropped';
+      console.log('Posting to:', downloadUrl);
 
-      // Clean up
-      document.body.removeChild(a);
-      console.log('Cleanup completed');
+      // Create a form and submit it
+      var form = jQuery('<form>', {
+        method: 'POST',
+        action: downloadUrl,
+        style: 'display:none;'
+      });
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'authenticity_token',
+        value: csrfToken
+      }));
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'image_data',
+        value: dataURL
+      }));
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'filename',
+        value: filename
+      }));
+
+      jQuery('body').append(form);
+      form.submit();
+      form.remove();
+
+      console.log('Download form submitted');
     });
 
     jQuery('#cancel-crop').click(function() {
