@@ -103,8 +103,9 @@
 
   jQuery(document).ready(function() {
     // Calculate optimal modal size based on viewport with safety margins
-    var viewportWidth = jQuery(window).width();
-    var viewportHeight = jQuery(window).height();
+    // Use native innerWidth/innerHeight to get actual viewport, not document size
+    var viewportWidth = window.innerWidth;
+    var viewportHeight = window.innerHeight;
     var modalWidth = Math.floor(viewportWidth * 0.9);
     var modalHeight = Math.floor(viewportHeight * 0.75);
 
@@ -139,7 +140,8 @@
         var image = document.getElementById('crop-image');
 
         // Use the maxHeight we set, not the current dialog height
-        var viewportHeight = jQuery(window).height();
+        // Use native innerHeight to get actual viewport, not document height
+        var viewportHeight = window.innerHeight;
         var targetModalHeight = Math.floor(viewportHeight * 0.75);
 
         // Get actual title bar height
