@@ -100,6 +100,8 @@
 :javascript
   var cropper;
   var currentImageName;
+  var currentTaskId;
+  var currentDocumentId;
 
   jQuery(document).ready(function() {
     // Maximize modal size - use as much viewport as possible
@@ -151,6 +153,8 @@
       e.preventDefault();
       var imageUrl = jQuery(this).data('image-url');
       currentImageName = jQuery(this).data('image-name');
+      currentTaskId = jQuery(this).data('task-id');
+      currentDocumentId = jQuery(this).data('document-id');
 
       jQuery('#crop-image').attr('src', imageUrl);
       jQuery('#image-crop-modal').dialog('open');
@@ -206,23 +210,66 @@
     });
 
     jQuery('#download-cropped').click(function() {
-      if (!cropper) return;
+      console.log('Download button clicked');
+      if (!cropper) {
+        console.error('Cropper not initialized');
+        return;
+      }
 
       var canvas = cropper.getCroppedCanvas();
-      canvas.toBlob(function(blob) {
-        var url = window.URL.createObjectURL(blob);
-        var a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        var nameParts = currentImageName.split('.');
-        var extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'png';
-        var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
-        a.download = baseName + '_cropped.' + extension;
-        document.body.appendChild(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        document.body.removeChild(a);
+      if (!canvas) {
+        console.error('getCroppedCanvas() returned null/undefined');
+        return;
+      }
+
+      // Determine format and filename
+      var nameParts = currentImageName.split('.');
+      var extension = (nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'png').toLowerCase();
+      var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
+      var filename = baseName + '_cropped.' + extension;
+
+      // Convert canvas to data URL
+      var mimeType = 'image/' + (extension === 'jpg' ? 'jpeg' : extension);
+      var dataURL = canvas.toDataURL(mimeType);
+      console.log('Data URL created, length:', dataURL.length);
+
+      // Get CSRF token
+      var csrfToken = jQuery('meta[name="csrf-token"]').attr('content');
+
+      // Construct download URL
+      var downloadUrl = '/tasks/' + currentTaskId + '/documents/' + currentDocumentId + '/download_cropped';
+      console.log('Posting to:', downloadUrl);
+
+      // Create a form and submit it
+      var form = jQuery('<form>', {
+        method: 'POST',
+        action: downloadUrl,
+        style: 'display:none;'
       });
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'authenticity_token',
+        value: csrfToken
+      }));
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'image_data',
+        value: dataURL
+      }));
+
+      form.append(jQuery('<input>', {
+        type: 'hidden',
+        name: 'filename',
+        value: filename
+      }));
+
+      jQuery('body').append(form);
+      form.submit();
+      form.remove();
+
+      console.log('Download form submitted');
     });
 
     jQuery('#cancel-crop').click(function() {

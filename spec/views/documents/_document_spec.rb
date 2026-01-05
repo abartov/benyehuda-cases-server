@@ -35,10 +35,10 @@ RSpec.describe 'documents/_document', type: :view do
       expect(rendered).to include('crop-image-link')
     end
 
-    it 'includes correct data attributes for image URL' do
+    it 'includes correct data attributes for image URL (proxy path)' do
       render partial: 'documents/document', locals: { document: image_document }
 
-      expect(rendered).to include("data-image-url='https://s3.example.com/test_image.jpg'")
+      expect(rendered).to include("data-image-url='/tasks/#{image_document.task_id}/documents/#{image_document.id}/proxy_image'")
     end
 
     it 'includes correct data attributes for image name' do

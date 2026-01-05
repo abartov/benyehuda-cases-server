@@ -53,6 +53,8 @@ Rails.application.routes.draw do
                                                   as: 'workaround_task_document'
   get '/tasks/:task_id/documents/:id/proxy_image', controller: 'documents', action: 'proxy_image',
                                                     as: 'proxy_task_document_image'
+  post '/tasks/:task_id/documents/:id/download_cropped', controller: 'documents', action: 'download_cropped',
+                                                          as: 'download_cropped_task_document'
 
   match '/tick_file/:id' => 'documents#tick_file', :via => :get
 
