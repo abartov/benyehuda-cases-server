@@ -238,8 +238,11 @@
       a.href = dataURL;
       a.download = baseName + '_cropped.' + extension;
       console.log('Download filename:', a.download);
+      console.log('Anchor href (first 100 chars):', a.href.substring(0, 100));
+      console.log('Anchor href length:', a.href.length);
 
       document.body.appendChild(a);
+      console.log('After appending to body, href (first 100 chars):', a.href.substring(0, 100));
       console.log('Triggering click on download link');
       a.click();
       console.log('Download triggered');
