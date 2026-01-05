@@ -77,6 +77,10 @@ This repository uses [Overcommit](https://github.com/sds/overcommit) to manage g
 
 **NO FEATURE OR BUG FIX IS COMPLETE WITHOUT PROPER TESTING**
 
+**⛔ NEVER COMMIT CODE WITHOUT RUNNING TESTS FIRST ⛔**
+
+**AI Agents: This means YOU! Do not commit until tests pass!**
+
 Before considering ANY work complete, you MUST:
 
 1. **Run the existing test suite** to ensure no regressions:
