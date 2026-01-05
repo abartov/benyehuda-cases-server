@@ -221,43 +221,32 @@
         return;
       }
 
-      // Determine MIME type from filename extension
+      // Determine format from filename extension
       var nameParts = currentImageName.split('.');
       var extension = (nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'png').toLowerCase();
+      var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
+      console.log('Image extension:', extension);
+
+      // Use toDataURL for better browser compatibility with downloads
       var mimeType = 'image/' + (extension === 'jpg' ? 'jpeg' : extension);
-      console.log('Image MIME type:', mimeType);
+      console.log('Converting canvas to data URL with MIME type:', mimeType);
 
-      console.log('Calling toBlob with MIME type:', mimeType);
-      canvas.toBlob(function(blob) {
-        console.log('toBlob callback fired, blob:', blob);
-        if (!blob) {
-          console.error('Blob is null/undefined');
-          alert('Failed to create image blob. Please try again.');
-          return;
-        }
+      var dataURL = canvas.toDataURL(mimeType);
+      console.log('Data URL created, length:', dataURL.length);
 
-        var url = window.URL.createObjectURL(blob);
-        console.log('Created blob URL:', url);
+      var a = document.createElement('a');
+      a.href = dataURL;
+      a.download = baseName + '_cropped.' + extension;
+      console.log('Download filename:', a.download);
 
-        var a = document.createElement('a');
-        a.style.display = 'none';
-        a.href = url;
-        var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
-        a.download = baseName + '_cropped.' + extension;
-        console.log('Download filename:', a.download);
+      document.body.appendChild(a);
+      console.log('Triggering click on download link');
+      a.click();
+      console.log('Download triggered');
 
-        document.body.appendChild(a);
-        console.log('Triggering click on download link');
-        a.click();
-        console.log('Download triggered');
-
-        // Clean up after a short delay to ensure download starts
-        setTimeout(function() {
-          window.URL.revokeObjectURL(url);
-          document.body.removeChild(a);
-          console.log('Cleanup completed');
-        }, 100);
-      }, mimeType);
+      // Clean up
+      document.body.removeChild(a);
+      console.log('Cleanup completed');
     });
 
     jQuery('#cancel-crop').click(function() {
