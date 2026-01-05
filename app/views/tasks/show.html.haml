@@ -102,11 +102,11 @@
   var currentImageName;
 
   jQuery(document).ready(function() {
-    // Calculate optimal modal size based on viewport
+    // Calculate optimal modal size based on viewport with safety margins
     var viewportWidth = jQuery(window).width();
     var viewportHeight = jQuery(window).height();
-    var modalWidth = Math.floor(viewportWidth * 0.95);
-    var modalHeight = Math.min(Math.floor(viewportHeight * 0.8), viewportHeight - 100);
+    var modalWidth = Math.floor(viewportWidth * 0.9);
+    var modalHeight = Math.floor(viewportHeight * 0.75);
 
     jQuery('#image-crop-modal').dialog({
       draggable: true,
@@ -115,7 +115,7 @@
       autoOpen: false,
       position: { my: 'center', at: 'center', of: window },
       width: modalWidth,
-      height: modalHeight,
+      maxHeight: modalHeight,
       close: function() {
         if (cropper) {
           cropper.destroy();
@@ -138,16 +138,37 @@
         }
         var image = document.getElementById('crop-image');
 
-        // Calculate available height for image (modal height - buttons - title bar - padding)
-        var modalHeight = jQuery('#image-crop-modal').dialog('option', 'height');
-        var buttonsHeight = jQuery('.crop-buttons').outerHeight(true) || 60;
-        var titleBarHeight = jQuery('#image-crop-modal').prev('.ui-dialog-titlebar').outerHeight(true) || 40;
-        var availableHeight = modalHeight - buttonsHeight - titleBarHeight - 40; // 40px for padding
+        // Get actual dialog element and its dimensions
+        var dialogElement = jQuery('#image-crop-modal').parent('.ui-dialog');
+        var dialogHeight = dialogElement.height();
+        var dialogPadding = parseInt(dialogElement.css('padding-top')) + parseInt(dialogElement.css('padding-bottom'));
 
-        // Set container dimensions to prevent scrolling
+        // Get actual title bar height
+        var titleBar = jQuery('#image-crop-modal').prev('.ui-dialog-titlebar');
+        var titleBarHeight = titleBar.outerHeight(true);
+
+        // Get buttons height
+        var buttonsHeight = jQuery('.crop-buttons').outerHeight(true);
+
+        // Get modal content padding
+        var modalContent = jQuery('#image-crop-modal');
+        var contentPadding = parseInt(modalContent.css('padding-top')) + parseInt(modalContent.css('padding-bottom'));
+
+        // Calculate available height conservatively
+        var availableHeight = dialogHeight - titleBarHeight - buttonsHeight - contentPadding - dialogPadding - 20;
+
+        console.log('Dialog height:', dialogHeight);
+        console.log('Title bar height:', titleBarHeight);
+        console.log('Buttons height:', buttonsHeight);
+        console.log('Content padding:', contentPadding);
+        console.log('Dialog padding:', dialogPadding);
+        console.log('Available height for image:', availableHeight);
+
+        // Set container to exact calculated height
         jQuery('.crop-container').css({
+          'height': availableHeight + 'px',
           'max-height': availableHeight + 'px',
-          'height': availableHeight + 'px'
+          'overflow': 'hidden'
         });
 
         cropper = new Cropper(image, {
@@ -157,16 +178,9 @@
           autoCropArea: 0.8,
           responsive: true,
           restore: true,
-          checkCrossOrigin: false,
-          ready: function() {
-            // Ensure cropper fits within container
-            var containerData = cropper.getContainerData();
-            if (containerData.height > availableHeight) {
-              jQuery('.crop-container').height(availableHeight);
-            }
-          }
+          checkCrossOrigin: false
         });
-      }, 300);
+      }, 500);
     });
 
     jQuery('#download-cropped').click(function() {
