@@ -5,6 +5,9 @@
     - if document.image?
       %a{ :href => task_document_path(document.task, document), :target => "_blank"}
         != document.file_file_name
+      != '&nbsp;&nbsp;'
+      %a.crop-image-link{ :href => "#", 'data-image-url' => document.file.url, 'data-image-name' => document.file_file_name }
+        = "[" + _("Crop & Download") + "]"
     - else
       %a{ :href => document.file.url, :target => "_blank"}
         != document.file_file_name

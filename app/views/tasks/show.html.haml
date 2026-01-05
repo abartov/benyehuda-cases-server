@@ -84,3 +84,86 @@
           %br
   .box
     != render(:partial => "audits/index")
+
+#image-crop-modal{ :title => _("Crop Image"), :style => "display:none;" }
+  .crop-container
+    %img#crop-image{ :style => "max-width: 100%;" }
+  .crop-buttons{ :style => "margin-top: 10px; text-align: center;" }
+    %button#download-cropped.purple-button.gradient
+      %span= _("Download Cropped Image")
+    %button#cancel-crop.purple-button.gradient{ :style => "margin-left: 10px;" }
+      %span= _("Cancel")
+
+%link{ :href => "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css", :rel => "stylesheet" }
+%script{ :src => "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" }
+
+:javascript
+  var cropper;
+  var currentImageName;
+
+  jQuery(document).ready(function() {
+    jQuery('#image-crop-modal').dialog({
+      draggable: true,
+      modal: true,
+      resizable: true,
+      autoOpen: false,
+      position: ['center', 50],
+      width: 900,
+      height: 600,
+      close: function() {
+        if (cropper) {
+          cropper.destroy();
+          cropper = null;
+        }
+      }
+    });
+
+    jQuery(document).on('click', '.crop-image-link', function(e) {
+      e.preventDefault();
+      var imageUrl = jQuery(this).data('image-url');
+      currentImageName = jQuery(this).data('image-name');
+
+      jQuery('#crop-image').attr('src', imageUrl);
+      jQuery('#image-crop-modal').dialog('open');
+
+      setTimeout(function() {
+        if (cropper) {
+          cropper.destroy();
+        }
+        var image = document.getElementById('crop-image');
+        cropper = new Cropper(image, {
+          aspectRatio: NaN,
+          viewMode: 1,
+          background: false,
+          autoCropArea: 0.8,
+          responsive: true,
+          restore: true,
+          checkCrossOrigin: false
+        });
+      }, 300);
+    });
+
+    jQuery('#download-cropped').click(function() {
+      if (!cropper) return;
+
+      var canvas = cropper.getCroppedCanvas();
+      canvas.toBlob(function(blob) {
+        var url = window.URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        var nameParts = currentImageName.split('.');
+        var extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'png';
+        var baseName = nameParts.slice(0, -1).join('.') || 'cropped';
+        a.download = baseName + '_cropped.' + extension;
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+        document.body.removeChild(a);
+      });
+    });
+
+    jQuery('#cancel-crop').click(function() {
+      jQuery('#image-crop-modal').dialog('close');
+    });
+  });
