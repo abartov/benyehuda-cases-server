@@ -145,3 +145,9 @@ he:
     email_intro: "%{sender} שלח/ה לך ברכה לרגל %{years} שנות ההתנדבות שלך בפרויקט:"
     email_closing: "תודה על תרומתך החשובה לפרויקט בן־יהודה!"
     email_signature: "בברכה,\nצוות פרויקט בן־יהודה\n%{domain}"
+  documents:
+    crop_and_download: חיתוך והורדה
+    crop_image: חיתוך תמונה
+    download_cropped_image: הורד תמונה חתוכה
+  common:
+    cancel: ביטול

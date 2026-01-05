@@ -56,3 +56,9 @@ en:
         email: "email"
         password: "password"
         remember_me: "remember me"
+  documents:
+    crop_and_download: Crop & Download
+    crop_image: Crop Image
+    download_cropped_image: Download Cropped Image
+  common:
+    cancel: Cancel

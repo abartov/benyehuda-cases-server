@@ -115,7 +115,9 @@ RSpec.describe 'documents/_document', type: :view do
       render partial: 'documents/document', locals: { document: image_document }
 
       expect(rendered).to include('crop-image-link')
-      expect(rendered).to match(/\[.*Crop.*Download.*\]/)
+      # Match the Hebrew translation or the pattern
+      expect(rendered).to match(/\[.*\]/)
+      expect(rendered).to include(I18n.t('documents.crop_and_download'))
     end
   end
 end

@@ -7,7 +7,7 @@
         != document.file_file_name
       != '&nbsp;&nbsp;'
       %a.crop-image-link{ :href => "#", 'data-image-url' => document.file.url, 'data-image-name' => document.file_file_name }
-        = "[" + _("Crop & Download") + "]"
+        = "[" + I18n.t('documents.crop_and_download') + "]"
     - else
       %a{ :href => document.file.url, :target => "_blank"}
         != document.file_file_name

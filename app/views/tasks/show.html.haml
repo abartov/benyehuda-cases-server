@@ -85,14 +85,14 @@
   .box
     != render(:partial => "audits/index")
 
-#image-crop-modal{ :title => _("Crop Image"), :style => "display:none;" }
+#image-crop-modal{ :title => I18n.t('documents.crop_image'), :style => "display:none;" }
   .crop-container
-    %img#crop-image{ :style => "max-width: 100%;" }
+    %img#crop-image{ :style => "max-width: 100%; max-height: 100%;" }
   .crop-buttons{ :style => "margin-top: 10px; text-align: center;" }
     %button#download-cropped.purple-button.gradient
-      %span= _("Download Cropped Image")
+      %span= I18n.t('documents.download_cropped_image')
     %button#cancel-crop.purple-button.gradient{ :style => "margin-left: 10px;" }
-      %span= _("Cancel")
+      %span= I18n.t('common.cancel')
 
 %link{ :href => "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css", :rel => "stylesheet" }
 %script{ :src => "https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js" }
@@ -102,14 +102,20 @@
   var currentImageName;
 
   jQuery(document).ready(function() {
+    // Calculate optimal modal size based on viewport
+    var viewportWidth = jQuery(window).width();
+    var viewportHeight = jQuery(window).height();
+    var modalWidth = Math.min(Math.floor(viewportWidth * 0.9), 1200);
+    var modalHeight = Math.floor(viewportHeight * 0.85);
+
     jQuery('#image-crop-modal').dialog({
       draggable: true,
       modal: true,
       resizable: true,
       autoOpen: false,
-      position: ['center', 50],
-      width: 900,
-      height: 600,
+      position: { my: 'center', at: 'center', of: window },
+      width: modalWidth,
+      height: modalHeight,
       close: function() {
         if (cropper) {
           cropper.destroy();
@@ -131,6 +137,15 @@
           cropper.destroy();
         }
         var image = document.getElementById('crop-image');
+
+        // Calculate available height for image (modal height - buttons - padding)
+        var modalHeight = jQuery('#image-crop-modal').dialog('option', 'height');
+        var buttonsHeight = jQuery('.crop-buttons').outerHeight(true) || 60;
+        var availableHeight = modalHeight - buttonsHeight - 60; // 60px for padding/margins
+
+        // Set container max-height to prevent scrolling
+        jQuery('.crop-container').css('max-height', availableHeight + 'px');
+
         cropper = new Cropper(image, {
           aspectRatio: NaN,
           viewMode: 1,
@@ -138,7 +153,14 @@
           autoCropArea: 0.8,
           responsive: true,
           restore: true,
-          checkCrossOrigin: false
+          checkCrossOrigin: false,
+          ready: function() {
+            // Ensure cropper fits within container
+            var containerData = cropper.getContainerData();
+            if (containerData.height > availableHeight) {
+              jQuery('.crop-container').height(availableHeight);
+            }
+          }
         });
       }, 300);
     });
