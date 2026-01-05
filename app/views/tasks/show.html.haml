@@ -117,6 +117,28 @@
       position: { my: 'center', at: 'center', of: window },
       width: modalWidth,
       maxHeight: modalHeight,
+      open: function() {
+        // Force dialog to be centered in viewport, not page
+        var dialog = jQuery(this).parent('.ui-dialog');
+        var scrollTop = jQuery(window).scrollTop();
+        var scrollLeft = jQuery(window).scrollLeft();
+        var viewportHeight = window.innerHeight;
+        var viewportWidth = window.innerWidth;
+        var dialogHeight = dialog.outerHeight();
+        var dialogWidth = dialog.outerWidth();
+
+        // Center in viewport
+        var top = scrollTop + (viewportHeight - dialogHeight) / 2;
+        var left = scrollLeft + (viewportWidth - dialogWidth) / 2;
+
+        dialog.css({
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          margin: 0
+        });
+      },
       close: function() {
         if (cropper) {
           cropper.destroy();
