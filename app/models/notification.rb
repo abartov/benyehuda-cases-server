@@ -52,7 +52,7 @@ class Notification < ActionMailer::Base
     @message = message
     @years = user.years_since_joining
     @domain = domain
-    mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: I18n.t('anniversary.email_subject', years: @years)
+    mail to: user.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: I18n.t('anniversary.email_subject', count: @years, years: @years)
   end
 
   def task_idle(task, assignee, editor)
