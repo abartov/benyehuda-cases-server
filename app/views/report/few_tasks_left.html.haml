@@ -1,4 +1,7 @@
 %h1= t('report.few_tasks_left')
+= form_tag(report_few_tasks_left_path, method: :get) do
+  = label_tag(:kind_id, 'סנן לפי סוג משימה:')
+  = select_tag(:kind_id, options_for_select([['הכל', '']] + @available_kinds.map { |k| [k.name, k.id] }, params[:kind_id]), onchange: 'this.form.submit();')
 %h2= t('total', count: @total)
 != render :partial => "tasks/index", :locals => { :tasks => @tasks, :editing => false, :title => t('report.few_tasks_left'), :stalled => false }
 

@@ -51,14 +51,36 @@ class ReportController < InheritedResources::Base
     @current_tab = :reports
     # For TaskKind 1, group by parent_id
     # For TaskKind 21, group by grandparent (parent's parent_id)
-    base_query = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
-                     .includes(:parent, :kind, :documents)
-                     .where(kind_id: [1, 21], state: 'unassigned')
-                     .group("CASE WHEN tasks.kind_id = 21 THEN parent_tasks.parent_id ELSE tasks.parent_id END")
-                     .having('count(tasks.id) < 3')
-                     .order(:name)
-    @total = base_query.count.count # total number of parents with few tasks left
-    @tasks = apply_scopes(base_query).paginate(page: params[:page], per_page: params[:per_page])
+
+    # Get available kinds for the dropdown filter
+    @available_kinds = TaskKind.where(id: [1, 21]).order(:name)
+
+    # Determine which kinds to query based on filter
+    kind_ids = params[:kind_id].present? ? [params[:kind_id].to_i] : [1, 21]
+
+    # First, find parent/grandparent IDs that have fewer than 3 tasks
+    parent_group_sql = "CASE WHEN tasks.kind_id = 21 THEN parent_tasks.parent_id ELSE tasks.parent_id END"
+    few_tasks_parents = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
+                            .where(kind_id: kind_ids, state: 'unassigned')
+                            .group(parent_group_sql)
+                            .having('count(tasks.id) < 3')
+                            .pluck(Arel.sql(parent_group_sql))
+                            .compact
+
+    @total = few_tasks_parents.count
+
+    # Now fetch all tasks that belong to those parents, with sorting
+    if few_tasks_parents.any?
+      base_query = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
+                       .joins(:kind)
+                       .includes(:parent, :kind, :documents)
+                       .where(kind_id: kind_ids, state: 'unassigned')
+                       .where("#{parent_group_sql} IN (?)", few_tasks_parents)
+                       .order('task_kinds.name', 'tasks.name')
+      @tasks = apply_scopes(base_query).paginate(page: params[:page], per_page: params[:per_page])
+    else
+      @tasks = Task.none.paginate(page: params[:page], per_page: params[:per_page])
+    end
   end
 
   def missing_metadata
@@ -156,6 +178,6 @@ class ReportController < InheritedResources::Base
 
   def permit_report_params
     @permitted_report_params = params.permit(:page, :per_page, :dir, :includes, :property,
-                                             :order_by, :order_by_state, :order_by_updated_at, :q)
+                                             :order_by, :order_by_state, :order_by_updated_at, :q, :kind_id)
   end
 end
