@@ -76,7 +76,7 @@ class ReportController < InheritedResources::Base
                        .includes(:parent, :kind, :documents)
                        .where(kind_id: kind_ids, state: 'unassigned')
                        .where("#{parent_group_sql} IN (?)", few_tasks_parents)
-                       .order('task_kinds.name', 'tasks.name')
+                       .order('task_kinds.name', 'tasks.created_at')
       @tasks = apply_scopes(base_query).paginate(page: params[:page], per_page: params[:per_page])
     else
       @tasks = Task.none.paginate(page: params[:page], per_page: params[:per_page])
