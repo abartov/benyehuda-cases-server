@@ -175,6 +175,7 @@ class Admin::TasksController < InheritedResources::Base
     @credits = @task.gather_all_involved.join('; ')
     @orig_lang = @task.orig_lang
     @publisher = @task.source
+    @project_id = @task.project_id
     docx = []
     @task.documents.each do |doc|
       next unless doc.document_type == 'maintext'
