@@ -207,10 +207,10 @@ class Admin::TasksController < InheritedResources::Base
     t.priority = ''
     t.creator_id = current_user.id
     # t.parent_id = task.id # setting the parent_id before save would trigger Task.clone_parent_documents, which we *don't* want here.
-    # copy over custom properties
-    task.task_properties.each do |tp|
-      t.task_properties << CustomProperty.new(property_id: tp.property_id, custom_value: tp.custom_value)
-    end
+    # copy over custom property columns (migrated from custom_properties)
+    t.orig_lang = task.orig_lang
+    t.rashi = task.rashi
+    t.instructions = task.instructions
     t.state = :unassigned
     task.teams.each { |team| t.teams << team } # copy over team assignments
     t
