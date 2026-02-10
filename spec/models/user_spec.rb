@@ -215,4 +215,143 @@ RSpec.describe User, type: :model do
       expect(Notification).not_to have_received(:volunteer_returned_from_break)
     end
   end
+
+  describe '.near_anniversary' do
+    around do |example|
+      # Freeze time to ensure deterministic tests
+      travel_to(Time.zone.local(2026, 2, 15, 12, 0, 0)) do
+        example.run
+      end
+    end
+
+    context 'year 0 volunteers (first year)' do
+      it 'excludes volunteers in their first year even when within 7-day anniversary window' do
+        # Create a volunteer who joined 350 days ago (still year 0, but within 7-day window of their "anniversary")
+        # Their "anniversary" would be in 15 days, which is outside the window, so let's make it closer
+        # Actually, to be within the window at year 0, they need to be < 1 year old AND within 7 days of today
+        # Let's create someone who joined 3 days ago - they ARE within the 7-day window of their join date
+        volunteer_year_0 = create(:user, :volunteer, :active_user,
+                                   on_break: false,
+                                   disabled_at: nil,
+                                   created_at: Time.zone.now - 3.days,
+                                   activated_at: Time.zone.now - 3.days,
+                                   congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_year_0)
+      end
+
+      it 'excludes volunteers who just joined (within a week) even though they are "near" their join date' do
+        # Create a volunteer who joined 3 days ago
+        volunteer_just_joined = create(:user, :volunteer, :active_user,
+                                        on_break: false,
+                                        disabled_at: nil,
+                                        created_at: Time.zone.now - 3.days,
+                                        activated_at: Time.zone.now - 3.days,
+                                        congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_just_joined)
+      end
+    end
+
+    context 'year 1+ volunteers' do
+      it 'includes volunteers at exactly 1 year when within anniversary window' do
+        # Frozen at 2026-02-15. Create volunteer who joined on 2025-02-13 (1 year and 2 days ago)
+        # Their anniversary is Feb 13, which is 2 days ago, within the 7-day window
+        volunteer_year_1 = create(:user, :volunteer, :active_user,
+                                   on_break: false,
+                                   disabled_at: nil,
+                                   created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                   activated_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                   congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).to include(volunteer_year_1)
+      end
+
+      it 'includes volunteers at year 2+ when within anniversary window' do
+        # Frozen at 2026-02-15. Create volunteer who joined on 2023-02-10 (3 years and 5 days ago)
+        # Their anniversary is Feb 10, which is 5 days ago, within the 7-day window
+        volunteer_year_3 = create(:user, :volunteer, :active_user,
+                                   on_break: false,
+                                   disabled_at: nil,
+                                   created_at: Time.zone.local(2023, 2, 10, 12, 0, 0),
+                                   activated_at: Time.zone.local(2023, 2, 10, 12, 0, 0),
+                                   congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).to include(volunteer_year_3)
+      end
+
+      it 'excludes year 1+ volunteers when NOT near anniversary date' do
+        # Frozen at 2026-02-15. Create volunteer who joined on 2024-12-15 (1 year and 2 months ago)
+        # Their anniversary is Dec 15, which is 2 months ago, outside the 7-day window
+        volunteer_not_near = create(:user, :volunteer, :active_user,
+                                     on_break: false,
+                                     disabled_at: nil,
+                                     created_at: Time.zone.local(2024, 12, 15, 12, 0, 0),
+                                     activated_at: Time.zone.local(2024, 12, 15, 12, 0, 0),
+                                     congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_not_near)
+      end
+    end
+
+    context 'filtering conditions' do
+      it 'excludes volunteers already congratulated this year' do
+        # Frozen at 2026-02-15. Create volunteer from 2024-02-13 (2 years ago, within window)
+        # But they were congratulated 6 months ago (2025-08-15), which is within the last year
+        volunteer_already_congratulated = create(:user, :volunteer, :active_user,
+                                                   on_break: false,
+                                                   disabled_at: nil,
+                                                   created_at: Time.zone.local(2024, 2, 13, 12, 0, 0),
+                                                   activated_at: Time.zone.local(2024, 2, 13, 12, 0, 0),
+                                                   congratulated_at: Time.zone.local(2025, 8, 15, 12, 0, 0))
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_already_congratulated)
+      end
+
+      it 'excludes volunteers on break' do
+        # Frozen at 2026-02-15. Create volunteer from 2025-02-13 (1 year ago, within window)
+        volunteer_on_break = create(:user, :volunteer, :active_user,
+                                     on_break: true,
+                                     disabled_at: nil,
+                                     created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                     activated_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                     congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_on_break)
+      end
+
+      it 'excludes disabled volunteers' do
+        # Frozen at 2026-02-15. Create volunteer from 2025-02-13 (1 year ago, within window)
+        volunteer_disabled = create(:user, :volunteer, :active_user,
+                                     on_break: false,
+                                     disabled_at: Time.zone.local(2026, 1, 15, 12, 0, 0),
+                                     created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                     activated_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                     congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_disabled)
+      end
+
+      it 'excludes not activated volunteers' do
+        # Frozen at 2026-02-15. Create volunteer from 2025-02-13 (1 year ago, within window)
+        volunteer_not_activated = create(:user, :volunteer,
+                                          on_break: false,
+                                          disabled_at: nil,
+                                          created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                          activated_at: nil,
+                                          congratulated_at: nil)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_not_activated)
+      end
+    end
+  end
 end
