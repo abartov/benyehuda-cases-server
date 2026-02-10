@@ -75,7 +75,8 @@ class User < ActiveRecord::Base
       .where('users.disabled_at IS NULL')
       .where('users.on_break = 0 OR users.on_break IS NULL')
       .where('(users.congratulated_at IS NULL OR users.congratulated_at < ?)', 1.year.ago)
-      .select { |u| u.near_anniversary? && u.years_since_joining > 0 }
+      .where('users.created_at <= ?', 1.year.ago)
+      .select { |u| u.near_anniversary? }
   }
 
   has_one :volunteer_request
