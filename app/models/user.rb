@@ -83,10 +83,12 @@ class User < ActiveRecord::Base
   has_many :confirmed_volunteer_requests, class_name: 'VolunteerRequest', foreign_key: :approver_id
   # has_many :volunteers_approved, :through => :volunteer_confirmations, :source => :user
 
-  include CustomProperties
-  has_many_custom_properties :user # user_properties
-  has_many_custom_properties :volunteer # volunteer_properties
-  has_many_custom_properties :editor # editor_properties
+  # CustomProperties removed - migrated to columns
+  # include CustomProperties
+  # has_many_custom_properties :user # user_properties
+  # has_many_custom_properties :volunteer # volunteer_properties
+  # has_many_custom_properties :editor # editor_properties
+
 
   has_many :created_tasks, class_name: 'Task', foreign_key: 'creator_id'
   has_many :editing_tasks, -> { order('tasks.updated_at desc') }, class_name: 'Task', foreign_key: 'editor_id'
@@ -136,7 +138,7 @@ class User < ActiveRecord::Base
   end
 
   def volunteer_preferences
-    @volunteer_preferences ||= get_volunteer_preferences
+    @volunteer_preferences ||= read_attribute(:volunteer_preferences) || ''
   end
 
   def disabled?
@@ -271,23 +273,16 @@ class User < ActiveRecord::Base
                  '')}, #{email}, #{current_login_at}, #{activated_at}, #{assignment_histories.count}, https://tasks.benyehuda.org/profiles/#{id}"
   end
 
+  # Migrated from custom properties to volunteer_preferences column
   def get_volunteer_preferences
-    return '' if id.nil?
-
-    prefs = volunteer_properties.where(property_id: PROP_VOL_PREFERENCES)
-    prefs.present? ? prefs.first.custom_value : ''
+    volunteer_preferences || ''
   end
 
   def set_volunteer_preferences(buf)
     return if id.nil?
 
-    prefs = volunteer_properties.where(property_id: PROP_VOL_PREFERENCES)
-    if prefs.present?
-      prefs.first.custom_value = buf
-      prefs.first.save
-    else
-      volunteer_properties.create(property_id: PROP_VOL_PREFERENCES, custom_value: buf)
-    end
+    self.volunteer_preferences = buf
+    save
   end
 
   # Anniversary-related methods

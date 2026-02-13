@@ -1,3 +1,7 @@
+# DEPRECATED: CustomProperties module has been replaced by individual columns
+# This module is kept for reference but should not be used in new code
+# Migration completed: 2025-11-23
+
 module CustomProperties
   def self.included(klass)
     klass.extend(ClassMethods)

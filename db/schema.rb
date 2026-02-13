@@ -219,6 +219,9 @@ ActiveRecord::Schema.define(version: 2025_12_28_010000) do
     t.boolean "include_images"
     t.string "source", limit: 2048
     t.integer "project_id"
+    t.string "orig_lang"
+    t.boolean "rashi", default: false
+    t.text "instructions"
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
     t.index ["editor_id"], name: "index_tasks_on_editor_id"
@@ -307,6 +310,7 @@ ActiveRecord::Schema.define(version: 2025_12_28_010000) do
     t.boolean "on_break"
     t.date "last_reminder"
     t.string "zehut"
+    t.text "volunteer_preferences"
     t.datetime "congratulated_at"
     t.index ["current_login_at"], name: "index_users_on_current_login_at"
     t.index ["email"], name: "index_users_on_email"
