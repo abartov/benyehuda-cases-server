@@ -1,5 +1,9 @@
 != render(:partial => "tasks/description")
 
+- if @task.errors.any?
+  .error
+    = @task.errors.full_messages.to_sentence
+
 = semantic_form_for(@task, :live_validations => false, :url => task_assignment_path(@task), :method => :put) do |f|
   = f.inputs :name => _("Change Assignments") do
     != f.input :assignee, :as => :select, :collection => User.not_on_break.order("name asc"), :label => _("Assignee")

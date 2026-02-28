@@ -80,6 +80,7 @@ class Task < ActiveRecord::Base
   # validates :priority, :inclusion => {:in => PRIORITIES.keys, :message => "not included in the list"}
   validates :creator_id, :name, :kind_id, :difficulty, presence: true
   validate :parent_task_updated
+  validate :not_marked_do_not_assign, if: -> { assignee_id.present? }
 
   #  attr_accessible :name, :kind_id, :priority, :difficulty, :full_nikkud, :comments_attributes, :independent, :include_images, :genre, :source, :project_id, :hours
 
@@ -211,6 +212,10 @@ class Task < ActiveRecord::Base
 
   def parent_task_updated
     errors.add(:base, _('task cannot be updated')) if @parent_task_cannot_be_updated
+  end
+
+  def not_marked_do_not_assign
+    errors.add(:base, I18n.t('tasks.do_not_assign_error')) if do_not_assign?
   end
 
   def participant?(user)

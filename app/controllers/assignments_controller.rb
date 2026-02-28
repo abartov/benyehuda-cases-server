@@ -5,6 +5,9 @@ class AssignmentsController < ApplicationController
     @task.assign_by_user_ids!(current_user.id, params[:assignee_id])
     flash[:notice] = _("Task has been reassigned")
     redirect_to dashboard_path
+  rescue ActiveRecord::RecordInvalid => e
+    flash[:error] = e.record.errors.full_messages.to_sentence
+    redirect_to dashboard_path
   end
 
   def edit
