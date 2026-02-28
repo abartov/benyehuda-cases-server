@@ -25,6 +25,7 @@ RSpec.describe 'Assignments with do_not_assign flag', type: :request do
         expect(response).to redirect_to(dashboard_path)
         follow_redirect!
         expect(task.reload.assignee).to be_nil
+        expect(flash[:error]).to be_present
       end
     end
 
