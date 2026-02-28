@@ -32,6 +32,7 @@
   /= f.input :difficulty, :as => :select, :collection => task_difficulties_for_select, :required => true, :label => _("Difficulty")
   /= f.input :priority, :as => :select, :collection => task_priorities_for_select, :required => true, :label => _("Priority")
   = f.input :full_nikkud, :as => :boolean, :label => _("Full Nikkud")
+  = f.input :do_not_assign, :as => :boolean, :label => I18n.t('tasks.form.do_not_assign')
   = f.input :hours, :label => _("Hours spent")+' '
 
 :javascript

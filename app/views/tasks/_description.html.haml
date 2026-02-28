@@ -54,6 +54,10 @@
     %b
       = _("Priority")+": "
     = Task.textify_priority(@task.priority)
+  - if @task.do_not_assign?
+    %br
+    %span{style: 'color: red; font-weight: bold;'}
+      = I18n.t('tasks.do_not_assign')
 .midtitle
   .boxbody
     = _("Status and allocation")

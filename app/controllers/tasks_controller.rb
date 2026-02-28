@@ -135,8 +135,8 @@ class TasksController < InheritedResources::Base
       joins << :teams
     end
 
-    # Build base query with filters
-    base_query = Task.unassigned.joins(joins).where(conds)
+    # Build base query with filters, excluding tasks marked do_not_assign
+    base_query = Task.unassigned.joins(joins).where(conds).where(do_not_assign: false)
 
     # Apply sorting scopes if present
     @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:order_by_updated_at].present? || params[:sort_by].present?

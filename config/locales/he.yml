@@ -23,9 +23,12 @@ he:
     recipient: נמען
     days_ago: לפני כמה ימים
     days_ago_value: לפני %{count} ימים
+    do_not_assign: אין להקצות
+    do_not_assign_error: משימה זו מסומנת כ"אין להקצות" ולא ניתן להציב אליה מתנדב
     form:
       manage_teams: ניהול צוותים
       teams: צוותים
+      do_not_assign: אין להקצות
   teams:
     index:
       title: צוותים
