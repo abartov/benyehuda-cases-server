@@ -9,6 +9,7 @@
   = f.input :genre, :as => :select, :collection => Task.genres.keys.map{|g| [g, g]}, :label => 'סוגה'
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
+  = f.input :do_not_publish, :as => :boolean, :label => I18n.t('tasks.form.do_not_publish')
   = f.input :source, :label => 'פרטי מהדורה (מהדורה [אם יש], עיר: מו"ל, שנה)', :input_html => {:class => 'span-13'}
   - if current_user && current_user.is_admin?
     %h4= t('.teams')

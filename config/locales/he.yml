@@ -25,10 +25,12 @@ he:
     days_ago_value: לפני %{count} ימים
     do_not_assign: אין להקצות
     do_not_assign_error: משימה זו מסומנת כ"אין להקצות" ולא ניתן להציב אליה מתנדב
+    do_not_publish: לא להעלאה!
     form:
       manage_teams: ניהול צוותים
       teams: צוותים
       do_not_assign: אין להקצות
+      do_not_publish: לא להעלאה לאתר
   teams:
     index:
       title: צוותים
