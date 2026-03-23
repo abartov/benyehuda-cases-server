@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_02_28_155708) do
+ActiveRecord::Schema.define(version: 2026_03_23_000001) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -220,8 +220,10 @@ ActiveRecord::Schema.define(version: 2026_02_28_155708) do
     t.string "source", limit: 2048
     t.integer "project_id"
     t.boolean "do_not_assign", default: false, null: false
+    t.boolean "do_not_publish", default: false, null: false
     t.index ["assignee_id"], name: "index_tasks_on_assignee_id"
     t.index ["creator_id"], name: "index_tasks_on_creator_id"
+    t.index ["do_not_publish"], name: "index_tasks_on_do_not_publish"
     t.index ["editor_id"], name: "index_tasks_on_editor_id"
     t.index ["kind_id"], name: "index_tasks_on_kind_id"
     t.index ["parent_id"], name: "index_tasks_on_parent_id"
