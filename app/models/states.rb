@@ -238,6 +238,37 @@ module States
     self.state = value
   end
 
+  # When the `complete` event is fired on this task, cascade it to eligible
+  # ancestor tasks based on the kind hierarchy:
+  #
+  #   הגהה          → parent הקלדה
+  #   עריכה_טכנית  → parent הגהה (and its parent הקלדה if present),
+  #                    or parent הקלדה directly
+  #
+  # Returns an array of tasks that were also completed (and saved).
+  def complete_related_ancestor_tasks
+    completed = []
+
+    tasks_to_complete =
+      case kind_id
+      when 'הגהה'
+        ancestors_matching(%w[הקלדה])
+      when 'עריכה_טכנית'
+        ancestors_matching(%w[הגהה הקלדה])
+      else
+        []
+      end
+
+    tasks_to_complete.each do |ancestor|
+      next unless ancestor.may_complete?
+      ancestor.complete
+      ancestor.save
+      completed << ancestor
+    end
+
+    completed
+  end
+
   EDITOR_EVENTS = [:reject, :complete, :create_other_task, :approve, :to_techedit, :help_required]
   ASSIGNEE_EVENTS = [:abandon, :finish, :help_required, :finish_partially]
 
@@ -253,5 +284,20 @@ module States
     return true if editor?(user) && EDITOR_EVENTS.member?(event.to_sym)
 
     false
+  end
+
+  private
+
+  # Walk up the parent chain collecting tasks whose kind_id is in +kind_keys+.
+  # The walk continues through each matched ancestor so a הגהה parent and its
+  # הקלדה grandparent are both returned when starting from עריכה_טכנית.
+  def ancestors_matching(kind_keys)
+    result = []
+    cursor = self.parent
+    while cursor
+      result << cursor if kind_keys.include?(cursor.kind_id)
+      cursor = cursor.parent
+    end
+    result
   end
 end

@@ -69,6 +69,8 @@ en:
         email: "email"
         password: "password"
         remember_me: "remember me"
+  tasks:
+    complete_also_updated_parents: "Task marked ready to publish. The following parent task(s) were also marked ready to publish: %{parent_names}"
   documents:
     crop_and_download: Crop & Download
     crop_image: Crop Image
