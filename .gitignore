@@ -8,6 +8,7 @@ db/*.db
 db/*.sqlite3
 tmp/**/*
 .DS_Store
+.beads/*
 doc/api
 doc/app
 config/database.yml
