@@ -1,4 +1,5 @@
 class ReportController < InheritedResources::Base
+  KindOption = Struct.new(:name, :key)
   before_action :require_editor_or_admin # , :only => [:index, :stalled, :inactive, :active, :newvols, :vols_notify, :do_notify]
   actions :index, :stalled, :active, :inactive, :newvols, :vols_notify, :do_notify, :hours
   before_action :permit_report_params, only: %i[stalled few_tasks_left]
@@ -55,8 +56,8 @@ class ReportController < InheritedResources::Base
 
     # Build available kinds list for the dropdown
     @available_kinds = [
-      OpenStruct.new(name: I18n.t('activerecord.attributes.task.kind_id.הקלדה', default: 'הקלדה'), key: 'הקלדה'),
-      OpenStruct.new(name: I18n.t('activerecord.attributes.task.kind_id.הגהה',  default: 'הגהה'),  key: 'הגהה')
+      KindOption.new(I18n.t('activerecord.attributes.task.kind_id.הקלדה', default: 'הקלדה'), 'הקלדה'),
+      KindOption.new(I18n.t('activerecord.attributes.task.kind_id.הגהה',  default: 'הגהה'),  'הגהה')
     ]
 
     # Determine which kinds to query based on filter

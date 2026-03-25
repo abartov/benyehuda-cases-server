@@ -1,23 +1,31 @@
 #require 'config/initializers/i18n'
 
 class CreateTaskKinds < ActiveRecord::Migration
+  # Migration-local model to avoid depending on the app-level TaskKind constant
+  # (which no longer exists after the enum refactor).
+  class TaskKind < ActiveRecord::Base
+    self.table_name = 'task_kinds'
+  end
+
   KINDS = {  # deleted from app/models/task.rb
-    "typing" => _("task kind|typing"),
-    "proofing" => _("task kind|proofing"),
-    "other" => _("task kind|other")
+    "typing" => "typing",
+    "proofing" => "proofing",
+    "other" => "other"
   }
   def self.up
     create_table :task_kinds do |t|
       t.string :name
       t.timestamps
     end
-    KINDS.each do |k,v|
-      TaskKind.create!(:name => v)
+    KINDS.each do |_k, v|
+      TaskKind.create!(name: v)
     end
     rename_column :tasks, :kind, :old_kind
     add_column :tasks, :kind_id, :integer
-    Task.all.each do |t|
-      t.update_attributes! :kind_id => TaskKind.find_or_create_by_name(KINDS[t.old_kind] || t.old_kind).id unless t.old_kind.blank?
+    execute("SELECT id, old_kind FROM tasks WHERE old_kind IS NOT NULL AND old_kind != ''").each do |row|
+      old_kind_name = KINDS[row['old_kind']] || row['old_kind']
+      kind = TaskKind.find_or_create_by!(name: old_kind_name)
+      execute("UPDATE tasks SET kind_id = #{kind.id} WHERE id = #{row['id']}")
     end
     remove_column :tasks, :old_kind
   end
@@ -25,9 +33,10 @@ class CreateTaskKinds < ActiveRecord::Migration
   def self.down
     add_column :tasks, :kind, :string
     sdnik = KINDS.invert
-    Task.all.each do |t|
-      k = TaskKind.find(t.kind_id).name
-      t.update_attributes! :kind => sdnik[k] || k unless t.kind_id.blank?
+    execute("SELECT id, kind_id FROM tasks WHERE kind_id IS NOT NULL").each do |row|
+      k = TaskKind.find(row['kind_id']).name
+      kind_str = sdnik[k] || k
+      execute("UPDATE tasks SET kind = '#{kind_str.gsub("'", "''")}' WHERE id = #{row['id']}")
     end
     remove_column :tasks, :kind_id
     drop_table :task_kinds

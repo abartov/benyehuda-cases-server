@@ -10,7 +10,12 @@ class Task < ActiveRecord::Base
                       creator_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
                       editor_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
                       assignee_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
-                      kind_id: proc { |v| v ? I18n.t("activerecord.attributes.task.kind_id.#{v}", default: v.to_s.tr('_', ' ')) : '' },
+                      kind_id: proc { |v|
+                        next '' unless v
+                        # Legacy audit rows stored the integer; new rows store the enum key string.
+                        key = (v.to_s =~ /\A\d+\z/) ? (Task.kind_ids.key(v.to_i) || v) : v
+                        I18n.t("activerecord.attributes.task.kind_id.#{key}", default: key.to_s.tr('_', ' '))
+                      },
                       difficulty: proc { |v| Task.textify_difficulty(v) },
                       priority: proc { |v| Task.textify_priority(v) },
                       task_state_id: proc { |v| v ? Task.textify_state(TaskState.find_by_id(v).try(:name)) : '' },
