@@ -153,7 +153,7 @@ class Admin::TasksController < InheritedResources::Base
             # (if final set equals the document set of the task, report and do nothing)
             # clone attachments to cloned task
             # change master task type to 'scan' and status to 'עלה לאתר'
-            @task.kind_id = TaskKind.where(name: 'סריקה')[0].id
+            @task.kind_id = :סריקה
             @task.editor_id = current_user.id
             @task.assignee_id = current_user.id
             @task.state = :ready_to_publish

@@ -1,11 +1,9 @@
 = f.inputs :name => s_("task section|General") do
   = f.input :name, :required => true, :label => _("Name"), :input_html => {:class => 'span-13'}
   - if defined? newkind
-    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind"), :selected => newkind
+    = f.input :kind_id, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind"), :selected => newkind
   - else
-    = f.input :kind, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind")
-  - if current_user && current_user.is_admin?
-    = link_to _("Manage Kinds"), "#", :id => "manage_kinds"
+    = f.input :kind_id, :as => :select, :collection => task_kinds_for_select, :required => true, :label => _("Kind")
   = f.input :genre, :as => :select, :collection => Task.genres.keys.map{|g| [g, g]}, :label => 'סוגה'
   = f.input :independent, :as => :boolean, :label => 'אפשר להעלות בנפרד?'
   = f.input :include_images, :as => :boolean, :label => 'מותר להעלות תמונות?'
@@ -37,29 +35,9 @@
   = f.input :hours, :label => _("Hours spent")+' '
 
 :javascript
-  var index_html = '#{escape_javascript(render(:template => "admin/task_kinds/index"))}';
-  $(function(){
-    $("#manage_kinds").click(function(){
-      $.modal(
-        index_html,
-        {
-          close: true,
-          opacity: 80,
-          overlayCss: {backgroundColor:"black"},
-          containerCss:{
-            borderColor:"#fff",
-            padding:10,
-            width:300
-          },
-          overlayClose:true
-        }
-      );
-      return false;
-    });
-  });
   $(document).ready(function() {
     if($('#task_kind_id').val() == '') {
-      $('#task_kind_id').val('1'); // default to typing
+      $('#task_kind_id').val('הקלדה'); // default to typing
     }
     persisted = #{@task.persisted? ? 'true' : 'false'};
     if (persisted) {

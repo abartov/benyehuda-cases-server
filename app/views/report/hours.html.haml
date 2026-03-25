@@ -10,7 +10,8 @@
   %h1 פירוט לפי סוג
   - @hours_by_kind.keys.each do |kind_id|
     - next if kind_id.nil? or kind_id == 0
-    %h2= _(TaskKind.find(kind_id).name)
+    - kind_name = Task.kind_ids.key(kind_id) || kind_id.to_s
+    %h2= I18n.t("activerecord.attributes.task.kind_id.#{kind_name}", default: kind_name.to_s.tr('_', ' '))
     %h3= "שעות: #{@hours_by_kind[kind_id]}; משימות: #{@count_by_kind[kind_id]}"
   %h1= 'פירוט לפי מתנדב/ת'
   %ul

@@ -30,7 +30,7 @@
                     %th.style12
                       = _("Assignee")
                   %th.style12
-                    %a.up{ :href => sorting_path_for_current_context(:order_by => {:includes => "kind", :property => "task_kinds.name", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
+                    %a.up{ :href => sorting_path_for_current_context(:order_by => {:property => "tasks.kind_id", :dir => order_direction(params[:order_by].try(:[], :dir))}) }
                       = _("Kind")
                   %th.style7
                     - if defined? stalled and stalled

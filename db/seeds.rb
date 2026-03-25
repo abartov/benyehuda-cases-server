@@ -33,10 +33,8 @@ TaskState.create(
     {:name => "other_task_creat", :value => N_("task state|Another Task Created")}
   ]
 )
-TaskKind.delete_all
-TaskKind.create([{name: 'typing'}, {name: 'הגהה'}, {name: 'סריקה'}])
 User.delete_all
 User.create([{name: 'testuser 1', email: 'testuser1@mailinator.com', is_volunteer: true}, {name: 'testuser 2', email: 'testuser2@mailinator.com', is_volunteer: true}, {name: 'testuser editor', email:'testeditor@mailinator.com', is_editor: true, is_volunteer: true}])
 Task.delete_all
-Task.create([{name: 'משימת בדיקה / חיים נחמן ביאליק', kind: TaskKind.find_by_name('typing'), creator: User.find_by_name('testuser editor')}])
+Task.create([{name: 'משימת בדיקה / חיים נחמן ביאליק', kind_id: :הקלדה, creator: User.find_by_name('testuser editor')}])
 puts "seeds done"

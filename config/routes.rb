@@ -68,7 +68,6 @@ Rails.application.routes.draw do
   resources :volunteer_requests
   namespace :admin do
     resources :tasks, only: %i[index new create edit update destroy]
-    resources :task_kinds, only: %i[create new index destroy]
     resources :volunteer_kinds, only: %i[create new index destroy]
   end
   get '/admin/changes', controller: 'admin/tasks', action: 'changes'

@@ -3,7 +3,6 @@ describe '/api/create_task' do
   let(:editor) { create :user, :editor }
   let(:api_user_writer) { create :api_user, email: editor.email }
   let(:api_user) { create :api_user }
-  let!(:task_kind) { create :task_kind, name: 'סריקה' }
   # counting on a Task seeded in seeds.rb
   let(:original_params) do
     { title: 'אל הציפור', author: 'חיים נחמן ביאליק', api_key: api_user.api_key }

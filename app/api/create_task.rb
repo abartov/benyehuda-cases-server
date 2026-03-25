@@ -19,7 +19,7 @@ class CreateTask < Grape::API
       tasks_user = User.find_by_email(api_user.email)
       unless tasks_user.blank? || !tasks_user.admin_or_editor?
         task = Task.new(name: "#{params[:title]} / #{params[:author]}",
-          kind: TaskKind.find_by_name('סריקה'), 
+          kind_id: :סריקה,
           source: params[:edition_details], 
           creator_id: tasks_user.id,
           editor_id: tasks_user.id,
