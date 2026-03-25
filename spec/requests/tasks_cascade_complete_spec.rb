@@ -48,8 +48,7 @@ RSpec.describe 'Tasks cascade complete flash notice', type: :request do
       put task_path(proofing_task), params: { event: 'complete' }
 
       expect(response).to redirect_to(task_path(proofing_task))
-      expect(flash[:notice]).not_to be_nil
-      expect(flash[:notice]).not_to include('parent_names')
+      expect(flash[:notice]).to eq('Task updated')
     end
   end
 

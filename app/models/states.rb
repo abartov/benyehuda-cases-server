@@ -262,8 +262,7 @@ module States
     tasks_to_complete.each do |ancestor|
       next unless ancestor.may_complete?
       ancestor.complete
-      ancestor.save
-      completed << ancestor
+      completed << ancestor if ancestor.save
     end
 
     completed
@@ -289,13 +288,13 @@ module States
   private
 
   # Walk up the parent chain collecting tasks whose kind_id is in +kind_keys+.
-  # The walk continues through each matched ancestor so a הגהה parent and its
-  # הקלדה grandparent are both returned when starting from עריכה_טכנית.
+  # Traversal stops as soon as a parent whose kind_id is NOT in +kind_keys+ is
+  # encountered, so non-matching ancestors are never skipped over.
   def ancestors_matching(kind_keys)
     result = []
     cursor = self.parent
-    while cursor
-      result << cursor if kind_keys.include?(cursor.kind_id)
+    while cursor && kind_keys.include?(cursor.kind_id)
+      result << cursor
       cursor = cursor.parent
     end
     result

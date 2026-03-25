@@ -172,18 +172,19 @@ class TasksController < InheritedResources::Base
     return _event_with_comment(params[:event]) if resource.commentable_event?(params[:event])
 
     resource.send(params[:event])
-    resource.save
 
-    if params[:event] == 'complete'
-      also_completed = resource.complete_related_ancestor_tasks
-      flash[:notice] = if also_completed.any?
-                         I18n.t('tasks.complete_also_updated_parents',
-                                parent_names: also_completed.map(&:name).join(', '))
-                       else
-                         _('Task updated')
-                       end
-    else
-      flash[:notice] = _('Task updated')
+    if resource.save
+      if params[:event] == 'complete'
+        also_completed = resource.complete_related_ancestor_tasks
+        flash[:notice] = if also_completed.any?
+                           I18n.t('tasks.complete_also_updated_parents',
+                                  parent_names: also_completed.map(&:name).join(', '))
+                         else
+                           _('Task updated')
+                         end
+      else
+        flash[:notice] = _('Task updated')
+      end
     end
 
     redirect_to task_path(resource)
