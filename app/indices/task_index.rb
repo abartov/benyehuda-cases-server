@@ -13,7 +13,7 @@ ThinkingSphinx::Index.define :task, name: index_name, with: :active_record do
   indexes :source
   indexes :difficulty, sortable: true
   indexes :priority, sortable: true
-  indexes kind.name, sortable: true, as: :kind
+  has :kind_id, type: :integer
   indexes :state, sortable: true
   has :documents_count, type: :integer
   indexes teams(:id), as: :teams, multi: true

@@ -221,7 +221,7 @@ class Task < ActiveRecord::Base
         page: opts[:page], per_page: opts[:per_page]
       )
     else
-      search_opts[:conditions][:kind_id] = Task.kind_ids[opts[:kind]] unless opts[:kind].blank?
+      search_opts[:with][:kind_id] = Task.kind_ids[opts[:kind]] unless opts[:kind].blank?
       if search_opts[:conditions][:state].class == Array
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
