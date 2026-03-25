@@ -5,7 +5,7 @@ FactoryBot.define do
     creator { create :user, :admin }
     assignee { create :user, :volunteer }
     editor { create :user, :editor }
-    kind { create :task_kind }
+    kind_id { :הקלדה }
     difficulty { 'normal' }
     parent_id { nil }
     factory :unassigned_task do

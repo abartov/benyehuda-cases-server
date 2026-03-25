@@ -10,7 +10,7 @@ class Task < ActiveRecord::Base
                       creator_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
                       editor_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
                       assignee_id: proc { |v| v ? User.find_by_id(v).try(:name) : '' },
-                      kind_id: proc { |v| v ? TaskKind.find_by_id(v).try(:name) : '' },
+                      kind_id: proc { |v| v ? I18n.t("activerecord.attributes.task.kind_id.#{v}", default: v.to_s.tr('_', ' ')) : '' },
                       difficulty: proc { |v| Task.textify_difficulty(v) },
                       priority: proc { |v| Task.textify_priority(v) },
                       task_state_id: proc { |v| v ? Task.textify_state(TaskState.find_by_id(v).try(:name)) : '' },
@@ -61,7 +61,27 @@ class Task < ActiveRecord::Base
   include States
   include TaskNotifications
 
-  belongs_to :kind, class_name: 'TaskKind'
+  # Task kind encoded as an enum; values match the historical task_kinds table IDs.
+  enum kind_id: {
+    הקלדה:            1,
+    אחר:              11,
+    הגהה:             21,
+    חיפוש_ביבליוגרפי: 31,
+    גיוס_כספים:       41,
+    רשות_פרסום:       51,
+    עריכה_טכנית:      61,
+    סריקה:            71,
+    חקיקה:            81,
+    פרסים:            91
+  }
+
+  # Backward-compatible accessor: task.kind.name returns the display name.
+  KindProxy = Struct.new(:name, :id)
+
+  def kind
+    return nil if kind_id.nil?
+    KindProxy.new(kind_id.to_s.tr('_', ' '), self.class.kind_ids[kind_id])
+  end
 
   DIFFICULTIES = {
     'easy' => N_('task difficulty|easy'),
@@ -90,7 +110,11 @@ class Task < ActiveRecord::Base
   # validates_associated :comments, :on => :create
 
   include DefaultAttributes
-  default_attribute :kind_id, TaskKind.find_by_name('typing').try(:id)
+  # Default kind for new tasks (הקלדה); set via after_initialize to avoid
+  # conflicting with DefaultAttributes overriding the enum getter.
+  after_initialize do
+    self[:kind_id] = 1 if new_record? && read_attribute(:kind_id).nil?
+  end
   default_attribute :difficulty, 'normal'
 
   has_many :documents, -> { where('documents.deleted_at IS NULL') }, dependent: :destroy
@@ -115,7 +139,7 @@ class Task < ActiveRecord::Base
   end
 
   SEARCH_INCLUDES = {
-    include: %i[creator assignee editor kind documents]
+    include: %i[creator assignee editor documents]
   }
 
   TASK_LENGTH = {
@@ -187,12 +211,12 @@ class Task < ActiveRecord::Base
         joins << "LEFT JOIN users AS #{user_association_alias} ON tasks.#{user_association}_id = #{user_association_alias}.id"
       end
 
-      search_opts[:conditions][:task_kinds] = { name: opts[:kind] } unless opts[:kind].blank?
-      ret = self.joins(joins).includes(%i[creator assignee editor kind teams]).where(search_opts[:conditions].merge(search_opts[:with])).order(ord).paginate(
+      search_opts[:conditions][:kind_id] = opts[:kind] unless opts[:kind].blank?
+      ret = self.joins(joins).includes(%i[creator assignee editor teams]).where(search_opts[:conditions].merge(search_opts[:with])).order(ord).paginate(
         page: opts[:page], per_page: opts[:per_page]
       )
     else
-      search_opts[:conditions][:kind] = opts[:kind] unless opts[:kind].blank?
+      search_opts[:conditions][:kind_id] = Task.kind_ids[opts[:kind]] unless opts[:kind].blank?
       if search_opts[:conditions][:state].class == Array
         search_opts[:conditions][:state] = search_opts[:conditions][:state].join(' | ')
       end # Sphinx doesn't handle arrays; it wants pipe-separated values
@@ -207,7 +231,7 @@ class Task < ActiveRecord::Base
   end
 
   def name_with_kind
-    "#{name} (#{kind.try(:name)})"
+    "#{name} (#{kind&.name})"
   end
 
   def parent_task_updated
@@ -341,14 +365,12 @@ class Task < ActiveRecord::Base
   end
 
   def estimate_hours
-    kindname = kind.try(:name)
-
-    factor = case kindname
-             when 'הקלדה' then 0.5
-             when 'הגהה' then 0.5
-             when 'עריכה טכנית' then 0.2
-             when 'חיפוש ביבליוגרפי' then 1
-             when 'סריקה' then 0.05
+    factor = case kind_id
+             when 'הקלדה'            then 0.5
+             when 'הגהה'             then 0.5
+             when 'עריכה_טכנית'      then 0.2
+             when 'חיפוש_ביבליוגרפי' then 1
+             when 'סריקה'            then 0.05
              else 0.5
              end
     (documents.count * factor + documents.count * 0.05).round

@@ -35,7 +35,7 @@
               = _("Instructions")+": "
           %td.instructions
             != auto_link(@task.instructions)
-      - if @task.kind.name == 'הגהה'
+      - if @task.הגהה?
         %a.purple-button.gradient{ :href => 'https://benyehuda.org/page/proofreading', :target => '_new'}
           %span
             = "הנחיות הגהה קבועות"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_23_000001) do
+ActiveRecord::Schema.define(version: 2026_03_25_000001) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -175,12 +175,6 @@ ActiveRecord::Schema.define(version: 2026_03_23_000001) do
     t.index ["task_id", "user_id"], name: "index_task_idle_reminders_on_task_id_and_user_id"
     t.index ["task_id"], name: "index_task_idle_reminders_on_task_id"
     t.index ["user_id"], name: "index_task_idle_reminders_on_user_id"
-  end
-
-  create_table "task_kinds", id: :integer, charset: "utf8mb3", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "task_states", id: :integer, charset: "utf8mb3", force: :cascade do |t|

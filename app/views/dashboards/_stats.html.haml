@@ -1,6 +1,7 @@
 %h4= "סטטיסטיקה"
-- TaskKind.all.each do |tk|
-  - if Task.where(kind_id: tk.id).count > 100
-    %b= "משימות #{tk.name}: "
-    = "#{Task.where(kind_id: tk.id).unassigned.count} לא מוקצות, #{Task.where(kind_id: tk.id).assigned.count} מוקצות, #{Task.where(kind_id: tk.id).approved.count} מאושרות, #{Task.where(kind_id: tk.id).where("updated_at > '#{30.days.ago}'").approved.count} הושלמו בחודש האחרון."
+- Task.kind_ids.each_key do |kind_key|
+  - display_name = I18n.t("activerecord.attributes.task.kind_id.#{kind_key}", default: kind_key.to_s.tr('_', ' '))
+  - if Task.where(kind_id: kind_key).count > 100
+    %b= "משימות #{display_name}: "
+    = "#{Task.where(kind_id: kind_key).unassigned.count} לא מוקצות, #{Task.where(kind_id: kind_key).assigned.count} מוקצות, #{Task.where(kind_id: kind_key).approved.count} מאושרות, #{Task.where(kind_id: kind_key).where("updated_at > '#{30.days.ago}'").approved.count} הושלמו בחודש האחרון."
     %br

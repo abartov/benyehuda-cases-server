@@ -2,7 +2,7 @@
 - child_task = @chained_task || @task.clone
 = semantic_form_for(child_task, :live_validations => false, :url => tasks_path(:id => @task.id), :method => :post) do |f|
   != f.semantic_errors
-  != render(:partial => "tasks/form", :locals => {:f => f, :newkind => TaskKind.find_by_name('הגהה').id})
+  != render(:partial => "tasks/form", :locals => {:f => f, :newkind => 'הגהה'})
   = f.inputs do
     != f.semantic_fields_for :comments, (@comment ||= child_task.comments.build) do |comment|
       != comment.input :message, :as => :text, :input_html => {:class => "comment_message #{!@comment.errors.blank? && 'active activated'}"}, :label => _("Message")

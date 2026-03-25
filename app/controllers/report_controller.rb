@@ -49,19 +49,23 @@ class ReportController < InheritedResources::Base
 
   def few_tasks_left
     @current_tab = :reports
-    # For TaskKind 1, group by parent_id
-    # For TaskKind 21, group by grandparent (parent's parent_id)
+    # הקלדה (kind_id=1): group by parent_id
+    # הגהה  (kind_id=21): group by grandparent (parent's parent_id)
+    proofing_id = Task.kind_ids[:הגהה]
 
-    # Get available kinds for the dropdown filter
-    @available_kinds = TaskKind.where(id: [1, 21]).order(:name)
+    # Build available kinds list for the dropdown
+    @available_kinds = [
+      OpenStruct.new(name: I18n.t('activerecord.attributes.task.kind_id.הקלדה', default: 'הקלדה'), key: 'הקלדה'),
+      OpenStruct.new(name: I18n.t('activerecord.attributes.task.kind_id.הגהה',  default: 'הגהה'),  key: 'הגהה')
+    ]
 
     # Determine which kinds to query based on filter
-    kind_ids = params[:kind_id].present? ? [params[:kind_id].to_i] : [1, 21]
+    kind_keys = params[:kind_id].present? ? [params[:kind_id]] : %w[הקלדה הגהה]
 
     # First, find parent/grandparent IDs that have fewer than 3 tasks
-    parent_group_sql = "CASE WHEN tasks.kind_id = 21 THEN parent_tasks.parent_id ELSE tasks.parent_id END"
+    parent_group_sql = "CASE WHEN tasks.kind_id = #{proofing_id} THEN parent_tasks.parent_id ELSE tasks.parent_id END"
     few_tasks_parents = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
-                            .where(kind_id: kind_ids, state: 'unassigned')
+                            .where(kind_id: kind_keys, state: 'unassigned')
                             .group(parent_group_sql)
                             .having('count(tasks.id) < 3')
                             .pluck(Arel.sql(parent_group_sql))
@@ -69,14 +73,13 @@ class ReportController < InheritedResources::Base
 
     @total = few_tasks_parents.count
 
-    # Now fetch all tasks that belong to those parents, with sorting
+    # Now fetch all tasks that belong to those parents, sorted by kind_id then creation date
     if few_tasks_parents.any?
       base_query = Task.joins("LEFT JOIN tasks AS parent_tasks ON tasks.parent_id = parent_tasks.id")
-                       .joins(:kind)
-                       .includes(:parent, :kind, :documents)
-                       .where(kind_id: kind_ids, state: 'unassigned')
+                       .includes(:parent, :documents)
+                       .where(kind_id: kind_keys, state: 'unassigned')
                        .where("#{parent_group_sql} IN (?)", few_tasks_parents)
-                       .order('task_kinds.name', 'tasks.created_at')
+                       .order('tasks.kind_id', 'tasks.created_at')
       @tasks = apply_scopes(base_query).paginate(page: params[:page], per_page: params[:per_page])
     else
       @tasks = Task.none.paginate(page: params[:page], per_page: params[:per_page])
@@ -85,8 +88,8 @@ class ReportController < InheritedResources::Base
 
   def missing_metadata
     @current_tab = :reports
-    typing = TaskKind.where(name: 'הקלדה')[0].id
-    proofing = TaskKind.where(name: 'הגהה')[0].id
+    typing   = Task.kind_ids[:הקלדה]
+    proofing = Task.kind_ids[:הגהה]
     filters = []
     filters << ' include_images is null ' unless params[:images].present?
     filters << ' independent is null ' unless params[:independent].present?

@@ -1,5 +1,18 @@
 en:
   activerecord:
+    attributes:
+      task:
+        kind_id:
+          הקלדה: Typing
+          אחר: Other
+          הגהה: Proofreading
+          חיפוש_ביבליוגרפי: Bibliographic Search
+          גיוס_כספים: Fundraising
+          רשות_פרסום: Publication Permission
+          עריכה_טכנית: Technical Editing
+          סריקה: Scanning
+          חקיקה: Legislation
+          פרסים: Awards
     errors:
       models:
         property:

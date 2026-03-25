@@ -127,7 +127,7 @@ class TasksController < InheritedResources::Base
     # current_user.search_settings.set_from_params!(params)
     conds = {}
     joins = []
-    conds[:kind_id] = TaskKind.find_by_name(params[:kind]).id if params[:kind].present?
+    conds[:kind_id] = params[:kind] if params[:kind].present?
     conds[:full_nikkud] = params[:full_nikkud] == 'true' if params[:full_nikkud].present?
     conds[:genre] = params[:genre] if params[:genre].present?
     if params[:team].present?
