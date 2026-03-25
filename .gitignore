@@ -39,3 +39,7 @@ run.sh
 /config/master.key
 node_modules
 vendor/bundle
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db

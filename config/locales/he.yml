@@ -30,7 +30,7 @@ he:
         targetdate: תאריך יעד
         open: פתוח לכל?
   tasks:
-    complete_also_updated_parents: "המשימה סומנה כמוכנה לפרסום, וגם משימות האב הבאות סומנו כמוכנות לפרסום: %{parent_names}"
+    complete_also_updated_parents: "המשימה הועברה למצב 'עלתה לאתר', וכך גם משימות האב הבאום: %{parent_names}"
     idle_reminders_sent: תזכורות שנשלחו על משימה לא פעילה
     date_sent: תאריך שליחה
     recipient: נמען
