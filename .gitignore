@@ -8,6 +8,7 @@ db/*.db
 db/*.sqlite3
 tmp/**/*
 .DS_Store
+.beads/*
 doc/api
 doc/app
 config/database.yml
@@ -39,3 +40,10 @@ run.sh
 /config/master.key
 node_modules
 vendor/bundle
+
+# Dolt database files (added by bd init)
+.dolt/
+*.db
+
+# Beads / Dolt files (added by bd init)
+.beads-credential-key
