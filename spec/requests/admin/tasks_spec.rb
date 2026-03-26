@@ -3,10 +3,71 @@ require 'rails_helper'
 RSpec.describe "Admin::Tasks", type: :request do
   let(:admin_user) { create(:user, :admin, :active_user) }
   let(:regular_user) { create(:user, :volunteer, :active_user) }
+  let(:editor)      { create(:user, :editor, :active_user) }
+  let(:volunteer)   { create(:user, :volunteer, :active_user) }
   let(:project) { create(:project, name: "Test Project") }
 
   before do
     allow_any_instance_of(ApplicationController).to receive(:require_user).and_return(true)
+    allow_any_instance_of(Task).to receive(:delayed_notify_on_changes)
+  end
+
+  # ── cascade ready_to_publish via admin state override ────────────────────
+
+  describe "PUT /admin/tasks/:id (admin_state set to ready_to_publish)" do
+    before do
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin_user)
+    end
+
+    def other_task_creat_task(kind:)
+      create(:task, kind_id: kind, state: 'other_task_creat', editor: editor, assignee: volunteer)
+    end
+
+    context 'when a הגהה task is set to ready_to_publish and its parent הקלדה is eligible' do
+      let!(:parent_typing)  { other_task_creat_task(kind: :הקלדה) }
+      let!(:proofing_task)  { create(:task, kind_id: :הגהה, state: 'assigned',
+                                     editor: editor, assignee: volunteer,
+                                     parent_id: parent_typing.id) }
+
+      it 'also transitions the parent הקלדה task to ready_to_publish' do
+        put admin_task_path(proofing_task),
+            params: { task: { admin_state: 'ready_to_publish' } }
+
+        expect(parent_typing.reload.state).to eq('ready_to_publish')
+      end
+    end
+
+    context 'when the task was already ready_to_publish (no state change)' do
+      let!(:parent_typing) { other_task_creat_task(kind: :הקלדה) }
+      let!(:proofing_task) { create(:task, kind_id: :הגהה, state: 'ready_to_publish',
+                                    editor: editor, assignee: volunteer,
+                                    parent_id: parent_typing.id) }
+
+      it 'does not cascade (parent remains unchanged)' do
+        put admin_task_path(proofing_task),
+            params: { task: { admin_state: 'ready_to_publish' } }
+
+        expect(parent_typing.reload.state).to eq('other_task_creat')
+      end
+    end
+
+    context 'when an עריכה_טכנית task is set to ready_to_publish with a הגהה → הקלדה chain' do
+      let!(:grandparent_typing) { other_task_creat_task(kind: :הקלדה) }
+      let!(:parent_proofing) do
+        other_task_creat_task(kind: :הגהה).tap { |t| t.update_column(:parent_id, grandparent_typing.id) }
+      end
+      let!(:tech_edit_task) { create(:task, kind_id: :עריכה_טכנית, state: 'assigned',
+                                     editor: editor, assignee: volunteer,
+                                     parent_id: parent_proofing.id) }
+
+      it 'transitions both ancestor tasks to ready_to_publish' do
+        put admin_task_path(tech_edit_task),
+            params: { task: { admin_state: 'ready_to_publish' } }
+
+        expect(parent_proofing.reload.state).to eq('ready_to_publish')
+        expect(grandparent_typing.reload.state).to eq('ready_to_publish')
+      end
+    end
   end
 
   describe "GET /tasks/:id/start_ingestion" do
