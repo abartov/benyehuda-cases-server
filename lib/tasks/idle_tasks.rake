@@ -1,12 +1,16 @@
 namespace :tasks do
   desc "Send weekly reminders for idle tasks and reports to editors"
   task send_idle_notifications: :environment do
-    dry_run = ENV['DRY_RUN'].to_s.downcase == 'true' || Rails.env.development?
+    dry_run = dry_run?
 
     if dry_run
       puts "=" * 70
-      puts "DRY RUN MODE - No emails will be sent"
-      puts "To send real emails, run: RAILS_ENV=production rake tasks:send_idle_notifications"
+      if staging_mode?
+        puts "STAGING MODE - No emails will be sent (staging uses production DB snapshot)"
+      else
+        puts "DRY RUN MODE - No emails will be sent"
+        puts "To send real emails, run: RAILS_ENV=production rake tasks:send_idle_notifications"
+      end
       puts "=" * 70
     end
 
@@ -27,17 +31,23 @@ namespace :tasks do
 
   desc "Send reminders to assignees for tasks idle 4+ months"
   task send_assignee_reminders: :environment do
-    dry_run = ENV['DRY_RUN'].to_s.downcase == 'true' || Rails.env.development?
-    send_assignee_reminders(dry_run)
+    send_assignee_reminders(dry_run?)
   end
 
   desc "Send reports to editors for tasks idle 5+ months"
   task send_editor_reports: :environment do
-    dry_run = ENV['DRY_RUN'].to_s.downcase == 'true' || Rails.env.development?
-    send_editor_reports(dry_run)
+    send_editor_reports(dry_run?)
   end
 
   private
+
+  def staging_mode?
+    ENV['is_staging'].to_s.strip.downcase == 'true'
+  end
+
+  def dry_run?
+    ENV['DRY_RUN'].to_s.strip.downcase == 'true' || Rails.env.development? || staging_mode?
+  end
 
   def send_assignee_reminders(dry_run = false)
     idle_tasks = find_idle_tasks(4.months.ago)
