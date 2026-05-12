@@ -50,3 +50,8 @@ vendor/bundle
 
 # IDE files
 .idea/
+
+# Dotenv local environment variables file
+.env.local
+.env.development.local
+.env.test.local
