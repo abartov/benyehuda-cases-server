@@ -67,6 +67,7 @@ gem 'puma'
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 
 group :test, :development do
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   # gem 'ZenTest', '4.0.0'
   gem 'grape-entity-matchers'
