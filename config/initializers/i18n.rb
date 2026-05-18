@@ -10,5 +10,25 @@ I18n.locale = 'he'
 #I18n.locale = :he
 I18n.enforce_available_locales = false
 
-WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
-WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+
+begin
+  def assets_compilation?
+    # Check if we're in assets group (set by rails assets:precompile)
+    return true if ENV['RAILS_GROUPS'].to_s.include?('assets')
+
+    # Fallback to checking rake tasks
+    if defined?(Rake.application)
+      Rake.application.top_level_tasks.any? do |task|
+        task.to_s == 'assets:precompile' ||
+          task.to_s.start_with?('assets:precompile')
+      end
+    end
+  end
+
+  # The code below requires DB connection, which can be unavailable during assets precompilation
+  # so we do it only when it is not an assets compilation rake task
+  unless assets_compilation?
+    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
+    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+  end
+end
