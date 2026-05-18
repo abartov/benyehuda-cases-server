@@ -23,13 +23,15 @@ ENV RAILS_ENV=production \
 FROM base AS builder
 
 COPY package.json ./
+COPY yarn.lock ./
 
 RUN apt-get install -y default-libmysqlclient-dev libvips-dev npm
 
 RUN bundle install --deployment --without test development --jobs "$(grep -c ^processor /proc/cpuinfo)" \
     && find vendor/bundle/ -path "*/cache/*" -name "*.gem"   -delete \
     && find vendor/bundle/ -path "*/gems/*"  -name "*.[c|o]" -delete \
-    && npm install
+    && npm install yarn --global \
+    && yarn install
 
 # rake tasks requires SECRET_KEY_BASE to be set, but we don't need it to be valid at this stage
 RUN SECRET_KEY_BASE=1 bundle exec rake assets:precompile
