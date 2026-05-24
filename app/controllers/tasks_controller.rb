@@ -6,7 +6,7 @@ class TasksController < InheritedResources::Base
   before_action :require_editor_or_admin, only: %i[index create make_comments_editor_only get_last_source]
   actions :index, :show, :update, :create
   autocomplete :task, :name, full: true, extra_data: [:kind_id], display_value: :name_with_kind
-  has_scope :order_by, only: :index, using: %i[includes property dir]
+  has_scope :order_by, only: :index, using: %i[includes property dir], allow_blank: true
   has_scope :order_by_state, only: :index, using: [:dir]
   has_scope :order_by_updated_at, only: :index, using: [:dir]
 

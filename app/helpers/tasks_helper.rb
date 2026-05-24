@@ -17,6 +17,22 @@ module TasksHelper
     param == 'ASC' ? 'DESC' : 'ASC'
   end
 
+  def modal_sort_dir_for(property)
+    current_property = params.dig(:order_by, :property)
+    current_dir = params.dig(:order_by, :dir)
+    (current_property.to_s == property.to_s && current_dir.present?) ? (current_dir == 'ASC' ? 'DESC' : 'ASC') : 'ASC'
+  end
+
+  def modal_state_sort_dir
+    current_dir = params.dig(:order_by_state, :dir)
+    current_dir.present? ? (current_dir == 'ASC' ? 'DESC' : 'ASC') : 'ASC'
+  end
+
+  def modal_sort_path(sort_params)
+    safe_params = params.permit(:assignee_id, :per_page, :kind, :genre, :team, :full_nikkud).to_h.symbolize_keys
+    tasks_path(safe_params.merge(sort_params))
+  end
+
   def sorting_path_for_current_context(params_to_merge = {})
     # Determine the correct path based on the current controller
     case controller_name
