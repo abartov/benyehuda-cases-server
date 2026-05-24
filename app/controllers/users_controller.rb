@@ -57,6 +57,10 @@ class UsersController < InheritedResources::Base
       @user.is_volunteer = uparams.delete(:is_volunteer)
       @user.is_editor = uparams.delete(:is_editor)
       @user.email = uparams[:email] || @user.email
+    else
+      uparams.delete(:is_admin)
+      uparams.delete(:is_volunteer)
+      uparams.delete(:is_editor)
     end
     update_resource(resource, uparams)
     render action: :show
@@ -100,6 +104,11 @@ class UsersController < InheritedResources::Base
   def send_anniversary_greeting
     @user = User.find(params[:id])
     return unless current_user.admin_or_editor?
+
+    if @user.suppress_anniversary_greeting?
+      render json: { success: false, error: I18n.t('anniversary.greeting_suppressed') }, status: :unprocessable_entity
+      return
+    end
 
     message = params[:message]
 
@@ -181,7 +190,8 @@ class UsersController < InheritedResources::Base
   end
 
   def user_params
-    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :zehut, :is_admin, :is_editor,
+    params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :suppress_anniversary_greeting,
+                                  :zehut, :is_admin, :is_editor,
                                   :is_volunteer, :avatar, user_properties: {}, volunteer_properties: {}, editor_properties: {})
     # params.permit!
   end

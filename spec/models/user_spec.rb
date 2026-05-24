@@ -352,6 +352,36 @@ RSpec.describe User, type: :model do
         result = User.near_anniversary
         expect(result).not_to include(volunteer_not_activated)
       end
+
+      it 'excludes volunteers who have suppressed anniversary greetings' do
+        # Frozen at 2026-02-15. Create volunteer from 2025-02-13 (1 year ago, within window)
+        # but who has opted out of anniversary greeting emails
+        volunteer_suppressed = create(:user, :volunteer, :active_user,
+                                       on_break: false,
+                                       disabled_at: nil,
+                                       created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                       activated_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                       congratulated_at: nil,
+                                       suppress_anniversary_greeting: true)
+
+        result = User.near_anniversary
+        expect(result).not_to include(volunteer_suppressed)
+      end
+
+      it 'includes volunteers who have not suppressed anniversary greetings (default)' do
+        # Frozen at 2026-02-15. Create volunteer from 2025-02-13 (1 year ago, within window)
+        # with the default (not suppressed)
+        volunteer_default = create(:user, :volunteer, :active_user,
+                                    on_break: false,
+                                    disabled_at: nil,
+                                    created_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                    activated_at: Time.zone.local(2025, 2, 13, 12, 0, 0),
+                                    congratulated_at: nil,
+                                    suppress_anniversary_greeting: false)
+
+        result = User.near_anniversary
+        expect(result).to include(volunteer_default)
+      end
     end
   end
 end

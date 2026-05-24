@@ -75,5 +75,8 @@ en:
     crop_and_download: Crop & Download
     crop_image: Crop Image
     download_cropped_image: Download Cropped Image
+  anniversary:
+    suppress_greeting_label: "Do not send me anniversary greeting emails"
+    greeting_suppressed: "This user has opted out of anniversary greeting emails"
   common:
     cancel: Cancel

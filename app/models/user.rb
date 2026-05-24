@@ -71,11 +71,13 @@ class User < ActiveRecord::Base
     # Find users whose created_at is within 1 week of their anniversary
     # and who are active (activated, not on break, not disabled, not already congratulated this year)
     # Exclude year 0 (first year volunteers should not receive anniversary emails)
+    # Exclude users who have opted out of anniversary greeting emails
     where('users.activated_at IS NOT NULL')
       .where('users.disabled_at IS NULL')
       .where('users.on_break = 0 OR users.on_break IS NULL')
       .where('(users.congratulated_at IS NULL OR users.congratulated_at < ?)', 1.year.ago)
       .where('users.created_at <= ?', 1.year.ago)
+      .where(suppress_anniversary_greeting: false)
       .select { |u| u.near_anniversary? }
   }
 

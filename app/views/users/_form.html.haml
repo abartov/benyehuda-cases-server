@@ -12,6 +12,7 @@
   = f.inputs :name => _("Email Notifications") do
     = f.input :notify_on_comments, :label => _("When a comment added to my task"), :as => :boolean
     = f.input :notify_on_status, :label => _("When my task status changed"), :as => :boolean
+    = f.input :suppress_anniversary_greeting, :label => I18n.t('anniversary.suppress_greeting_label'), :as => :boolean
 
   = render(:partial => "users/user_form", :locals => {:f => f})
 
