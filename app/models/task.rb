@@ -129,7 +129,11 @@ class Task < ActiveRecord::Base
   }
 
   scope :order_by, proc { |included_assoc, property, dir|
-    includes(included_assoc).order("#{property} #{dir}") if property.present? && dir.present?
+    if property.present? && dir.present?
+      includes(included_assoc).order("#{property} #{dir}")
+    else
+      all
+    end
   }
 
   scope :order_by_updated_at, proc { |dir| order("updated_at #{dir}") }
