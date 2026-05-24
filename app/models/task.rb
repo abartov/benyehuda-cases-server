@@ -128,7 +128,23 @@ class Task < ActiveRecord::Base
     joins('left join task_states on tasks.state = task_states.name').joins('left join translation_keys on translation_keys.key = task_states.value').joins('left join translation_texts on translation_keys.id = translation_texts.translation_key_id').where("translation_texts.locale = '#{FastGettext.locale}'").order("translation_texts.text #{dir}")
   }
 
-  scope :order_by, proc { |included_assoc, property, dir| includes(included_assoc).order("#{property} #{dir}") }
+  ALLOWED_ORDER_COLUMNS = %w[
+    name tasks.name tasks.genre tasks.kind_id tasks.updated_at
+    documents_count tasks.documents_count users.name
+  ].freeze
+  ALLOWED_ORDER_INCLUDES = %w[creator editor assignee].freeze
+
+  scope :order_by, proc { |included_assoc, property, dir|
+    safe_col = ALLOWED_ORDER_COLUMNS.include?(property.to_s) ? property.to_s : nil
+    safe_dir = %w[ASC DESC].include?(dir.to_s.upcase) ? dir.to_s.upcase : nil
+    if safe_col && safe_dir
+      safe_incl = ALLOWED_ORDER_INCLUDES.include?(included_assoc.to_s) ? included_assoc : nil
+      base = order(Arel.sql("#{safe_col} #{safe_dir}"))
+      safe_incl ? base.includes(safe_incl) : base
+    else
+      all
+    end
+  }
 
   scope :order_by_updated_at, proc { |dir| order("updated_at #{dir}") }
 
