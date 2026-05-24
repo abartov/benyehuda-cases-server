@@ -28,7 +28,7 @@
     %tr
       %th &nbsp;
       %th= link_to _("Name"), modal_sort_path(order_by: { property: 'tasks.name', dir: modal_sort_dir_for('tasks.name') }), data: { remote: true }
-      %th= link_to 'סוגה', modal_sort_path(order_by: { property: 'genre', dir: modal_sort_dir_for('genre') }), data: { remote: true }
+      %th= link_to 'סוגה', modal_sort_path(order_by: { property: 'tasks.genre', dir: modal_sort_dir_for('tasks.genre') }), data: { remote: true }
       %th= link_to _("Kind"), modal_sort_path(order_by: { property: 'tasks.kind_id', dir: modal_sort_dir_for('tasks.kind_id') }), data: { remote: true }
       %th= link_to _("State"), modal_sort_path(order_by_state: { dir: modal_state_sort_dir }), data: { remote: true }
       %th= link_to _("Files"), modal_sort_path(order_by: { property: 'documents_count', dir: modal_sort_dir_for('documents_count') }), data: { remote: true }
