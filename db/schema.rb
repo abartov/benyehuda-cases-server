@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_03_25_000001) do
+ActiveRecord::Schema.define(version: 2026_05_24_000000) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key"
@@ -305,6 +305,7 @@ ActiveRecord::Schema.define(version: 2026_03_25_000001) do
     t.date "last_reminder"
     t.string "zehut"
     t.datetime "congratulated_at"
+    t.boolean "suppress_anniversary_greeting", default: false, null: false
     t.index ["current_login_at"], name: "index_users_on_current_login_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["perishable_token"], name: "index_users_on_perishable_token"
