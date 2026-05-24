@@ -11,8 +11,15 @@ RSpec.describe 'Users anniversary greeting', type: :request do
 
   describe 'POST /users/:id/send_anniversary_greeting' do
     context 'when the volunteer has not suppressed anniversary greetings' do
-      it 'sends the greeting and returns success' do
-        allow(Notification).to receive_message_chain(:anniversary_greeting, :deliver_now)
+      let(:mail_double) { double('mail', deliver_now: true) }
+
+      before do
+        allow(Notification).to receive(:anniversary_greeting).and_return(mail_double)
+      end
+
+      it 'calls the mailer and returns success' do
+        expect(Notification).to receive(:anniversary_greeting).with(volunteer, editor, 'Congratulations!').and_return(mail_double)
+        expect(mail_double).to receive(:deliver_now)
 
         post send_anniversary_greeting_user_path(volunteer), params: { message: 'Congratulations!' }
 
@@ -22,8 +29,6 @@ RSpec.describe 'Users anniversary greeting', type: :request do
       end
 
       it 'updates the congratulated_at timestamp' do
-        allow(Notification).to receive_message_chain(:anniversary_greeting, :deliver_now)
-
         expect {
           post send_anniversary_greeting_user_path(volunteer), params: { message: 'Congratulations!' }
         }.to change { volunteer.reload.congratulated_at }.from(nil)

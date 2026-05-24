@@ -57,6 +57,10 @@ class UsersController < InheritedResources::Base
       @user.is_volunteer = uparams.delete(:is_volunteer)
       @user.is_editor = uparams.delete(:is_editor)
       @user.email = uparams[:email] || @user.email
+    else
+      uparams.delete(:is_admin)
+      uparams.delete(:is_volunteer)
+      uparams.delete(:is_editor)
     end
     update_resource(resource, uparams)
     render action: :show
