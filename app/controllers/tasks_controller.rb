@@ -137,7 +137,10 @@ class TasksController < InheritedResources::Base
 
     # Build base query with filters, excluding tasks marked do_not_assign or do_not_publish
     base_query = Task.unassigned.joins(joins).where(conds).where(do_not_assign: false).where(do_not_publish: false)
-    base_query = base_query.where('tasks.name LIKE ?', "%#{params[:query]}%") if params[:query].present?
+    if params[:query].present?
+      escaped_query = ActiveRecord::Base.sanitize_sql_like(params[:query])
+      base_query = base_query.where('tasks.name LIKE ?', "%#{escaped_query}%")
+    end
 
     # Apply sorting scopes if present
     @tasks = if params[:order_by].present? || params[:order_by_state].present? || params[:order_by_updated_at].present? || params[:sort_by].present?
