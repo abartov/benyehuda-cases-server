@@ -46,4 +46,40 @@ RSpec.describe 'Tasks assignment popup sorting', type: :request do
       expect(response.body).to include('ManyFilesTask')
     end
   end
+
+  describe 'GET /tasks (assignment popup) name search' do
+    let!(:matching_task)    { create(:unassigned_task, name: 'AlphaTask') }
+    let!(:nonmatching_task) { create(:unassigned_task, name: 'BetaTask') }
+
+    it 'filters tasks by name substring' do
+      get tasks_path, params: { assignee_id: volunteer.id, query: 'Alpha' }, xhr: true
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('AlphaTask')
+      expect(response.body).not_to include('BetaTask')
+    end
+
+    it 'returns all tasks when query is blank' do
+      get tasks_path, params: { assignee_id: volunteer.id, query: '' }, xhr: true
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('AlphaTask')
+      expect(response.body).to include('BetaTask')
+    end
+
+    it 'renders the query field in the filter form' do
+      get tasks_path, params: { assignee_id: volunteer.id }, xhr: true
+
+      expect(response).to have_http_status(:success)
+      # JS response escapes quotes; check for the field name attribute
+      expect(response.body).to include('name=\\"query\\"')
+    end
+
+    it 'preserves query param in sort links' do
+      get tasks_path, params: { assignee_id: volunteer.id, query: 'Alpha' }, xhr: true
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('query%5D=Alpha').or include('query=Alpha')
+    end
+  end
 end
