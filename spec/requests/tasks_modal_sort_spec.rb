@@ -37,5 +37,13 @@ RSpec.describe 'Tasks assignment popup sorting', type: :request do
       expect(response.body).to include('data-remote')
       expect(response.body).to include('documents_count')
     end
+
+    it 'ignores a crafted SQL injection property and returns all tasks unsorted' do
+      get tasks_path, params: { assignee_id: volunteer.id, order_by: { property: '1; DROP TABLE tasks--', dir: 'ASC' } }, xhr: true
+
+      expect(response).to have_http_status(:success)
+      expect(response.body).to include('FewFilesTask')
+      expect(response.body).to include('ManyFilesTask')
+    end
   end
 end
