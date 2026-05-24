@@ -29,7 +29,7 @@ module TasksHelper
   end
 
   def modal_sort_path(sort_params)
-    safe_params = params.permit(:assignee_id, :per_page, :kind, :genre, :team, :full_nikkud).to_h.symbolize_keys
+    safe_params = params.permit(:assignee_id, :per_page, :kind, :genre, :team, :full_nikkud, :query).to_h.symbolize_keys
     tasks_path(safe_params.merge(sort_params))
   end
 
