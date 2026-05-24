@@ -12,6 +12,48 @@ RSpec.describe "Admin::Tasks", type: :request do
     allow_any_instance_of(Task).to receive(:delayed_notify_on_changes)
   end
 
+  # ── admin tasks list sorting ──────────────────────────────────────────────
+
+  describe 'GET /admin/tasks (index sorting)' do
+    ALL_TASK_STATES = %w[unassigned assigned stuck partial waits_for_editor rejected approved techedit ready_to_publish other_task_creat].freeze
+
+    before do
+      ALL_TASK_STATES.each { |s| create(:task_state, name: s, value: s) }
+      allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin_user)
+    end
+
+    context 'sorting by documents_count' do
+      let!(:task_few)  { create(:task, name: 'FewFilesAdminTask',  documents_count: 1) }
+      let!(:task_many) { create(:task, name: 'ManyFilesAdminTask', documents_count: 9) }
+
+      it 'sorts ascending' do
+        get admin_tasks_path, params: { order_by: { property: 'tasks.documents_count', dir: 'ASC' } }
+
+        expect(response).to have_http_status(:success)
+        expect(response.body.index('FewFilesAdminTask')).to be < response.body.index('ManyFilesAdminTask')
+      end
+
+      it 'sorts descending' do
+        get admin_tasks_path, params: { order_by: { property: 'tasks.documents_count', dir: 'DESC' } }
+
+        expect(response).to have_http_status(:success)
+        expect(response.body.index('ManyFilesAdminTask')).to be < response.body.index('FewFilesAdminTask')
+      end
+    end
+
+    context 'sorting by kind_id' do
+      let!(:task_typing)   { create(:task, name: 'TypingTask',   kind_id: :הקלדה) }
+      let!(:task_proofing) { create(:task, name: 'ProofingTask', kind_id: :הגהה) }
+
+      it 'does not raise a SQL error' do
+        expect {
+          get admin_tasks_path, params: { order_by: { property: 'tasks.kind_id', dir: 'ASC' } }
+        }.not_to raise_error
+        expect(response).to have_http_status(:success)
+      end
+    end
+  end
+
   # ── cascade ready_to_publish via admin state override ────────────────────
 
   describe "PUT /admin/tasks/:id (admin_state set to ready_to_publish)" do

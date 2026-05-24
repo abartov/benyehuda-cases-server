@@ -4,7 +4,7 @@ class Admin::TasksController < InheritedResources::Base
   before_action :require_admin, only: %i[create update changes split_task start_ingestion]
   before_action :require_editor_or_admin, only: %i[index new create split_task]
   actions :index, :new, :create, :edit, :update, :destroy, :changes, :split_task, :start_ingestion
-  has_scope :order_by, only: :index, using: %i[includes property dir]
+  has_scope :order_by, only: :index, using: %i[includes property dir], allow_blank: true
   has_scope :order_by_state, only: :index, using: [:dir]
   respond_to :js
 
