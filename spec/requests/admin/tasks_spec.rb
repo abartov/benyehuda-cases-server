@@ -52,6 +52,18 @@ RSpec.describe "Admin::Tasks", type: :request do
         expect(response).to have_http_status(:success)
       end
     end
+
+    context 'SQL injection attempt in order_by property' do
+      let!(:task_a) { create(:task, name: 'TaskAlpha') }
+
+      it 'ignores a crafted property and returns tasks unsorted' do
+        expect {
+          get admin_tasks_path, params: { order_by: { property: '1; DROP TABLE tasks--', dir: 'ASC' } }
+        }.not_to raise_error
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include('TaskAlpha')
+      end
+    end
   end
 
   # ── cascade ready_to_publish via admin state override ────────────────────
