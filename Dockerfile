@@ -22,6 +22,7 @@ ENV RAILS_ENV=production \
 
 FROM base AS builder
 
+COPY public ./public
 COPY package.json ./
 COPY yarn.lock ./
 
