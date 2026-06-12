@@ -5,6 +5,7 @@ if [ "${1}" == "./bin/rails" ] && [ "${2}" == "server" ]; then
   ./bin/rails db:migrate
 
   # Starting Thinking Sphinx
+  bundle exec rake ts:configure
   bundle exec rake ts:start
 fi
 
