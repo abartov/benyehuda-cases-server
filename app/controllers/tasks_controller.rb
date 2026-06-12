@@ -1,4 +1,5 @@
 require 'httparty'
+require 'shellwords'
 require 'will_paginate/array' # for sorting the array when sorting by percent_done
 
 class TasksController < InheritedResources::Base
@@ -26,50 +27,71 @@ class TasksController < InheritedResources::Base
     if @task
       tmpfile = Tempfile.new(['dl_task_pdf__', '.pdf'])
       begin
-        jpegs = @task.documents.select { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/ }
+        docs = @task.documents.select { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|JPG|JPEG|TIF|PNG|png|PDF|pdf)$/ }
         if params['dtype'].blank? || params['dtype'] == 'maintext'
-          jpegs = jpegs.select { |x| x.document_type == 'maintext' }
+          docs = docs.select { |x| x.document_type == 'maintext' }
         elsif params['dtype'] == 'front'
-          jpegs = jpegs.select { |x| x.document_type == 'front' }
+          docs = docs.select { |x| x.document_type == 'front' }
         elsif params['dtype'] == 'footnotes'
-          jpegs = jpegs.select { |x| x.document_type == 'footnotes_and_corrigenda' }
+          docs = docs.select { |x| x.document_type == 'footnotes_and_corrigenda' }
         else
           flash[:error] = 'התבקש סוג הורדה לא תקין'
           redirect_to task_path(@task)
           return
         end
-        if jpegs.empty?
+        if docs.empty?
           flash[:error] = 'אין סריקות מתאימות להורדה!'
           redirect_to task_path(@task)
           return
         end
-        tmpjpegs = []
-        jpegs.each do |jpeg|
-          jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
-          tmpjpeg = Tempfile.new(['dl_task_jpg__', jpegext], binmode: true)
-          tmpjpegpath = tmpjpeg.path
-          tmpjpegs << tmpjpeg
-          response = HTTParty.get(jpeg.file.url)
-          tmpjpeg.write(response.body)
-          tmpjpeg.flush
-        end
+
+        has_images = docs.any? { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|png)/i }
+
         tmpfilename = tmpfile.path
-        inputfiles = tmpfilename + '_input.txt'
-        # img2pdf needs NUL-separated list
-        File.open(inputfiles, 'w') do |f|
-          f.write(tmpjpegs.map do |tj|
-                    tj.path
-                  end.join("\0"))
+
+        if has_images
+          # Current behavior: convert images (and any PDFs) to a single PDF via img2pdf
+          tmpjpegs = []
+          docs.each do |jpeg|
+            jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
+            tmpjpeg = Tempfile.new(['dl_task_jpg__', jpegext], binmode: true)
+            tmpjpegs << tmpjpeg
+            http_response = HTTParty.get(jpeg.file.url)
+            tmpjpeg.write(http_response.body)
+            tmpjpeg.flush
+          end
+          inputfiles = tmpfilename + '_input.txt'
+          # img2pdf needs NUL-separated list
+          File.open(inputfiles, 'w') do |f|
+            f.write(tmpjpegs.map(&:path).join("\0"))
+          end
+          # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
+          # ImageMagick was producing low-quality PDFs, so switched to img2pdf:
+          run_img2pdf(inputfiles, tmpfilename)
+          pdf = File.read(tmpfilename)
+          send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
+          File.delete(tmpfilename)
+          File.delete(inputfiles)
+        elsif docs.length == 1
+          # Single PDF: stream it directly without merging
+          http_response = HTTParty.get(docs.first.file.url)
+          send_data http_response.body, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
+        else
+          # PDF-only, multiple files: concatenate with pdfunite
+          tmppdfs = []
+          docs.each do |pdf_doc|
+            tmppdf = Tempfile.new(['dl_task_src_', '.pdf'], binmode: true)
+            tmppdfs << tmppdf
+            http_response = HTTParty.get(pdf_doc.file.url)
+            tmppdf.write(http_response.body)
+            tmppdf.flush
+          end
+          pdf_args = tmppdfs.map { |t| Shellwords.escape(t.path) }.join(' ')
+          run_pdfunite(pdf_args, tmpfilename)
+          pdf = File.read(tmpfilename)
+          send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
+          File.delete(tmpfilename)
         end
-        # run the conversion
-        # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-        # `convert @#{inputfiles} #{tmpfilename}`
-        # ImageMagick was producing low-quality PDFs, so switched to img2pdf:
-        `img2pdf --from-file #{inputfiles} -o #{tmpfilename}`
-        pdf = File.read(tmpfilename)
-        send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
-        File.delete(tmpfilename) # delete temporary generated PDF
-        File.delete(inputfiles)
       rescue StandardError
         redirect_to '/'
       ensure
@@ -245,5 +267,13 @@ class TasksController < InheritedResources::Base
 
   def task_params
     params.permit!
+  end
+
+  def run_img2pdf(input_list_file, output_path)
+    `img2pdf --from-file #{input_list_file} -o #{Shellwords.escape(output_path)}`
+  end
+
+  def run_pdfunite(pdf_args, output_path)
+    `pdfunite #{pdf_args} #{Shellwords.escape(output_path)}`
   end
 end
