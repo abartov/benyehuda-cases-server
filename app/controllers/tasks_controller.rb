@@ -1,5 +1,4 @@
 require 'httparty'
-require 'shellwords'
 require 'will_paginate/array' # for sorting the array when sorting by percent_done
 
 class TasksController < InheritedResources::Base
@@ -52,11 +51,11 @@ class TasksController < InheritedResources::Base
         if has_images
           # Current behavior: convert images (and any PDFs) to a single PDF via img2pdf
           tmpjpegs = []
-          docs.each do |jpeg|
-            jpegext = jpeg.file_file_name[jpeg.file_file_name.rindex('.')..-1]
-            tmpjpeg = Tempfile.new(['dl_task_jpg__', jpegext], binmode: true)
+          docs.each do |doc|
+            docext = doc.file_file_name[doc.file_file_name.rindex('.')..-1]
+            tmpjpeg = Tempfile.new(['dl_task_jpg__', docext], binmode: true)
             tmpjpegs << tmpjpeg
-            http_response = HTTParty.get(jpeg.file.url)
+            http_response = HTTParty.get(doc.file.url)
             tmpjpeg.write(http_response.body)
             tmpjpeg.flush
           end
@@ -86,8 +85,7 @@ class TasksController < InheritedResources::Base
             tmppdf.write(http_response.body)
             tmppdf.flush
           end
-          pdf_args = tmppdfs.map { |t| Shellwords.escape(t.path) }.join(' ')
-          run_pdfunite(pdf_args, tmpfilename)
+          run_pdfunite(tmppdfs.map(&:path), tmpfilename)
           pdf = File.read(tmpfilename)
           send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
           File.delete(tmpfilename)
@@ -270,10 +268,10 @@ class TasksController < InheritedResources::Base
   end
 
   def run_img2pdf(input_list_file, output_path)
-    `img2pdf --from-file #{input_list_file} -o #{Shellwords.escape(output_path)}`
+    system('img2pdf', '--from-file', input_list_file, '-o', output_path) || raise('img2pdf failed')
   end
 
-  def run_pdfunite(pdf_args, output_path)
-    `pdfunite #{pdf_args} #{Shellwords.escape(output_path)}`
+  def run_pdfunite(pdf_paths, output_path)
+    system('pdfunite', *pdf_paths, output_path) || raise('pdfunite failed')
   end
 end
