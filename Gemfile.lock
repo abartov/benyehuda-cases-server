@@ -78,9 +78,9 @@ GEM
       airbrake-ruby (~> 6.0)
     airbrake-ruby (6.2.2)
       rbtree3 (~> 0.6)
-    airbrussh (1.5.3)
+    airbrussh (1.6.1)
       sshkit (>= 1.6.1, != 1.7.0)
-    ast (2.4.2)
+    ast (2.4.3)
     authlogic (6.4.3)
       activemodel (>= 5.2, < 7.2)
       activerecord (>= 5.2, < 7.2)
@@ -125,10 +125,10 @@ GEM
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
-    capistrano3-puma (6.2.0)
+    capistrano3-puma (8.0.0)
       capistrano (~> 3.7)
       capistrano-bundler
-      puma (>= 5.1, < 7.0)
+      puma (>= 6.1, < 9.0)
     capybara (3.40.0)
       addressable
       matrix
@@ -143,19 +143,20 @@ GEM
       logger (~> 1.5)
     chronic (0.10.2)
     climate_control (1.2.0)
-    concurrent-ruby (1.3.4)
+    concurrent-ruby (1.3.6)
     crass (1.0.6)
     csv (3.3.5)
     daemons (1.4.1)
-    database_cleaner-active_record (2.2.0)
+    database_cleaner-active_record (2.2.2)
       activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0.0)
-    database_cleaner-core (2.0.1)
+      database_cleaner-core (~> 2.0)
+    database_cleaner-core (2.1.0)
     date (3.5.1)
     debug (1.11.0)
       irb (~> 1.10)
       reline (>= 0.3.8)
     diff-lcs (1.5.1)
+    drb (2.2.3)
     dry-core (1.0.2)
       concurrent-ruby (~> 1.0)
       logger
@@ -234,7 +235,7 @@ GEM
       csv
       mini_mime (>= 1.0.0)
       multi_xml (>= 0.5.2)
-    i18n (1.14.6)
+    i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     image_science (1.2.1)
     inherited_resources (2.0.1)
@@ -260,6 +261,7 @@ GEM
       mime-types
       terrapin (>= 0.6.0, < 2.0)
     language_server-protocol (3.17.0.5)
+    lint_roller (1.1.0)
     listen (3.9.0)
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
@@ -290,7 +292,9 @@ GEM
     mini_magick (5.0.1)
     mini_mime (1.1.5)
     mini_portile2 (2.8.9)
-    minitest (5.26.1)
+    minitest (6.0.6)
+      drb (~> 2.0)
+      prism (~> 1.5)
     mocha (2.5.0)
       ruby2_keywords (>= 0.0.5)
     msgpack (1.7.3)
@@ -315,8 +319,8 @@ GEM
       net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.5.0)
       net-protocol
-    net-ssh (7.3.0)
-    nio4r (2.7.4)
+    net-ssh (7.3.2)
+    nio4r (2.7.5)
     nokogiri (1.19.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
@@ -327,8 +331,8 @@ GEM
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
-    parallel (1.26.3)
-    parser (3.3.6.0)
+    parallel (1.28.0)
+    parser (3.3.11.1)
       ast (~> 2.4.1)
       racc
     power_assert (3.0.1)
@@ -338,11 +342,12 @@ GEM
     prime (0.1.2)
       forwardable
       singleton
+    prism (1.9.0)
     psych (5.2.6)
       date
       stringio
     public_suffix (7.0.5)
-    puma (6.4.3)
+    puma (8.0.2)
       nio4r (~> 2.0)
     racc (1.8.1)
     rack (2.2.23)
@@ -395,7 +400,7 @@ GEM
       erb
       psych (>= 4.0.0)
       tsort
-    regexp_parser (2.9.2)
+    regexp_parser (2.12.0)
     reline (0.6.2)
       io-console (~> 0.5)
     request_store (1.7.0)
@@ -429,18 +434,20 @@ GEM
     rspec2-rails-views-matchers (0.2.2)
       nokogiri (>= 1.4.4)
       rspec (>= 2.0.0)
-    rubocop (1.68.0)
+    rubocop (1.87.0)
       json (~> 2.3)
-      language_server-protocol (>= 3.17.0)
-      parallel (~> 1.10)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
       parser (>= 3.3.0.2)
       rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 2.4, < 3.0)
-      rubocop-ast (>= 1.32.2, < 2.0)
+      regexp_parser (>= 2.9.3, < 3.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
       ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 2.4.0, < 3.0)
-    rubocop-ast (1.34.1)
-      parser (>= 3.3.1.0)
+      unicode-display_width (>= 2.4.0, < 4.0)
+    rubocop-ast (1.49.1)
+      parser (>= 3.3.7.2)
+      prism (~> 1.7)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     ruby_parser (3.21.1)
@@ -474,7 +481,7 @@ GEM
       actionpack (>= 6.1)
       activesupport (>= 6.1)
       sprockets (>= 3.0.0)
-    sshkit (1.24.0)
+    sshkit (1.25.0)
       base64
       logger
       net-scp (>= 1.1.2)
@@ -503,7 +510,9 @@ GEM
       concurrent-ruby (~> 1.0)
     uglifier (4.2.1)
       execjs (>= 0.3.0, < 3)
-    unicode-display_width (2.6.0)
+    unicode-display_width (3.2.0)
+      unicode-emoji (~> 4.1)
+    unicode-emoji (4.2.0)
     web-console (4.2.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -518,7 +527,7 @@ GEM
     will_paginate (4.0.1)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.7.1)
+    zeitwerk (2.8.2)
 
 PLATFORMS
   ruby
@@ -538,7 +547,7 @@ DEPENDENCIES
   capistrano-bundler (~> 2.1)
   capistrano-rails (~> 1.6)
   capistrano-rvm
-  capistrano3-puma (~> 6.0)
+  capistrano3-puma (~> 8.0)
   capybara
   daemons
   database_cleaner-active_record
