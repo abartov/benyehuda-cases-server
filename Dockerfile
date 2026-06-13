@@ -1,7 +1,7 @@
 FROM ruby:3.2.11-trixie AS base
 
 RUN apt-get update -qq \
-  && apt-get install -y libmariadb3 sphinxsearch \
+  && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf \
   && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 WORKDIR /app
