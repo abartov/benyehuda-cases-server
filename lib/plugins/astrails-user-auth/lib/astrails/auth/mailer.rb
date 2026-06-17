@@ -32,12 +32,8 @@ module Astrails
       protected
 
       def domain
-        if domain = GlobalPreference.get(:domain)
-          default_url_options[:host] = domain
-        end
-        @domain ||= domain
+        @domain ||= SiteConstants::APP_HOSTNAME
       end
-
     end
   end
 end

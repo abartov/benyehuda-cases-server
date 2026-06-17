@@ -4,7 +4,6 @@ class UsersController < InheritedResources::Base
   before_action :require_owner, only: %i[edit update]
   before_action :require_owner, only: %i[edit update take_break]
   before_action :require_owner_or_public_profile, only: :show
-  before_action :set_default_domain, only: :create
 
   respond_to :html, :js
 
@@ -173,14 +172,6 @@ class UsersController < InheritedResources::Base
 
   def resource
     @user ||= params[:id] ? User.find(params[:id]) : current_user
-  end
-
-  # this will set global preference :domain to the current domain
-  # when we create the first user.
-  def set_default_domain
-    return unless GlobalPreference.get(:domain).blank?
-
-    GlobalPreference.set!(:domain, request.host_with_port)
   end
 
   def _remove_avatar

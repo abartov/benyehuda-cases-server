@@ -124,9 +124,6 @@ class User < ActiveRecord::Base
 
   def email_recipient
     email
-    #    addr = GlobalPreference.get(:email_override)
-    #    addr = email if addr.blank?
-    #    "#{name.gsub('"','')} <#{addr}>"
   end
 
   def volunteer_preferences
