@@ -7,9 +7,6 @@
 #   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
-GlobalPreference.set!('domain', 'localhost:3000')
-GlobalPreference.set!('disable_volunteer_notifications', "false")
-
 VolunteerKind.delete_all
 VolunteerKind.create(
   [
