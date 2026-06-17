@@ -14,15 +14,7 @@ class User < ActiveRecord::Base
 
   has_gravatar
   has_attached_file :avatar, styles: { thumb: '50x50>', medium: '100x100>' },
-                             storage: :s3,
-                             bucket: GlobalPreference.get(:s3_bucket),
-                             path: 'users/:id/avatars/:style/:filename',
-                             s3_protocol: :https,
-                             s3_region: 'us-east-1',
-                             s3_credentials: {
-                               access_key_id: GlobalPreference.get(:s3_key) || 'junk',
-                               secret_access_key: GlobalPreference.get(:s3_secret) || 'junk'
-                             }
+                             path: 'users/:id/avatars/:style/:filename'
   validates_attachment :avatar, content_type: { content_type: ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'] }
 
   has_many :audits

@@ -27,16 +27,8 @@ class Document < ActiveRecord::Base
                     default_title: N_('auditable|Document')
 
   has_attached_file :file,
-                    storage: :s3,
-                    bucket: GlobalPreference.get(:s3_bucket),
                     path: 'documents/:id/:filename',
                     default_url: '',
-                    s3_protocol: :https,
-                    s3_region: 'us-east-1',
-                    s3_credentials: {
-                      access_key_id: GlobalPreference.get(:s3_key),
-                      secret_access_key: GlobalPreference.get(:s3_secret)
-                    },
                     url: ':s3_domain_url'
   # attr_accessible :file, :done
   validates_attachment_presence :file
