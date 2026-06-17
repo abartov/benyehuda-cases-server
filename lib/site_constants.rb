@@ -13,4 +13,6 @@ module SiteConstants
   S3_BUCKET = fetch_env_var('S3_BUCKET')
   AWS_ACCESS_KEY_ID = fetch_env_var('AWS_ACCESS_KEY_ID')
   AWS_SECRET_ACCESS_KEY = fetch_env_var('AWS_SECRET_ACCESS_KEY')
+
+  NOTIFICATIONS_DEFAULT_EMAIL = fetch_env_var('NOTIFICATIONS_DEFAULT_EMAIL', 'asaf.bartov@gmail.com')
 end

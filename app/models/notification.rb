@@ -80,6 +80,6 @@ protected
   end
 
   def from_address
-    GlobalPreference.get(:notifications_default_email) || "asaf.bartov@gmail.com"
+    SiteConstants::NOTIFICATIONS_DEFAULT_EMAIL
   end
 end
