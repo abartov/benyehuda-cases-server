@@ -38,7 +38,7 @@ gem 'scrypt', '2.1.1'
 gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
-gem 'whenever', require: false
+gem 'rufus-scheduler'
 
 group :development do
   gem 'ed25519'
