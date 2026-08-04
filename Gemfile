@@ -38,15 +38,9 @@ gem 'scrypt', '2.1.1'
 gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
-gem 'whenever', require: false
+gem 'rufus-scheduler'
 
 group :development do
-  # Capistrano for deployment
-  gem 'capistrano', '~> 3.19', require: false
-  gem 'capistrano-rails', '~> 1.6', require: false
-  gem 'capistrano-bundler', '~> 2.1', require: false
-  gem 'capistrano-rvm', require: false
-  gem 'capistrano3-puma', '~> 8.0', require: false
   gem 'ed25519'
   gem 'bcrypt_pbkdf'
 end
@@ -67,6 +61,7 @@ gem 'puma'
 gem 'scanf' # no longer stdlib in Ruby 2.7+
 
 group :test, :development do
+  gem 'dotenv-rails'
   gem 'factory_bot_rails'
   # gem 'ZenTest', '4.0.0'
   gem 'grape-entity-matchers'

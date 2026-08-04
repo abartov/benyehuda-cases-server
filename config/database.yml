@@ -1,0 +1,12 @@
+defaults: &defaults
+  adapter: mysql2
+  encoding: utf8
+
+production:
+  <<: *defaults
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults

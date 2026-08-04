@@ -76,13 +76,10 @@ class Notification < ActionMailer::Base
 protected
 
   def domain
-    if domain = GlobalPreference.get(:domain)
-      default_url_options[:host] = domain
-    end
-    @domain ||= domain
+    @domain ||= SiteConstants::APP_HOSTNAME
   end
 
   def from_address
-    GlobalPreference.get(:notifications_default_email) || "asaf.bartov@gmail.com"
+    SiteConstants::NOTIFICATIONS_DEFAULT_EMAIL
   end
 end

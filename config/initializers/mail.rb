@@ -1,7 +1,8 @@
-domain = (GlobalPreference.get(:domain) || "benyehuda.org") rescue "benyehuda.org"
-ActionMailer::Base.smtp_settings = {
-  :address => "localhost",
-  :port => 25,
-  :domain => domain,
-  :enable_starttls_auto => false  # XXX maybe to set through global preferences
-}
+# frozen_string_literal: true
+
+if Rails.env.production?
+  ActionMailer::Base.smtp_settings = {
+    address: 'smtp-relay.gmail.com',
+    domain: 'benyehuda.org'
+  }
+end

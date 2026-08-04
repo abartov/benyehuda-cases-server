@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "fast_gettext/translation_repository/db"
 FastGettext::TranslationRepository::Db.require_models
 
@@ -10,5 +12,13 @@ I18n.locale = 'he'
 #I18n.locale = :he
 I18n.enforce_available_locales = false
 
-WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
-WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+
+begin
+  require 'deployment_helpers'
+  # The code below requires DB connection, which can be unavailable during assets precompilation
+  # so we do it only when it is not an assets compilation rake task
+  unless DeploymentHelpers.assets_compilation?
+    WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
+    WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
+  end
+end
