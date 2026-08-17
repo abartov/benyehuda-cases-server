@@ -282,9 +282,13 @@ class User < ActiveRecord::Base
   end
 
   # Anniversary-related methods
+  # The anniversary being marked, i.e. the calendar-year difference: a volunteer who
+  # joined in 2020 is marking six years in 2026. Greetings go out within a week on
+  # either side of the anniversary date, so counting fully elapsed years would be off
+  # by one for everyone greeted before their anniversary date itself.
   def years_since_joining
     return 0 if created_at.nil?
-    ((Time.zone.now - created_at) / 1.year).floor
+    Time.zone.now.year - created_at.year
   end
 
   def near_anniversary?
