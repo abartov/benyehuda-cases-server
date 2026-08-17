@@ -100,6 +100,12 @@ RSpec.describe 'validate_scans rake task', type: :task do
       expect(report).to include("Total files: 0")
     end
 
+    # Regression: the task used to call `exit 0` when it found no images, which
+    # terminated the whole rspec process and silently hid the rest of the suite.
+    it 'does not exit the process when no image files are found' do
+      expect { task.invoke(test_dir) }.not_to raise_error
+    end
+
     it 'uses default directory when no argument provided' do
       FileUtils.mkdir_p('tmp/scans')
 
