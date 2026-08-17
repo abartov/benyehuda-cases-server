@@ -384,4 +384,41 @@ RSpec.describe User, type: :model do
       end
     end
   end
+
+  describe '#years_since_joining' do
+    around do |example|
+      travel_to(Time.zone.local(2026, 2, 15, 12, 0, 0)) do
+        example.run
+      end
+    end
+
+    it 'counts the anniversary about to be marked, for volunteers greeted before their anniversary date' do
+      # Joined 2020-02-20: their sixth anniversary is 5 days away, within the greeting window
+      volunteer = create(:user, :volunteer, :active_user,
+                         created_at: Time.zone.local(2020, 2, 20, 12, 0, 0))
+
+      expect(volunteer.years_since_joining).to eq(6)
+    end
+
+    it 'counts the anniversary just marked, for volunteers greeted after their anniversary date' do
+      # Joined 2020-02-10: their sixth anniversary was 5 days ago, within the greeting window
+      volunteer = create(:user, :volunteer, :active_user,
+                         created_at: Time.zone.local(2020, 2, 10, 12, 0, 0))
+
+      expect(volunteer.years_since_joining).to eq(6)
+    end
+
+    it 'counts a single year on the first anniversary' do
+      volunteer = create(:user, :volunteer, :active_user,
+                         created_at: Time.zone.local(2025, 2, 15, 12, 0, 0))
+
+      expect(volunteer.years_since_joining).to eq(1)
+    end
+
+    it 'returns 0 when created_at is unknown' do
+      volunteer = build(:user, :volunteer, created_at: nil)
+
+      expect(volunteer.years_since_joining).to eq(0)
+    end
+  end
 end
