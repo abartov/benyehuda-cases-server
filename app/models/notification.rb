@@ -3,6 +3,11 @@ class Notification < ActionMailer::Base
   include TasksHelper
   helper :tasks
 
+  # A recipient who accumulated hundreds of buffered notifications would
+  # otherwise get a mail their provider may truncate or reject outright,
+  # costing them the whole digest rather than its tail.
+  DIGEST_ITEM_LIMIT = 30
+
   def comment_added(comment, recipient_users, from_user)
     @comment = comment
     @task_url = task_url(comment.task)
@@ -73,7 +78,41 @@ class Notification < ActionMailer::Base
     mail to: editor.email_recipient, from: "Project Ben-Yehuda <editor@benyehuda.org>", subject: "דו\"ח שבועי: משימות ללא התקדמות"
   end
 
+  # One aggregate email standing in for several buffered notifications.
+  #
+  # +items+ is a list of [PendingNotification, occurrences] pairs as produced by
+  # PendingNotification.collapse; +omitted_count+ is how many further
+  # notifications were dropped by DIGEST_ITEM_LIMIT and are reported as a count.
+  def notification_digest(recipient_email, items, omitted_count = 0)
+    @recipient_email = recipient_email
+    @user = User.find_by(email: recipient_email)
+    @omitted_count = omitted_count
+    @domain = domain
+    # Each item is rendered by invoking its original mailer method and embedding
+    # the result, so digest content stays in sync with the individual emails and
+    # there is no second set of templates to maintain.
+    @entries = items.map do |(pending, occurrences)|
+      { body: render_buffered_notification(pending), occurrences: occurrences }
+    end
+    total = items.sum { |(_pending, occurrences)| occurrences } + omitted_count
+    mail to: recipient_email, from: "Project Ben-Yehuda <editor@benyehuda.org>",
+         subject: I18n.t('notification_digest.subject', count: total)
+  end
+
 protected
+
+  def render_buffered_notification(pending)
+    message = pending.mailer_class.public_send(pending.mailer_method, *pending.deserialized_args).message
+    part = message.multipart? ? (message.text_part || message.html_part) : message
+    body = part.body.decoded
+    body = ActionController::Base.helpers.strip_tags(body) if part.content_type.to_s.include?('text/html')
+    body.strip
+  rescue StandardError => e
+    # One bad item must not lose the whole digest.
+    Rails.logger.warn("Notification#notification_digest: could not render #{pending.notification_type}: " \
+                      "#{e.class}: #{e.message}")
+    I18n.t('notification_digest.render_failed')
+  end
 
   def domain
     @domain ||= SiteConstants::APP_HOSTNAME

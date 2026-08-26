@@ -11,15 +11,15 @@ RSpec.describe 'Users anniversary greeting', type: :request do
 
   describe 'POST /users/:id/send_anniversary_greeting' do
     context 'when the volunteer has not suppressed anniversary greetings' do
-      let(:mail_double) { double('mail', deliver_now: true) }
-
       before do
-        allow(Notification).to receive(:anniversary_greeting).and_return(mail_double)
+        allow(NotificationService).to receive(:call)
       end
 
-      it 'calls the mailer and returns success' do
-        expect(Notification).to receive(:anniversary_greeting).with(volunteer, editor, 'Congratulations!').and_return(mail_double)
-        expect(mail_double).to receive(:deliver_now)
+      it 'sends the greeting through the notification gate and returns success' do
+        expect(NotificationService).to receive(:call)
+          .with(mailer_method: :anniversary_greeting,
+                recipient_email: volunteer.email_recipient,
+                args: [volunteer, editor, 'Congratulations!'])
 
         post send_anniversary_greeting_user_path(volunteer), params: { message: 'Congratulations!' }
 

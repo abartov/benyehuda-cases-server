@@ -56,7 +56,12 @@ class TeamsController < ApplicationController
   # POST /teams/1/mass_message
   def mass_message
     @team.users.each do |user|
-      Notification.team_mass_message(user, @team, params[:message].html_safe).deliver
+      # The message is passed through as an ordinary String: the template emits
+      # it with `raw`, and a SafeBuffer would not survive being buffered for a
+      # digest anyway.
+      NotificationService.call(mailer_method: :team_mass_message,
+                               recipient_email: user.email_recipient,
+                               args: [user, @team, params[:message].to_s])
     end
     redirect_to team_path(@team), notice: I18n.t('teams.mass_message_sent')
   end

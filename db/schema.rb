@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_06_17_202443) do
+ActiveRecord::Schema.define(version: 2026_08_27_000003) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key", collation: "utf8mb3_bin"
@@ -94,6 +94,12 @@ ActiveRecord::Schema.define(version: 2026_06_17_202443) do
     t.datetime "updated_at"
   end
 
+  create_table "digest_deliveries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "recipient_email", limit: 100, null: false
+    t.datetime "last_digest_sent_at", null: false
+    t.index ["recipient_email"], name: "index_digest_deliveries_on_recipient_email", unique: true
+  end
+
   create_table "documents", id: :integer, charset: "utf8mb3", force: :cascade do |t|
     t.string "file_file_name", collation: "utf8mb3_bin"
     t.string "file_content_type", collation: "utf8mb3_bin"
@@ -109,6 +115,15 @@ ActiveRecord::Schema.define(version: 2026_06_17_202443) do
     t.index ["task_id", "created_at"], name: "index_documents_on_task_id_and_created_at"
     t.index ["task_id"], name: "index_documents_on_task_id"
     t.index ["user_id", "created_at"], name: "index_documents_on_user_id_and_created_at"
+  end
+
+  create_table "pending_notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "recipient_email", limit: 100, null: false
+    t.string "notification_type", limit: 128, null: false
+    t.text "notification_data", null: false
+    t.datetime "created_at", null: false
+    t.index ["created_at"], name: "index_pending_notifications_on_created_at"
+    t.index ["recipient_email", "created_at"], name: "index_pending_notifications_on_recipient_email_and_created_at"
   end
 
   create_table "projects", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -297,6 +312,7 @@ ActiveRecord::Schema.define(version: 2026_06_17_202443) do
     t.string "zehut", collation: "utf8mb3_bin"
     t.datetime "congratulated_at"
     t.boolean "suppress_anniversary_greeting", default: false, null: false
+    t.string "email_frequency", limit: 16, default: "unlimited", null: false
     t.index ["current_login_at"], name: "index_users_on_current_login_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["perishable_token"], name: "index_users_on_perishable_token"

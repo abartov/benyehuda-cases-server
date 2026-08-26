@@ -54,6 +54,7 @@ module UserHelper
       res << _("When a comment added to my task") if user.notify_on_comments?
       res << _("When my task status changed") if user.notify_on_status?
       res << s_("notifications|None") if res.blank?
+      res << I18n.t("email_frequency.options.#{user.email_frequency}")
     end.join(", ")
   end
 

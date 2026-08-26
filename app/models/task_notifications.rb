@@ -40,11 +40,15 @@ module TaskNotifications
 
     cond = @was_state_changed
     cond = false unless state == 'ready_to_publish'
-    if cond
     #if @was_stated_changed && self.state == 'ready_to_publish'
-      I18n.with_locale('he') { Notification.task_published(self, recipients).deliver }
-    else
-      I18n.with_locale('he') { Notification.task_state_changed(self, recipients).deliver }
+    mailer_method = cond ? :task_published : :task_state_changed
+
+    # One gate call per recipient: the throttle is per address, so a shared
+    # To: header would make it impossible to honour each recipient's preference.
+    recipients.each do |recipient|
+      NotificationService.call(mailer_method: mailer_method,
+                               recipient_email: recipient.email_recipient,
+                               args: [self, [recipient]])
     end
   end
 end
