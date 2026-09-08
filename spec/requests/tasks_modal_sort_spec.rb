@@ -4,8 +4,6 @@ RSpec.describe 'Tasks assignment popup sorting', type: :request do
   let(:editor) { create(:user, :editor, :active_user) }
   let(:volunteer) { create(:user, :volunteer, :active_user) }
 
-  let!(:unassigned_state) { create(:task_state, name: 'unassigned', value: 'unassigned_value') }
-
   before do
     allow_any_instance_of(ApplicationController).to receive(:require_user).and_return(true)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(editor)

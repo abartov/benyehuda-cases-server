@@ -15,10 +15,7 @@ RSpec.describe "Admin::Tasks", type: :request do
   # ── admin tasks list sorting ──────────────────────────────────────────────
 
   describe 'GET /admin/tasks (index sorting)' do
-    ALL_TASK_STATES = %w[unassigned assigned stuck partial waits_for_editor rejected approved techedit ready_to_publish other_task_creat].freeze
-
     before do
-      ALL_TASK_STATES.each { |s| create(:task_state, name: s, value: s) }
       allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(admin_user)
     end
 
@@ -125,9 +122,6 @@ RSpec.describe "Admin::Tasks", type: :request do
   end
 
   describe "GET /tasks/:id/start_ingestion" do
-    # Create necessary TaskState record
-    let!(:approved_state) { create(:task_state, name: 'approved', value: 'state_approved') }
-
     let(:task) { create(:approved_task, name: "Test Task", genre: "שירה", source: "Test Publisher") }
     let(:volunteer_user) { create(:user, :volunteer, :active_user) }
     let!(:document) do
