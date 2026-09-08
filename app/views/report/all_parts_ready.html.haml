@@ -1,0 +1,3 @@
+%h1= t('report.all_parts_ready')
+%h2= t('total', count: @total)
+!= render :partial => "tasks/index", :locals => { :tasks => @tasks, :editing => false, :title => t('report.all_parts_ready'), :stalled => false }

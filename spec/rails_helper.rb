@@ -32,16 +32,21 @@ rescue ActiveRecord::PendingMigrationError => e
 end
 require 'capybara/rspec'
 
-# Reference data the application reads by name or by hardcoded id, and which no
-# factory can reasonably invent: task states, volunteer kinds, properties.
-# Without it, anything rendering a task state dies in Task.textify_state, which
-# specs used to work around one at a time.
-#
-# Seeded outside the per-example transaction, so it is visible to every spec and
-# survives rollback.
-load Rails.root.join('db/seeds/reference_data.rb').to_s
-
 RSpec.configure do |config|
+  # Reference data the application reads by name or by hardcoded id, and which no
+  # factory can reasonably invent: task states, volunteer kinds, properties.
+  # Without it, anything rendering a task state dies in Task.textify_state, which
+  # specs used to work around one at a time.
+  #
+  # Seeded outside the per-example transaction, so it is visible to every spec and
+  # survives rollback. It has to run *after* spec_helper's before(:suite), which
+  # calls DatabaseCleaner.clean_with(:truncation) and would otherwise wipe it;
+  # spec_helper is required first, so its hook is registered first and runs first.
+  config.before(:suite) do
+    load Rails.root.join('db/seeds/reference_data.rb').to_s
+  end
+
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 

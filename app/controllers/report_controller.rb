@@ -87,6 +87,35 @@ class ReportController < InheritedResources::Base
     end
   end
 
+  # Parent tasks all of whose parts are done: every הקלדה child of the parent has
+  # at least one הגהה child, and all of those הגהה children were approved by an editor
+  # ('approved' is the state the UI calls "Approved by Editor").
+  def all_parts_ready
+    @current_tab = :reports
+    proofing_id = Task.kind_ids[:הגהה]
+
+    typing_children = Task.where(kind_id: 'הקלדה').where.not(parent_id: nil)
+
+    # הקלדה tasks that are fully proofread. The INNER JOIN drops those with no
+    # הגהה child at all, and the HAVING keeps only those with no unapproved one.
+    finished_typing_ids =
+      typing_children
+      .joins("INNER JOIN tasks AS proofing ON proofing.parent_id = tasks.id AND proofing.kind_id = #{proofing_id}")
+      .group('tasks.id')
+      .having("COUNT(proofing.id) = SUM(CASE WHEN proofing.state = 'approved' THEN 1 ELSE 0 END)")
+      .pluck('tasks.id')
+
+    # A parent qualifies only if *none* of its הקלדה children is unfinished.
+    unfinished_parent_ids = typing_children.where.not(id: finished_typing_ids).distinct.pluck(:parent_id)
+    parent_ids = typing_children.distinct.pluck(:parent_id) - unfinished_parent_ids
+
+    @total = parent_ids.count
+    @tasks = Task.where(id: parent_ids)
+                 .includes(:documents)
+                 .order('tasks.updated_at DESC')
+                 .paginate(page: params[:page], per_page: params[:per_page])
+  end
+
   def missing_metadata
     @current_tab = :reports
     typing   = Task.kind_ids[:הקלדה]
