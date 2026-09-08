@@ -4,10 +4,6 @@ RSpec.describe 'Assignments with do_not_assign flag', type: :request do
   let(:editor) { create(:user, :editor, :active_user) }
   let(:volunteer) { create(:user, :volunteer, :active_user) }
 
-  # TaskState records are required by Task.textify_state (used in views and notifications)
-  let!(:unassigned_state) { create(:task_state, name: 'unassigned', value: 'unassigned_value') }
-  let!(:assigned_state)   { create(:task_state, name: 'assigned',   value: 'assigned_value') }
-
   before do
     allow_any_instance_of(ApplicationController).to receive(:require_user).and_return(true)
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(editor)

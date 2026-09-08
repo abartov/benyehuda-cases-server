@@ -10,8 +10,6 @@ RSpec.describe "Report", type: :request do
 
   describe "GET /report/few_tasks_left" do
     context "when tasks exist for הקלדה and הגהה" do
-      let!(:unassigned_state) { create(:task_state, name: 'unassigned', value: 'state_unassigned') }
-
       # הקלדה (kind_id=1): group by parent_id
       let!(:parent_typing)  { create(:task, kind_id: :הקלדה) }
 

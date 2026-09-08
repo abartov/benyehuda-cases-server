@@ -2,34 +2,28 @@
 # This file should contain all the record creation needed to seed the database with its default values.
 # The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
 #
-# Examples:
+# Reference data (task states, volunteer kinds, properties) lives in
+# db/seeds/reference_data.rb, shared by every environment and safe to re-run.
+# Anything below that line is throwaway sample content for a fresh development
+# database.
+
+env_seeds = Rails.root.join("db/seeds/#{Rails.env}.rb")
+if env_seeds.exist?
+  load env_seeds.to_s
+  return
+end
+
+load Rails.root.join('db/seeds/reference_data.rb').to_s
+
+# --- Sample content ----------------------------------------------------------
 #
-#   cities = City.create([{ :name => 'Chicago' }, { :name => 'Copenhagen' }])
-#   Mayor.create(:name => 'Daley', :city => cities.first)
+# Destructive, and guarded accordingly: this wipes users and tasks, which is
+# ruinous against anything but an empty development database.
+unless Rails.env.development?
+  puts "reference data seeded; skipping destructive sample content in #{Rails.env}"
+  return
+end
 
-VolunteerKind.delete_all
-VolunteerKind.create(
-  [
-    {:name => "סריקה"},
-    {:name => "עריכה טכנית"},
-    {:name => "רשות פרסום"}
-  ]
-)
-
-TaskState.delete_all
-TaskState.create(
-  [
-    {:name => "unassigned", :value => N_("task state|Unassigned")},
-    {:name => "assigned", :value => N_("task state|Assigned/Work in Progress")},
-    {:name => "stuck", :value => N_("task state|Editors Help Required")},
-    {:name => "partial", :value => N_("task state|Partialy Ready")},
-    {:name => "waits_for_editor", :value => N_("task state|Waits for Editor's approvement")},
-    {:name => "rejected", :value => N_("task state|Rejected by Editor")},
-    {:name => "approved", :value => N_("task state|Approved by Editor")},
-    {:name => "ready_to_publish", :value => N_("task state|Ready to Publish")},
-    {:name => "other_task_creat", :value => N_("task state|Another Task Created")}
-  ]
-)
 User.delete_all
 User.create([{name: 'testuser 1', email: 'testuser1@mailinator.com', is_volunteer: true}, {name: 'testuser 2', email: 'testuser2@mailinator.com', is_volunteer: true}, {name: 'testuser editor', email:'testeditor@mailinator.com', is_editor: true, is_volunteer: true}])
 Task.delete_all
