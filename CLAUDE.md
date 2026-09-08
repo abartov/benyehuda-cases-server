@@ -160,9 +160,7 @@ end
 3. **Make your changes and commit to YOUR branch:**
    ```bash
    git add <files>
-   bd sync  # sync beads changes
    git commit -m "Your commit message"
-   bd sync  # sync beads changes again
    ```
    - Never run `git commit` while on master/main!
    - Double-check with `git branch --show-current` if unsure
@@ -188,7 +186,6 @@ end
 6. **Close the bead** after PR is created:
    ```bash
    bd close <bead-id> --reason "Created PR #123"
-   bd sync
    ```
    - Close the bead AFTER creating the PR, not after merge
    - Include the PR number in the close reason
@@ -209,7 +206,6 @@ Before running ANY git command, verify:
 - [ ] Am I on a branch I created in this session? (`git branch --show-current`)
 - [ ] If not, have I created a new feature/fix branch?
 - [ ] Am I about to push to my own branch, not master/main?
-- [ ] Have I run `bd sync` before and after committing?
 - [ ] Will I create a PR immediately after pushing? (REQUIRED)
 
 **If any answer is NO, do NOT proceed with git push!**
@@ -219,11 +215,9 @@ Before running ANY git command, verify:
 When finishing ANY piece of work, you MUST complete ALL these steps:
 - [ ] All tests pass (`bundle exec rspec`)
 - [ ] Code committed to feature/fix branch
-- [ ] `bd sync` run before and after commit
 - [ ] Branch pushed to origin
 - [ ] **PR created via `gh pr create`** (MANDATORY - do not skip!)
 - [ ] Bead closed with PR reference
-- [ ] `bd sync` run after closing bead
 - [ ] User informed with PR link
 
 **Work is NOT complete until a PR exists. Do not wait to be asked.**

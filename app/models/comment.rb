@@ -34,6 +34,12 @@ class Comment < ActiveRecord::Base
     unless task.editor.nil?
       from_addr = task.editor.email
     end
-    I18n.with_locale('he') { Notification.comment_added(self, recipients, from_addr).deliver }
+    # One gate call per recipient: the throttle is per address, so a shared
+    # To: header would make it impossible to honour each recipient's preference.
+    recipients.each do |recipient|
+      NotificationService.call(mailer_method: :comment_added,
+                               recipient_email: recipient.email_recipient,
+                               args: [self, [recipient], from_addr])
+    end
   end
 end

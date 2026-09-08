@@ -22,11 +22,10 @@ task :validate_scans, [:scan_dir] => :environment do |taskname, args|
 
   if image_files.empty?
     puts "No image files found in #{scan_dir}"
-    exit 0
+  else
+    puts "Found #{image_files.length} image files"
+    puts "Extracting page numbers..."
   end
-
-  puts "Found #{image_files.length} image files"
-  puts "Extracting page numbers..."
 
   # Store results: filename => page_number (or nil if unknown)
   results = {}

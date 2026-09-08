@@ -165,16 +165,17 @@ RSpec.describe User, type: :model do
     end
 
     it 'sends notification to the last editor when volunteer returns from break' do
-      # Mock the notification delivery
-      notification_double = double('notification')
-      allow(notification_double).to receive(:deliver)
-      allow(Notification).to receive(:volunteer_returned_from_break).and_return(notification_double)
+      # The notification goes through NotificationService so that the editor's
+      # own email frequency preference applies to it.
+      allow(NotificationService).to receive(:call)
 
       # Simulate volunteer returning from break
       volunteer.update(on_break: false)
 
-      expect(Notification).to have_received(:volunteer_returned_from_break).with(volunteer, editor)
-      expect(notification_double).to have_received(:deliver)
+      expect(NotificationService).to have_received(:call)
+        .with(mailer_method: :volunteer_returned_from_break,
+              recipient_email: editor.email_recipient,
+              args: [volunteer, editor])
     end
 
     it 'does not send notification when on_break changes from false to true' do

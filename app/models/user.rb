@@ -33,6 +33,10 @@ class User < ActiveRecord::Base
   has_many :task_idle_reminders, dependent: :destroy
 
   validates :name, presence: true
+  # How often this user is willing to be emailed by the Notification mailer;
+  # NotificationService is what honours it. Resolved lazily so that User does
+  # not force NotificationService to load at class-definition time.
+  validates :email_frequency, inclusion: { in: ->(_user) { NotificationService::FREQUENCIES } }
 
   scope :volunteers, -> { where('is_volunteer = 1 AND activated_at IS NOT NULL AND disabled_at IS NULL') }
   scope :all_volunteers, lambda {
@@ -314,7 +318,9 @@ class User < ActiveRecord::Base
   end
 
   def welcome_on_volunteering
-    Notification.volnteer_welcome(self).deliver if is_volunteer_changed? && is_volunteer?
+    return unless is_volunteer_changed? && is_volunteer?
+
+    NotificationService.call(mailer_method: :volnteer_welcome, recipient_email: email_recipient, args: [self])
   end
 
   def notify_editor_on_return_from_break
@@ -324,7 +330,11 @@ class User < ActiveRecord::Base
     return unless on_break == false && changed
 
     editor = last_editor
-    Notification.volunteer_returned_from_break(self, editor).deliver if editor
+    return unless editor
+
+    NotificationService.call(mailer_method: :volunteer_returned_from_break,
+                             recipient_email: editor.email_recipient,
+                             args: [self, editor])
   end
 
   def handle_volunteer_kind

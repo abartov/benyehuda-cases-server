@@ -81,8 +81,14 @@ namespace :tasks do
         if dry_run
           puts "  [DRY RUN] Would send reminder for task ##{task.id} (#{task.name.utf_snippet(30)}) to #{task.assignee.name}"
         else
-          # Send notification
-          Notification.task_idle(task, task.assignee, task.editor).deliver_now
+          # Send notification. task_idle addresses both assignee and editor, so
+          # it goes through the gate once per recipient; the gate narrows each
+          # delivery to the one address whose preference it just checked.
+          idle_recipients(task).each do |recipient|
+            NotificationService.call(mailer_method: :task_idle,
+                                     recipient_email: recipient.email_recipient,
+                                     args: [task, task.assignee, task.editor])
+          end
 
           # Log the reminder
           TaskIdleReminder.create!(
@@ -100,6 +106,15 @@ namespace :tasks do
     end
 
     reminder_count
+  end
+
+  # Mirrors the recipient list Notification#task_idle builds for itself.
+  def idle_recipients(task)
+    recipients = [task.assignee].compact
+    if task.editor && task.editor.email_recipient != task.assignee&.email_recipient
+      recipients << task.editor
+    end
+    recipients
   end
 
   def send_editor_reports(dry_run = false)
@@ -141,7 +156,9 @@ namespace :tasks do
           puts "  [DRY RUN] Would send report to editor #{editor.name} with #{tasks.count} idle tasks"
         else
           # Send the editor report
-          Notification.editor_idle_tasks_report(editor, idle_tasks_data).deliver_now
+          NotificationService.call(mailer_method: :editor_idle_tasks_report,
+                                   recipient_email: editor.email_recipient,
+                                   args: [editor, idle_tasks_data])
           puts "  ✓ Sent report to editor #{editor.name} with #{tasks.count} idle tasks"
         end
         reports_sent += 1

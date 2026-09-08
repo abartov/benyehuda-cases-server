@@ -13,6 +13,7 @@
     = f.input :notify_on_comments, :label => _("When a comment added to my task"), :as => :boolean
     = f.input :notify_on_status, :label => _("When my task status changed"), :as => :boolean
     = f.input :suppress_anniversary_greeting, :label => I18n.t('anniversary.suppress_greeting_label'), :as => :boolean
+    = f.input :email_frequency, :label => I18n.t('email_frequency.label'), :as => :select, :include_blank => false, :hint => I18n.t('email_frequency.hint'), :collection => NotificationService::FREQUENCIES.map { |freq| [I18n.t("email_frequency.options.#{freq}"), freq] }
 
   = render(:partial => "users/user_form", :locals => {:f => f})
 

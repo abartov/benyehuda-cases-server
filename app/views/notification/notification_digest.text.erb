@@ -1,0 +1,19 @@
+<%= I18n.t('notification_digest.greeting', name: @user ? @user.name : @recipient_email) %>
+
+<%= I18n.t('notification_digest.intro', count: @entries.size) %>
+<% @entries.each do |entry| %>
+------------------------------------------------------------
+<% if entry[:occurrences] > 1 %><%= I18n.t('notification_digest.occurrences', count: entry[:occurrences]) %>
+
+<% end %><%= entry[:body] %>
+<% end %>
+------------------------------------------------------------
+<% if @omitted_count > 0 %>
+<%= I18n.t('notification_digest.omitted', count: @omitted_count) %>
+<% end %>
+<% if @user %>
+<%= I18n.t('notification_digest.footer_registered', url: edit_user_url(@user)) %>
+<% else %>
+<%= I18n.t('notification_digest.footer_anonymous', url: signup_url) %>
+<% end %>
+<%= I18n.t('notification_digest.signature', domain: @domain) %>

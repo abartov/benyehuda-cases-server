@@ -172,7 +172,9 @@ class ReportController < InheritedResources::Base
     if users.nil? or users.empty?
       flash[:error] = _('No volunteers to notify')
     else
-      users.each { |u| Notification.tasks_added_to_site(u).deliver }
+      users.each do |u|
+        NotificationService.call(mailer_method: :tasks_added_to_site, recipient_email: u.email_recipient, args: [u])
+      end
       flash[:notice] = _('E-mails sent to volunteers')
     end
     redirect_to report_path

@@ -62,6 +62,12 @@ class UsersController < InheritedResources::Base
       uparams.delete(:is_editor)
     end
     update_resource(resource, uparams)
+    if @user.saved_change_to_email_frequency?
+      # The scheduled digest run only visits users whose *current* preference is
+      # throttled, so whatever is still buffered has to be dealt with here.
+      ResolveBufferedNotifications.call(recipient_email: @user.email_recipient,
+                                        new_frequency: @user.email_frequency)
+    end
     render action: :show
   end
 
@@ -111,8 +117,10 @@ class UsersController < InheritedResources::Base
 
     message = params[:message]
 
-    # Send email
-    Notification.anniversary_greeting(@user, current_user, message).deliver_now
+    # Send email (or buffer it, if the recipient asked to be emailed in digests)
+    NotificationService.call(mailer_method: :anniversary_greeting,
+                             recipient_email: @user.email_recipient,
+                             args: [@user, current_user, message])
 
     # Update congratulated_at timestamp
     @user.update_attribute(:congratulated_at, Time.zone.now)
@@ -182,7 +190,7 @@ class UsersController < InheritedResources::Base
 
   def user_params
     params.require('user').permit(:name, :email, :notify_on_comments, :notify_on_status, :suppress_anniversary_greeting,
-                                  :zehut, :is_admin, :is_editor,
+                                  :email_frequency, :zehut, :is_admin, :is_editor,
                                   :is_volunteer, :avatar, user_properties: {}, volunteer_properties: {}, editor_properties: {})
     # params.permit!
   end

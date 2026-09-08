@@ -80,3 +80,27 @@ en:
     greeting_suppressed: "This user has opted out of anniversary greeting emails"
   common:
     cancel: Cancel
+  email_frequency:
+    label: Email frequency
+    hint: "Transactional email (account activation, password reset) is always sent and is not affected by this setting."
+    options:
+      unlimited: "Unlimited - send every notification immediately"
+      daily: "Daily digest - at most one aggregate email per day"
+      weekly: "Weekly digest - at most one aggregate email per week"
+      none: "None - do not email me at all"
+  notification_digest:
+    subject:
+      one: "Project Ben-Yehuda: 1 update from the task system"
+      other: "Project Ben-Yehuda: %{count} updates from the task system"
+    greeting: "Hello %{name},"
+    intro:
+      one: "As you requested, here is the update from the task system:"
+      other: "As you requested, here are the %{count} updates from the task system:"
+    occurrences: "[this update repeated %{count} times]"
+    render_failed: "[this update could not be rendered]"
+    omitted:
+      one: "There was also 1 further update not included in this email."
+      other: "There were also %{count} further updates not included in this email."
+    footer_registered: "To change your email frequency: %{url}"
+    footer_anonymous: "To sign up and choose your email frequency: %{url}"
+    signature: "The Project Ben-Yehuda team\n%{domain}"

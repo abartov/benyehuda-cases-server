@@ -56,7 +56,11 @@ class TeamsController < ApplicationController
   # POST /teams/1/mass_message
   def mass_message
     @team.users.each do |user|
-      Notification.team_mass_message(user, @team, params[:message].html_safe).deliver
+      # The template renders @message with `raw`, so sanitize to avoid injecting arbitrary HTML.
+      message = ActionController::Base.helpers.sanitize(params[:message].to_s)
+      NotificationService.call(mailer_method: :team_mass_message,
+                               recipient_email: user.email_recipient,
+                               args: [user, @team, message])
     end
     redirect_to team_path(@team), notice: I18n.t('teams.mass_message_sent')
   end

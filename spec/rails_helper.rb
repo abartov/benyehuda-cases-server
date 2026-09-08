@@ -72,4 +72,15 @@ RSpec.configure do |config|
 
   # Include ActiveSupport time helpers for time travel in tests
   config.include ActiveSupport::Testing::TimeHelpers
+
+  # RSpec deliberately does not rescue SystemExit, so code under test that calls
+  # Kernel#exit (e.g. a rake task) kills the whole run mid-suite, and the at_exit
+  # summary still reports "0 failures" for the examples that did run. Turn such an
+  # exit into an ordinary example failure so the rest of the suite keeps running.
+  config.around do |example|
+    example.run
+  rescue SystemExit => e
+    raise "Example called Kernel#exit(#{e.status}); code under test must not exit the process. " \
+          "Wrap the call in `expect { ... }.to raise_error(SystemExit)` if the exit is intentional."
+  end
 end
