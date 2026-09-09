@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get 'report/stalled'
   get 'report/missing_metadata'
   get 'report/few_tasks_left'
+  get 'report/all_parts_ready'
   get 'report/missing_metadata_panel/:id', controller: 'report', action: 'missing_metadata_panel'
   match 'report/hours', via: %i[get post]
   post 'report/update_metadata'

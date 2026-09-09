@@ -102,6 +102,7 @@ he:
     translations: תרגום ממשק
   report:
     few_tasks_left: 'דו"ח עוד קצת וגמרנו'
+    all_parts_ready: 'משימות שכל חלקיהן מוכנים'
     missing_metadata:
       missing_genre: התעלם מחוסר סוגה
       missing_images: התעלם מהגדרת תמונות

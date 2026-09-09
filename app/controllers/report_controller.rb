@@ -87,6 +87,35 @@ class ReportController < InheritedResources::Base
     end
   end
 
+  # Parent tasks all of whose parts are done: every הקלדה child of the parent has
+  # at least one הגהה child, and all of those הגהה children were approved by an editor
+  # ('approved' is the state the UI calls "Approved by Editor").
+  def all_parts_ready
+    @current_tab = :reports
+    proofing_id = Task.kind_ids[:הגהה]
+
+    parts = Task.where(kind_id: 'הקלדה').where.not(parent_id: nil)
+
+    # Parts that are fully proofread. The INNER JOIN drops those with no הגהה
+    # child at all, and the HAVING keeps only those with no unapproved one.
+    finished_parts =
+      parts
+      .joins("INNER JOIN tasks AS proofing ON proofing.parent_id = tasks.id AND proofing.kind_id = #{proofing_id}")
+      .group('tasks.id')
+      .having("COUNT(proofing.id) = SUM(CASE WHEN proofing.state = 'approved' THEN 1 ELSE 0 END)")
+      .select('tasks.id')
+
+    # A parent qualifies if it has parts and *none* of them is unfinished. Both
+    # halves stay subqueries rather than plucked arrays, so the database does the
+    # anti-join and the pagination LIMIT still applies to the outer query.
+    @tasks = Task.where(id: parts.select(:parent_id))
+                 .where.not(id: parts.where.not(id: finished_parts).select(:parent_id))
+                 .includes(:documents)
+                 .order('tasks.updated_at DESC')
+                 .paginate(page: params[:page], per_page: params[:per_page])
+    @total = @tasks.total_entries
+  end
+
   def missing_metadata
     @current_tab = :reports
     typing   = Task.kind_ids[:הקלדה]

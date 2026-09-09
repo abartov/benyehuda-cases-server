@@ -8,6 +8,69 @@ RSpec.describe "Report", type: :request do
     allow_any_instance_of(ApplicationController).to receive(:require_editor_or_admin).and_return(true)
   end
 
+  describe "GET /report/all_parts_ready" do
+    # A parent qualifies when every one of its הקלדה children has at least one
+    # הגהה child and all of those הגהה children are in the 'approved' state
+    # (the state the UI labels "Approved by Editor").
+    def typing_child(parent)
+      create(:task, kind_id: :הקלדה, parent: parent)
+    end
+
+    def proofing_child(parent, state)
+      create(:task, kind_id: :הגהה, parent: parent, state: state)
+    end
+
+    let!(:ready_parent) { create(:task, kind_id: :אחר) }
+    let!(:partly_ready_parent) { create(:task, kind_id: :אחר) }
+    let!(:unproofed_parent) { create(:task, kind_id: :אחר) }
+    let!(:not_started_parent) { create(:task, kind_id: :אחר) }
+
+    before do
+      # every part fully proofread → included
+      proofing_child(typing_child(ready_parent), 'approved')
+      second_part = typing_child(ready_parent)
+      proofing_child(second_part, 'approved')
+      proofing_child(second_part, 'approved')
+
+      # one part done, one part still waiting → excluded
+      proofing_child(typing_child(partly_ready_parent), 'approved')
+      proofing_child(typing_child(partly_ready_parent), 'waits_for_editor')
+
+      # the only part's proofing was not approved → excluded
+      proofing_child(typing_child(unproofed_parent), 'assigned')
+
+      # the only part has no proofing task at all → excluded
+      typing_child(not_started_parent)
+    end
+
+    it "successfully loads the page" do
+      get report_all_parts_ready_path
+      expect(response).to have_http_status(:success)
+    end
+
+    it "lists parents whose parts are all approved" do
+      get report_all_parts_ready_path
+      expect(response.body).to include(ready_parent.name)
+    end
+
+    it "excludes parents with a part that is not fully approved" do
+      get report_all_parts_ready_path
+      expect(response.body).not_to include(partly_ready_parent.name)
+      expect(response.body).not_to include(unproofed_parent.name)
+    end
+
+    it "excludes parents with a part that has no הגהה task yet" do
+      get report_all_parts_ready_path
+      expect(response.body).not_to include(not_started_parent.name)
+    end
+
+    it "is linked from the reports index" do
+      get report_path
+      expect(response.body).to include(I18n.t('report.all_parts_ready'))
+      expect(response.body).to include(report_all_parts_ready_path)
+    end
+  end
+
   describe "GET /report/few_tasks_left" do
     context "when tasks exist for הקלדה and הגהה" do
       # הקלדה (kind_id=1): group by parent_id
