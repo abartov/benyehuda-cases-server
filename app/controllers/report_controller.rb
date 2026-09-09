@@ -94,26 +94,26 @@ class ReportController < InheritedResources::Base
     @current_tab = :reports
     proofing_id = Task.kind_ids[:הגהה]
 
-    typing_children = Task.where(kind_id: 'הקלדה').where.not(parent_id: nil)
+    parts = Task.where(kind_id: 'הקלדה').where.not(parent_id: nil)
 
-    # הקלדה tasks that are fully proofread. The INNER JOIN drops those with no
-    # הגהה child at all, and the HAVING keeps only those with no unapproved one.
-    finished_typing_ids =
-      typing_children
+    # Parts that are fully proofread. The INNER JOIN drops those with no הגהה
+    # child at all, and the HAVING keeps only those with no unapproved one.
+    finished_parts =
+      parts
       .joins("INNER JOIN tasks AS proofing ON proofing.parent_id = tasks.id AND proofing.kind_id = #{proofing_id}")
       .group('tasks.id')
       .having("COUNT(proofing.id) = SUM(CASE WHEN proofing.state = 'approved' THEN 1 ELSE 0 END)")
-      .pluck('tasks.id')
+      .select('tasks.id')
 
-    # A parent qualifies only if *none* of its הקלדה children is unfinished.
-    unfinished_parent_ids = typing_children.where.not(id: finished_typing_ids).distinct.pluck(:parent_id)
-    parent_ids = typing_children.distinct.pluck(:parent_id) - unfinished_parent_ids
-
-    @total = parent_ids.count
-    @tasks = Task.where(id: parent_ids)
+    # A parent qualifies if it has parts and *none* of them is unfinished. Both
+    # halves stay subqueries rather than plucked arrays, so the database does the
+    # anti-join and the pagination LIMIT still applies to the outer query.
+    @tasks = Task.where(id: parts.select(:parent_id))
+                 .where.not(id: parts.where.not(id: finished_parts).select(:parent_id))
                  .includes(:documents)
                  .order('tasks.updated_at DESC')
                  .paginate(page: params[:page], per_page: params[:per_page])
+    @total = @tasks.total_entries
   end
 
   def missing_metadata
