@@ -47,6 +47,16 @@ RSpec.describe 'Tasks index CSV download', type: :request do
 
       expect(parsed_csv.drop(1).map(&:first)).to eq(%w[AlphaMany AlphaFew])
     end
+
+    it 'neutralizes task names that a spreadsheet would treat as formulas' do
+      create(:unassigned_task, name: '=HYPERLINK("http://evil.example","x")')
+      create(:unassigned_task, name: '-ספר')
+
+      get tasks_path(format: :csv)
+
+      names = parsed_csv.drop(1).map(&:first)
+      expect(names).to include(%q('=HYPERLINK("http://evil.example","x")), "'-ספר", 'BetaTask')
+    end
   end
 
   describe 'GET /tasks' do

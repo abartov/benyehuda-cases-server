@@ -225,14 +225,21 @@ class TasksController < InheritedResources::Base
 
   # Same columns as the tasks/_index listing (minus actions), with the task URL after the name
   def tasks_csv(tasks)
+    tasks = tasks.to_a
+    percent_done = Task.percent_done_by_task_id(tasks.map(&:id))
     csv = CSV.generate do |rows|
       rows << [_('Name'), I18n.t('tasks.csv.task_url'), _('Kind'), _('State'), _('Files'), _('Progress')]
       tasks.each do |task|
-        rows << [task.name, task_url(task), task.kind.try(:name), Task.textify_state(task.state),
-                 task.documents_count, "#{task.percent_done}%"]
+        rows << [csv_safe(task.name), task_url(task), task.kind.try(:name), Task.textify_state(task.state),
+                 task.documents_count, "#{percent_done[task.id]}%"]
       end
     end
     "\uFEFF#{csv}" # BOM so Excel detects UTF-8 (Hebrew)
+  end
+
+  # Prevent spreadsheet formula injection from free-text cells
+  def csv_safe(value)
+    value.is_a?(String) && value.start_with?('=', '+', '-', '@', "\t", "\r", "\n") ? "'#{value}" : value
   end
 
   def require_task_participant_or_editor

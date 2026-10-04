@@ -286,8 +286,10 @@ class Task < ActiveRecord::Base
     doc
   end
 
+  TODO_FILE_EXTENSIONS = %w[pdf jpg png jpeg].freeze
+
   def files_todo
-    todo = documents_by_extensions(%w[pdf jpg png jpeg])
+    todo = documents_by_extensions(TODO_FILE_EXTENSIONS)
     todo.length
   end
 
@@ -305,6 +307,25 @@ class Task < ActiveRecord::Base
 
     done = files_done || 0
     (files_done.to_f / files_todo * 100).round
+  end
+
+  # Same result as #percent_done for many tasks at once, without per-task queries.
+  # Returns { task_id => percent }.
+  def self.percent_done_by_task_id(task_ids)
+    todo = Hash.new(0)
+    done = Hash.new(0)
+    task_ids.each_slice(1000) do |ids|
+      Document.where(task_id: ids, deleted_at: nil).pluck(:task_id, :file_file_name, :done).each do |task_id, name, is_done|
+        todo[task_id] += 1 if TODO_FILE_EXTENSIONS.include?(file_extension(name))
+        done[task_id] += 1 if is_done
+      end
+    end
+    task_ids.index_with { |id| todo[id].zero? ? 0 : (done[id].to_f / todo[id] * 100).round }
+  end
+
+  def self.file_extension(file_name)
+    pos = file_name.to_s.rindex('.')
+    pos.nil? ? nil : file_name[pos + 1..]
   end
 
   # convenience method for custom prop
@@ -402,10 +423,10 @@ class Task < ActiveRecord::Base
   def documents_by_extensions(exts)
     ret = []
     documents.each do |f|
-      pos = f.file_file_name.rindex('.')
-      next if pos.nil?
+      ext = Task.file_extension(f.file_file_name)
+      next if ext.nil?
 
-      ret << f if exts.include?(f.file_file_name[pos + 1..-1])
+      ret << f if exts.include?(ext)
     end
     ret
   end
