@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Image Cropping', type: :system, js: true do
   let(:user) { create(:user, :volunteer, :active_user) }
   let(:task) { create(:task, assignee: user) }
-  let(:image_document) do
+  let!(:image_document) do
     create(:document,
            task: task,
            user: user,
@@ -11,9 +11,23 @@ RSpec.describe 'Image Cropping', type: :system, js: true do
            file_file_size: 1024)
   end
 
+  # The proxied image loads asynchronously; measure only once it has real dimensions.
+  def wait_for_crop_image_loaded
+    expect(page).to have_css('#crop-image', visible: :all)
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      sleep 0.1 until page.evaluate_script(
+        "document.getElementById('crop-image').complete && document.getElementById('crop-image').naturalHeight > 0"
+      )
+    end
+  end
+
   before do
     # Mock S3 URL for the image
-    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('https://via.placeholder.com/2000x3000.jpg')
+    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('https://example.test/2000x3000.jpg')
+
+    # Serve a real tall image from proxy_image instead of fetching it over the network
+    image_body = File.binread(Rails.root.join('spec/fixtures/files/tall_image.jpg'))
+    allow(HTTParty).to receive(:get).and_return(double(body: image_body))
 
     # Mock authentication - bypass auth checks
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
@@ -33,6 +47,7 @@ RSpec.describe 'Image Cropping', type: :system, js: true do
 
     # Wait for modal to open
     expect(page).to have_css('#image-crop-modal', visible: true)
+    wait_for_crop_image_loaded
 
     # Get viewport dimensions
     viewport_width = page.execute_script('return window.innerWidth')
@@ -93,21 +108,22 @@ RSpec.describe 'Image Cropping', type: :system, js: true do
 
     # Wait for modal
     expect(page).to have_css('#image-crop-modal', visible: true)
+    wait_for_crop_image_loaded
 
     # Check buttons are visible
     expect(page).to have_button(I18n.t('documents.download_cropped_image'))
     expect(page).to have_button(I18n.t('common.cancel'))
 
-    # Get button position
-    button_top = page.execute_script('return jQuery("#download-cropped").offset().top')
+    # Get button position (viewport-relative: offset() is document-relative and ignores page scroll)
+    rect = page.evaluate_script('(function(){var r = document.getElementById("download-cropped").getBoundingClientRect(); return {top: r.top, bottom: r.bottom};})()')
     viewport_height = page.execute_script('return window.innerHeight')
 
     puts "\n=== Button Position ==="
-    puts "Button top: #{button_top}px"
+    puts "Button top/bottom: #{rect['top']}px / #{rect['bottom']}px"
     puts "Viewport height: #{viewport_height}px"
 
-    # Buttons should be within viewport
-    expect(button_top).to be < viewport_height,
-      "Buttons should be visible within viewport"
+    # Buttons should be entirely within viewport
+    expect(rect['top']).to be >= 0, "Buttons should not be above the viewport"
+    expect(rect['bottom']).to be <= viewport_height, "Buttons should be fully visible within viewport"
   end
 end

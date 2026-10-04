@@ -89,8 +89,8 @@
     != render(:partial => "audits/index")
 
 #image-crop-modal{ :title => I18n.t('documents.crop_image'), :style => "display:none;" }
-  .crop-container{ :style => "overflow: hidden;" }
-    %img#crop-image{ :style => "display: block; max-width: 100%;" }
+  .crop-container{ :style => "overflow: hidden; max-height: calc(90vh - 130px);" }
+    %img#crop-image{ :style => "display: block; max-width: 100%; max-height: calc(90vh - 130px);" }
   .crop-buttons{ :style => "margin-top: 10px; text-align: center;" }
     %button#download-cropped.purple-button.gradient
       %span= I18n.t('documents.download_cropped_image')
