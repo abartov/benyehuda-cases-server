@@ -43,5 +43,19 @@ RSpec.describe Task, type: :model do
 
       expect(queries.size).to eq(1)
     end
+
+    it '.sort_by_percent_done orders tasks ascending with one documents query' do
+      tasks = [task_half, task_empty, task_none].map(&:reload)
+      queries = []
+      callback = ->(*, payload) { queries << payload[:sql] if payload[:sql].include?('documents') }
+      sorted = nil
+      ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') do
+        sorted = described_class.sort_by_percent_done(tasks)
+      end
+
+      expect(sorted.last).to eq(task_half)
+      expect(sorted.map(&:percent_done)).to eq([0, 0, 50])
+      expect(queries.size).to eq(1)
+    end
   end
 end

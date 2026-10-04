@@ -12,7 +12,7 @@ class DashboardsController < InheritedResources::Base
       @anniversary_users = User.all_volunteers.near_anniversary
       @editing_tasks = current_user.editing_tasks.visible_in_my_tasks.order('updated_at desc')
       if params[:sort_by] == 'percent_done'
-        @editing_tasks.sort! {|a,b| a.percent_done <=> b.percent_done }
+        @editing_tasks = Task.sort_by_percent_done(@editing_tasks)
         @editing_tasks.reverse! if params[:dir] == 'DESC'
       end
     end

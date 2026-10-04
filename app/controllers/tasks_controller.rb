@@ -172,7 +172,7 @@ class TasksController < InheritedResources::Base
 
     # Handle percent_done sorting (special case like in DashboardsController)
     if params[:sort_by] == 'percent_done'
-      @tasks = @tasks.to_a.sort { |a, b| a.percent_done <=> b.percent_done } # this converts to array
+      @tasks = Task.sort_by_percent_done(@tasks) # this converts to array
       @tasks.reverse! if params[:dir] == 'DESC'
     end
 
