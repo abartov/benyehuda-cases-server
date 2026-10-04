@@ -323,7 +323,8 @@ class Task < ActiveRecord::Base
     task_ids.index_with { |id| todo[id].zero? ? 0 : (done[id].to_f / todo[id] * 100).round }
   end
 
-  # Sorts tasks by percent done (ascending) using a constant number of queries.
+  # Sorts tasks by percent done (ascending). Progress is bulk-loaded, one documents query
+  # per 1000 tasks (see percent_done_by_task_id), rather than several queries per task.
   def self.sort_by_percent_done(tasks)
     tasks = tasks.to_a
     percents = percent_done_by_task_id(tasks.map(&:id))

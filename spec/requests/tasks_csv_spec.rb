@@ -48,6 +48,50 @@ RSpec.describe 'Tasks index CSV download', type: :request do
       expect(parsed_csv.drop(1).map(&:first)).to eq(%w[AlphaMany AlphaFew])
     end
 
+    context 'when sorting by progress' do
+      let(:volunteer) { create(:user, :volunteer, :active_user) }
+
+      before do
+        # AlphaFew: 100% done, AlphaMany: 50% done, BetaTask: 0% done
+        add_doc(task_few_files, 'a.jpg', done: true)
+        add_doc(task_many_files, 'b.jpg', done: true)
+        add_doc(task_many_files, 'c.jpg')
+        add_doc(other_task, 'd.jpg')
+      end
+
+      def add_doc(task, filename, done: false)
+        create(:document, task: task, file_file_name: filename, file_content_type: 'application/octet-stream',
+                          file_file_size: 100, user_id: volunteer.id, done: done)
+      end
+
+      it 'orders ascending when dir is ASC' do
+        get tasks_path(format: :csv), params: { sort_by: 'percent_done', dir: 'ASC' }
+
+        expect(parsed_csv.drop(1).map(&:first)).to eq(%w[BetaTask AlphaMany AlphaFew])
+      end
+
+      it 'reverses the order when dir is DESC' do
+        get tasks_path(format: :csv), params: { sort_by: 'percent_done', dir: 'DESC' }
+
+        expect(parsed_csv.drop(1).map(&:first)).to eq(%w[AlphaFew AlphaMany BetaTask])
+      end
+
+      it 'uses a constant number of document queries regardless of the number of tasks' do
+        count_queries = lambda do
+          queries = []
+          callback = ->(*, payload) { queries << payload[:sql] if payload[:sql] =~ /FROM .documents./ }
+          ActiveSupport::Notifications.subscribed(callback, 'sql.active_record') do
+            get tasks_path(format: :csv), params: { sort_by: 'percent_done', dir: 'ASC' }
+          end
+          queries.size
+        end
+        baseline = count_queries.call
+        create_list(:unassigned_task, 3)
+
+        expect(count_queries.call).to eq(baseline)
+      end
+    end
+
     it 'neutralizes task names that a spreadsheet would treat as formulas' do
       create(:unassigned_task, name: '=HYPERLINK("http://evil.example","x")')
       create(:unassigned_task, name: '-ספר')
