@@ -1,4 +1,5 @@
 require 'httparty'
+require 'csv'
 require 'will_paginate/array' # for sorting the array when sorting by percent_done
 
 class TasksController < InheritedResources::Base
@@ -175,10 +176,16 @@ class TasksController < InheritedResources::Base
       @tasks.reverse! if params[:dir] == 'DESC'
     end
 
-    @tasks = @tasks.paginate(page: params[:page], per_page: params[:per_page])
-    # end
-
-    @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
+    respond_to do |format|
+      format.csv do
+        send_data tasks_csv(@tasks), type: 'text/csv; charset=utf-8',
+                                     filename: "tasks_#{Time.zone.today.iso8601}.csv"
+      end
+      format.any(:html, :js) do
+        @tasks = @tasks.paginate(page: params[:page], per_page: params[:per_page])
+        @assignee = User.find(params[:assignee_id]) if params[:assignee_id]
+      end
+    end
   end
 
   def show
@@ -215,6 +222,18 @@ class TasksController < InheritedResources::Base
   end
 
   protected
+
+  # Same columns as the tasks/_index listing (minus actions), with the task URL after the name
+  def tasks_csv(tasks)
+    csv = CSV.generate do |rows|
+      rows << [_('Name'), I18n.t('tasks.csv.task_url'), _('Kind'), _('State'), _('Files'), _('Progress')]
+      tasks.each do |task|
+        rows << [task.name, task_url(task), task.kind.try(:name), Task.textify_state(task.state),
+                 task.documents_count, "#{task.percent_done}%"]
+      end
+    end
+    "\uFEFF#{csv}" # BOM so Excel detects UTF-8 (Hebrew)
+  end
 
   def require_task_participant_or_editor
     return false unless require_user

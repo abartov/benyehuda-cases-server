@@ -30,6 +30,9 @@ he:
         targetdate: תאריך יעד
         open: פתוח לכל?
   tasks:
+    csv:
+      task_url: קישור למשימה
+      download: הורדה כקובץ CSV
     modal:
       search_by_name: חיפוש לפי שם משימה
     complete_also_updated_parents: "המשימה הועברה למצב 'עלתה לאתר', וכך גם משימות האב הבאום: %{parent_names}"

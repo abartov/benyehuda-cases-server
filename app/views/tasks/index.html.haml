@@ -11,5 +11,9 @@
         %span
           %em
             != _("back to dashboard")
+    %li
+      %a.link1{ :href => tasks_path(request.query_parameters.except('page', 'per_page').symbolize_keys.merge(:format => :csv)) }
+        %span
+          %em= t('tasks.csv.download')
 
 != render(:partial => "tasks/index", :locals => {:tasks => @tasks, :editing => false, :stalled => stalled, :title => _("Unassigned Tasks")})
