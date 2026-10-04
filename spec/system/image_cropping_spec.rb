@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe 'Image Cropping', type: :system, js: true do
   let(:user) { create(:user, :volunteer, :active_user) }
   let(:task) { create(:task, assignee: user) }
-  let(:image_document) do
+  let!(:image_document) do
     create(:document,
            task: task,
            user: user,
@@ -13,7 +13,11 @@ RSpec.describe 'Image Cropping', type: :system, js: true do
 
   before do
     # Mock S3 URL for the image
-    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('https://via.placeholder.com/2000x3000.jpg')
+    allow_any_instance_of(Paperclip::Attachment).to receive(:url).and_return('https://example.test/2000x3000.jpg')
+
+    # Serve a real tall image from proxy_image instead of fetching it over the network
+    image_body = File.binread(Rails.root.join('spec/fixtures/files/tall_image.jpg'))
+    allow(HTTParty).to receive(:get).and_return(double(body: image_body))
 
     # Mock authentication - bypass auth checks
     allow_any_instance_of(ApplicationController).to receive(:current_user).and_return(user)
@@ -99,7 +103,7 @@ RSpec.describe 'Image Cropping', type: :system, js: true do
     expect(page).to have_button(I18n.t('common.cancel'))
 
     # Get button position
-    button_top = page.execute_script('return jQuery("#download-cropped").offset().top')
+    button_top = page.execute_script('return document.getElementById("download-cropped").getBoundingClientRect().top')
     viewport_height = page.execute_script('return window.innerHeight')
 
     puts "\n=== Button Position ==="
