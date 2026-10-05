@@ -1,3 +1,5 @@
+require 'csv'
+
 class Admin::TasksController < InheritedResources::Base
   include ActionController::Cookies # include ActionController
   before_action :load_authlogic
@@ -7,6 +9,9 @@ class Admin::TasksController < InheritedResources::Base
   has_scope :order_by, only: :index, using: %i[includes property dir], allow_blank: true
   has_scope :order_by_state, only: :index, using: [:dir]
   respond_to :js
+
+  CSV_BATCH_SIZE = 1000 # Sphinx caps results per request; used when exporting a text-query search
+  CSV_FORMULA_PREFIXES = ['=', '+', '-', '@', "\t", "\r", "\n"].freeze
 
   def new
     remove_extra_params
@@ -62,6 +67,8 @@ class Admin::TasksController < InheritedResources::Base
       params.merge!(current_user.search_settings.retrieve)
     end
     current_user.search_settings.set_from_params!(params)
+    return send_tasks_csv if request.format.csv?
+
     default_index_with_search!
   end
 
@@ -196,6 +203,44 @@ class Admin::TasksController < InheritedResources::Base
 
   def collection
     @tasks ||= (params['query'].present? ? Task.filter(task_params) : apply_scopes(Task.filter(task_params)))
+  end
+
+  # The same query as the listing, but for all pages rather than the current one
+  def all_filtered_tasks
+    return apply_scopes(Task.filter(task_params)).except(:limit, :offset) if params['query'].blank?
+
+    # text queries go through Sphinx, which can only be paged through
+    tasks = []
+    1.step do |page|
+      batch = Task.filter(task_params.merge(page: page, per_page: CSV_BATCH_SIZE))
+      tasks.concat(batch.to_a)
+      break if page >= batch.total_pages
+    end
+    tasks
+  end
+
+  # Same columns as the listing (minus the action links), with the task URL after the name
+  def send_tasks_csv
+    tasks = all_filtered_tasks
+    csv = CSV.generate do |rows|
+      rows << [I18n.t('tasks.csv.id'), _('Creater'), _('Last Updated'), _('Name'), I18n.t('tasks.csv.task_url'),
+               I18n.t('tasks.csv.genre'), _('Kind'), _('Editor'), _('Assignee'), _('State'), _('Files')]
+      tasks.each do |task|
+        rows << [task.id, task.creator.try(:name), task.updated_at.to_s(:db), task.name, task_url(task), task.try(:genre),
+                 task.kind.try(:name), task.editor.try(:name), task.assignee.try(:name), Task.textify_state(task.state),
+                 task.documents_count].map { |cell| csv_safe(cell) }
+      end
+    end
+    # BOM so Excel detects UTF-8 (Hebrew)
+    send_data "\uFEFF#{csv}", type: 'text/csv; charset=utf-8', filename: "tasks_#{Time.zone.today.iso8601}.csv"
+  rescue Riddle::ConnectionError
+    flash[:error] = _('Search is not available at this moment, please try again later')
+    redirect_to '/'
+  end
+
+  # Prevent spreadsheet formula injection from free-text cells
+  def csv_safe(value)
+    value.is_a?(String) && value.start_with?(*CSV_FORMULA_PREFIXES) ? "'#{value}" : value
   end
 
   def interpolation_options
