@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_05_000001) do
+ActiveRecord::Schema.define(version: 2026_10_05_000002) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key", collation: "utf8mb3_bin"
@@ -171,6 +171,8 @@ ActiveRecord::Schema.define(version: 2026_10_05_000001) do
     t.datetime "completed_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.datetime "deleted_at"
+    t.index ["copyright_expiration_year"], name: "index_scan_folders_on_copyright_expiration_year"
     t.index ["name"], name: "index_scan_folders_on_name", unique: true
     t.index ["status"], name: "index_scan_folders_on_status"
     t.index ["task_id"], name: "index_scan_folders_on_task_id"

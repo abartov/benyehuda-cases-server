@@ -10,7 +10,7 @@ class ScanFoldersController < ApplicationController
     @statuses = ScanFolder::STATUSES
     @all_tags = FolderTag.order(:name)
     @tag_ids = Array(params[:tag_ids]).reject(&:blank?)
-    @scan_folders = ScanFolder.with_status(params[:status]).name_like(params[:q]).tagged_with_all(@tag_ids)
+    @scan_folders = ScanFolder.with_status(params[:status]).expiring_in(params[:expiration_year]).name_like(params[:q]).tagged_with_all(@tag_ids)
                               .includes(:folder_tags).order(created_at: :desc)
                               .paginate(page: params[:page], per_page: PER_PAGE)
   end
@@ -76,6 +76,12 @@ class ScanFoldersController < ApplicationController
   def update
     @scan_folder.update!(params.permit(:title, :author, :comment))
     render json: { ok: true, message: I18n.t('scans.saved') }
+  end
+
+  def destroy
+    @scan_folder.soft_delete!
+    flash[:notice] = I18n.t('scans.folder_deleted')
+    redirect_back fallback_location: scan_folders_path
   end
 
   def approve

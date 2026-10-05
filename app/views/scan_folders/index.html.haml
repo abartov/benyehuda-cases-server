@@ -3,9 +3,11 @@
 .scans-page
   = form_tag scan_folders_path, method: :get, id: 'scan-filter' do
     = select_tag :status, options_for_select([[t('scans.all_statuses'), '']] + @statuses.map { |s| [t("scans.statuses.#{s}"), s] }, params[:status]), onchange: 'this.form.submit()'
+    = number_field_tag :expiration_year, params[:expiration_year], placeholder: t('scans.filter_expiration_year'), title: t('scans.filter_expiration_year')
     = text_field_tag :q, params[:q], placeholder: t('scans.filter_name')
     = select_tag 'tag_ids[]', options_from_collection_for_select(@all_tags, :id, :name, @tag_ids.map(&:to_i)), multiple: true, title: t('scans.filter_tags')
     = submit_tag t('scans.filter'), name: nil
+  %p.scans-total= t('scans.total_folders', count: @scan_folders.total_entries)
   - if @scan_folders.empty?
     %p.scans-empty= t('scans.no_folders')
   - else
@@ -20,9 +22,9 @@
         %th= t('scans.comment')
         %th
       - @scan_folders.each do |sf|
-        - raw = sf.status == 'archived' ? nil : sf
+        - raw = %w[archived deleted].include?(sf.status) ? nil : sf
         %tr{ id: "scan-folder-#{sf.id}" }
-          %td= link_to sf.name, scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
+          %td= link_to sf.display_name, scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
           - if raw
             %td= sf.file_count
             %td= scan_size(sf.total_size)

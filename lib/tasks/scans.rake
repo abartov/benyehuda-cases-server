@@ -9,6 +9,11 @@ namespace :scans do
     ArchiveOldScanFolders.call
   end
 
+  desc 'Physically delete ScanFolders (and their stored files) deleted over two years ago'
+  task purge_deleted: :environment do
+    PurgeDeletedScanFolders.call
+  end
+
   desc 'Approve postponed ScanFolders whose copyright expires next year'
   task approve_expiring: :environment do
     ApproveExpiringScanFolders.call

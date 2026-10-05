@@ -248,6 +248,11 @@ he:
     filter_tags: תגיות (ניתן לבחור כמה)
     filter: סינון
     no_folders: לא נמצאו תיקיות סריקות
+    total_folders: "סך הכל: %{count} תיקיות"
+    filter_expiration_year: שנת פקיעת זכויות
+    delete: מחיקה
+    confirm_delete_folder: למחוק את התיקייה? (התיקייה תוסתר, והקבצים יימחקו לצמיתות לאחר שנתיים)
+    folder_deleted: התיקייה נמחקה
     title: כותרת
     author: מחבר
     tags: תגיות
@@ -292,3 +297,4 @@ he:
       postponed: נדחה
       complete: הושלם
       archived: בארכיון
+      deleted: נמחק

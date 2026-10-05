@@ -79,7 +79,7 @@ Rails.application.routes.draw do
     resources :comments
   end
 
-  resources :scan_folders, only: %i[index show new create update] do
+  resources :scan_folders, only: %i[index show new create update destroy] do
     get :file, on: :collection # serves disk-backed scans in dev/test
     post :sync, on: :collection
     member do

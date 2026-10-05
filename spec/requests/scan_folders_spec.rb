@@ -23,6 +23,42 @@ RSpec.describe 'ScanFolders', type: :request do
   end
 
   describe 'GET /scan_folders' do
+    it 'shows the total count and paginates' do
+      create_list(:scan_folder, ScanFoldersController::PER_PAGE + 2)
+      get scan_folders_path
+      expect(response.body).to include(I18n.t('scans.total_folders', count: ScanFoldersController::PER_PAGE + 2))
+      expect(response.body.scan(/id=['"]scan-folder-\d+['"]/).size).to eq ScanFoldersController::PER_PAGE
+      get scan_folders_path, params: { page: 2 }
+      expect(response.body.scan(/id=['"]scan-folder-\d+['"]/).size).to eq 2
+    end
+
+    it 'filters by copyright expiration year' do
+      create(:scan_folder, name: 'exp-2040', copyright_expiration_year: 2040)
+      create(:scan_folder, name: 'exp-2050', copyright_expiration_year: 2050)
+      get scan_folders_path, params: { expiration_year: 2040 }
+      expect(response.body).to include('exp-2040')
+      expect(response.body).not_to include('exp-2050')
+    end
+
+    it 'shows "title / author" instead of the folder name when titled' do
+      create(:scan_folder, name: 'raw-name-1', title: ' שיר ', author: 'ביאליק ')
+      create(:scan_folder, name: 'raw-name-2')
+      get scan_folders_path
+      expect(response.body).to include('שיר / ביאליק', 'raw-name-2')
+      expect(response.body).not_to include('raw-name-1')
+    end
+
+    it 'hides deleted folders unless filtering by that status' do
+      create(:scan_folder, name: 'live-one')
+      create(:scan_folder, name: 'gone-one', status: 'deleted', deleted_at: 1.day.ago)
+      get scan_folders_path
+      expect(response.body).to include('live-one')
+      expect(response.body).not_to include('gone-one')
+      get scan_folders_path, params: { status: 'deleted' }
+      expect(response.body).to include('gone-one')
+      expect(response.body).not_to include('live-one')
+    end
+
     it 'lists and filters by status, name and ANDed tags' do
       x = create(:folder_tag)
       y = create(:folder_tag)
@@ -273,5 +309,23 @@ RSpec.describe 'ScanFolders disk file serving', type: :request do
     expect(response).to have_http_status(:success)
     get file_scan_folders_path(folder: '..', filename: 'passwd')
     expect(response).to have_http_status(:not_found)
+  end
+
+  describe 'DELETE /scan_folders/:id' do
+    it 'soft-deletes, keeping the record and its files' do
+      sf = create(:scan_folder, status: 'approved')
+      expect(ScanStorage).not_to receive(:delete_direct_files)
+      delete scan_folder_path(sf)
+      expect(response).to redirect_to(scan_folders_path)
+      expect(sf.reload.status).to eq 'deleted'
+      expect(sf.deleted_at).to be_within(1.minute).of(Time.zone.now)
+    end
+
+    it 'refuses folders still uploading' do
+      sf = create(:scan_folder, status: 'uploading')
+      delete scan_folder_path(sf)
+      expect(sf.reload.status).to eq 'uploading'
+      expect(flash[:error]).to eq I18n.t('scans.invalid_state')
+    end
   end
 end
