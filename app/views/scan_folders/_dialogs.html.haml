@@ -64,6 +64,9 @@
             // Center in the viewport (not the page), whatever the scroll position or content size.
             $(this).parent('.ui-dialog').css({ position: 'fixed', top: '50%', left: '50%',
                                                transform: 'translate(-50%, -50%)', margin: 0, maxHeight: '95vh' });
+            // Make the scrolling pane itself focusable, so arrow/PgUp/PgDn keys scroll it, and clicking
+            // anywhere on non-interactive content (tiles, gaps) leaves focus on it rather than on <body>.
+            $(this).attr('tabindex', -1).css('outline', 'none').focus();
           },
           close: function() { destroyCropper(); $(this).dialog('destroy'); }
         });
