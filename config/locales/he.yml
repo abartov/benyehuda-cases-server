@@ -258,6 +258,10 @@ he:
     name_taken: שם התיקייה כבר קיים
     name_required: יש לציין שם תיקייה
     files_required: יש לבחור קבצים להעלאה
+    files_too_large: 'קובץ אחד או יותר גדולים מדי (הגבלה: 50 מ"ב לקובץ)'
+    task_files_too_large: "הקבצים הבאים גדולים מדי לצירוף למשימה (הגבלה: %{max} מ\"ב): %{files}"
+    already_converted: כבר נוצרה משימה מתיקייה זו
+    not_convertible: ניתן ליצור משימה רק מתיקייה מאושרת או דחויה
     not_a_scan: סוג קובץ לא נתמך
     statuses:
       raw: גולמי

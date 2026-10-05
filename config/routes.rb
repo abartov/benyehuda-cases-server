@@ -88,6 +88,7 @@ Rails.application.routes.draw do
       delete :delete_file
       post :rotate_file
       post :crop_file
+      get :preview
     end
   end
 

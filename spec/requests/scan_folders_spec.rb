@@ -58,6 +58,26 @@ RSpec.describe 'ScanFolders', type: :request do
   describe 'POST /scan_folders' do
     let(:file) { fixture_file_upload('spec/fixtures/files/scan.jpg', 'image/jpeg') }
 
+    it 'cleans up partial uploads when a later file fails' do
+      calls = 0
+      allow(ScanStorage).to receive(:upload).and_wrap_original do |m, *args, **kw|
+        calls += 1
+        raise 'boom' if calls == 2
+
+        m.call(*args, **kw)
+      end
+      expect { post scan_folders_path, params: { name: 'partial', files: [file, file] } }.to raise_error(RuntimeError, 'boom')
+      expect(ScanStorage.folder_exists?('partial')).to be false
+      expect(ScanFolder.where(name: 'partial')).to be_empty
+    end
+
+    it 'rejects files too large to become documents' do
+      stub_const('ScanFolder::MAX_FILE_SIZE', 1.byte)
+      post scan_folders_path, params: { name: 'bigfolder', files: [file] }
+      expect(ScanFolder.where(name: 'bigfolder')).to be_empty
+      expect(CGI.unescapeHTML(response.body)).to include(I18n.t('scans.files_too_large'))
+    end
+
     before do
       FileUtils.mkdir_p(Rails.root.join('spec/fixtures/files'))
       File.binwrite(Rails.root.join('spec/fixtures/files/scan.jpg'), 'x') unless File.exist?(Rails.root.join('spec/fixtures/files/scan.jpg'))
@@ -112,6 +132,23 @@ RSpec.describe 'ScanFolders', type: :request do
       expect(Document).to have_received(:create!).exactly(3).times
     end
 
+    it 'refuses a second conversion and non-approved folders' do
+      allow(ScanStorage).to receive(:list_files).and_return([])
+      done = create(:scan_folder, status: 'approved')
+      post create_task_scan_folder_path(done), params: { title: 'T', author: 'A' }
+      expect { post create_task_scan_folder_path(done), params: { title: 'T', author: 'A' } }.not_to change(Task, :count)
+      raw = create(:scan_folder, status: 'raw')
+      expect { post create_task_scan_folder_path(raw), params: { title: 'T', author: 'A' } }.not_to change(Task, :count)
+      expect(raw.reload.task_id).to be_nil
+    end
+
+    it 'refuses folders with files too large for a Document, before creating a task' do
+      allow(ScanStorage).to receive(:list_files).and_return([{ name: 'big.jpg', size: 51.megabytes }])
+      sf = create(:scan_folder, status: 'approved')
+      expect { post create_task_scan_folder_path(sf), params: { title: 'T', author: 'A' } }.not_to change(Task, :count)
+      expect(flash[:error]).to include('big.jpg')
+    end
+
     it 'requires title and author' do
       sf = create(:scan_folder, status: 'approved')
       expect { post create_task_scan_folder_path(sf), params: { title: '', author: '' } }.not_to change(Task, :count)
@@ -125,6 +162,17 @@ RSpec.describe 'ScanFolders', type: :request do
     it 'GET show renders the modal with thumbnails' do
       get scan_folder_path(sf)
       expect(response.body).to include('a.jpg', 'rotate-file', 'crop-file', 'delete-file')
+    end
+
+    it 'shows TIFFs through the JPEG preview and serves it' do
+      sf = create(:scan_folder)
+      allow(ScanStorage).to receive(:list_files).and_return([{ name: 'a.tif', size: 1 }])
+      allow(ScanStorage).to receive(:presigned_url).and_return('/orig/a.tif')
+      allow(ScanStorage).to receive(:preview).with(sf.name, 'a.tif').and_return('jpegdata')
+      get scan_folder_path(sf)
+      expect(response.body).to include("src='#{preview_scan_folder_path(sf, filename: 'a.tif')}".sub(/\?.*/, ''))
+      get preview_scan_folder_path(sf, filename: 'a.tif')
+      expect([response.media_type, response.body]).to eq ['image/jpeg', 'jpegdata']
     end
 
     it 'deletes, rotates and crops only by base filename' do

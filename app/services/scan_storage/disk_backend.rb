@@ -51,7 +51,7 @@ class ScanStorage
       rel = key.delete_prefix("#{ScanStorage::ROOT}/")
       folder, filename = File.split(rel)
       Rails.application.routes.url_helpers.file_scan_folders_path(folder: folder, filename: filename,
-                                                                  t: File.mtime(path_for(key)).to_i)
+                                                                  t: (File.mtime(path_for(key)).to_f * 1000).to_i)
     end
   end
 end

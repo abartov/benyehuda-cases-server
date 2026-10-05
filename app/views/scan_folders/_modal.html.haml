@@ -14,10 +14,11 @@
     - files.each do |f|
       .bigthumb
         - url = ScanStorage.presigned_url(scan_folder.name, f[:name])
+        - img_url = ScanStorage.image_file?(f[:name]) ? display_url(scan_folder, f[:name]) : url
         %a{ href: url, target: '_blank' }= f[:name]
         %br
         - if ScanStorage.image_file?(f[:name])
-          %img{ src: url, style: 'width:500px; height:500px; object-fit:contain;' }
+          %img{ src: img_url, style: 'width:500px; height:500px; object-fit:contain;' }
         - else
           %em PDF
         %br

@@ -32,8 +32,6 @@
     var token = $('meta[name=csrf-token]').attr('content');
     var cropper = null, cropCtx = null;
 
-    function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + '_=' + Date.now(); }
-
     function api(method, url, data) {
       return $.ajax({ url: url, type: method, data: data, headers: { 'X-CSRF-Token': token } });
     }
@@ -83,7 +81,7 @@
     });
     $(document).on('click', '#scan-modal .rotate-file', function() {
       var $t = $(this).closest('.bigthumb');
-      api('POST', $(this).data('url'), { filename: $(this).data('filename') }).done(function(r) { $t.find('img').attr('src', bust(r.url)); });
+      api('POST', $(this).data('url'), { filename: $(this).data('filename') }).done(function(r) { $t.find('img').attr('src', r.url); });
     });
 
     function destroyCropper() {
@@ -95,7 +93,7 @@
       if (!cropper) return;
       var d = cropper.getData(true), ctx = cropCtx;
       api('POST', ctx.url, { filename: ctx.filename, x: d.x, y: d.y, width: d.width, height: d.height }).done(function(r) {
-        ctx.img.attr('src', bust(r.url)); destroyCropper();
+        ctx.img.attr('src', r.url); destroyCropper();
       });
     }
     $(document).on('click', '#scan-modal .crop-file', function() {
@@ -108,7 +106,7 @@
         .append($('<button type="button" id="crop-apply"></button>').text(i18n.crop_apply))
         .append($('<button type="button" id="crop-cancel"></button>').text(i18n.cancel));
       $t.append($pane);
-      cropper = new Cropper($pane.find('img')[0], { viewMode: 1 });
+      cropper = new Cropper($pane.find('img')[0], { viewMode: 1, checkCrossOrigin: false, checkOrientation: false });
       $(document).on('keydown.cropper', function(e) {
         if (e.which === 13) { e.preventDefault(); e.stopPropagation(); applyCrop(); }
       });

@@ -34,6 +34,10 @@ class ScanStorage
       SCAN_EXTS.include?(File.extname(key).delete('.').downcase)
     end
 
+    def tiff_file?(key)
+      %w[tif tiff].include?(File.extname(key).delete('.').downcase)
+    end
+
     def image_file?(key)
       IMAGE_EXTS.include?(File.extname(key).delete('.').downcase)
     end
@@ -80,6 +84,22 @@ class ScanStorage
 
     def delete_folder(folder)
       backend.delete_prefix(folder_prefix(folder))
+    end
+
+    # Deletes only the objects directly inside the folder, never those of nested folders (which are
+    # separate ScanFolders). Failures propagate, so callers never mark a folder done with files left.
+    def delete_direct_files(folder)
+      prefix = folder_prefix(folder)
+      list_objects(prefix).each do |o|
+        backend.delete(o[:key]) unless o[:key].delete_prefix(prefix).include?('/')
+      end
+    end
+
+    # JPEG rendering (same pixel dimensions) of an image, for formats browsers can't display (TIFF).
+    def preview(folder, filename)
+      image = MiniMagick::Image.read(read(folder, filename))
+      image.format('jpeg', 0)
+      image.to_blob
     end
 
     def read(folder, filename)

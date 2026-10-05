@@ -20,7 +20,7 @@ RSpec.describe 'scan folder scheduled jobs' do
     it 'archives only folders completed over a year ago' do
       old = create(:scan_folder, status: 'complete', completed_at: 13.months.ago)
       recent = create(:scan_folder, status: 'complete', completed_at: 2.months.ago)
-      expect(ScanStorage).to receive(:delete_folder).with(old.name)
+      expect(ScanStorage).to receive(:delete_direct_files).with(old.name)
       described_class.call
       expect(old.reload.status).to eq 'archived'
       expect(recent.reload.status).to eq 'complete'

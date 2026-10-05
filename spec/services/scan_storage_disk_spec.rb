@@ -23,6 +23,23 @@ RSpec.describe ScanStorage::DiskBackend do
     expect(ScanStorage.folder_exists?('g')).to be true
   end
 
+  it 'deletes only a folder\'s direct files, leaving nested folders alone' do
+    ScanStorage.upload('A', 'a.jpg', StringIO.new('1'))
+    ScanStorage.upload('A/B', 'b.jpg', StringIO.new('2'))
+    ScanStorage.delete_direct_files('A')
+    expect(ScanStorage.list_files('A')).to be_empty
+    expect(ScanStorage.list_files('A/B').size).to eq 1
+  end
+
+  it 'renders a JPEG preview of a TIFF with the same dimensions' do
+    Tempfile.create(['p', '.tif']) do |f|
+      MiniMagick::Tool::Convert.new { |c| c.size '40x20'; c << 'xc:red'; c << f.path }
+      ScanStorage.upload('t', 'p.tif', StringIO.new(File.binread(f.path)))
+    end
+    img = MiniMagick::Image.read(ScanStorage.preview('t', 'p.tif'))
+    expect([img.type, img.width, img.height]).to eq ['JPEG', 40, 20]
+  end
+
   it 'refuses keys escaping the root' do
     expect { described_class.new.path_for('../../etc/passwd') }.to raise_error(ArgumentError)
   end

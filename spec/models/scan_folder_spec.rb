@@ -61,7 +61,7 @@ RSpec.describe ScanFolder, type: :model do
 
   it 'archives by deleting stored files' do
     sf = create(:scan_folder, status: 'complete')
-    expect(ScanStorage).to receive(:delete_folder).with(sf.name)
+    expect(ScanStorage).to receive(:delete_direct_files).with(sf.name)
     sf.archive!
     expect(sf.reload.status).to eq 'archived'
   end

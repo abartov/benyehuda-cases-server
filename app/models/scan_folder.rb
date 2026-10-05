@@ -1,6 +1,8 @@
 class ScanFolder < ApplicationRecord
   STATUSES = %w[raw approved postponed complete archived].freeze
   YEARS_AFTER_DEATH = 71
+  MAX_FILE_SIZE = 50.megabytes # Document's attachment limit
+  CONVERTIBLE_STATUSES = %w[approved postponed].freeze
 
   belongs_to :task, optional: true
   has_many :folder_taggings, dependent: :destroy
@@ -34,6 +36,11 @@ class ScanFolder < ApplicationRecord
     @files ||= ScanStorage.list_files(name)
   end
 
+  # Files too large to attach to a Document.
+  def oversized_files
+    files.select { |f| f[:size] >= MAX_FILE_SIZE }
+  end
+
   def file_count
     files.size
   end
@@ -64,7 +71,7 @@ class ScanFolder < ApplicationRecord
   end
 
   def archive!
-    ScanStorage.delete_folder(name)
+    ScanStorage.delete_direct_files(name)
     update!(status: 'archived')
   end
 end

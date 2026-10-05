@@ -1,6 +1,7 @@
 class ScanFoldersController < ApplicationController
   before_action :require_admin
   before_action :load_scan_folder, except: %i[index new create file]
+  helper_method :display_url
 
   PER_PAGE = 25
 
@@ -27,13 +28,19 @@ class ScanFoldersController < ApplicationController
     return upload_error(:name_required) if name.blank? || name.include?('/') || name.start_with?('.')
     return upload_error(:files_required) if files.empty?
     return upload_error(:not_a_scan) unless files.all? { |f| ScanStorage.scan_file?(f.original_filename) }
+    return upload_error(:files_too_large) if files.any? { |f| f.size >= ScanFolder::MAX_FILE_SIZE }
     return upload_error(:name_taken) if ScanFolder.exists?(name: name) || ScanStorage.folder_exists?(name)
 
-    ScanFolder.transaction do
-      @scan_folder = ScanFolder.create!(name: name, comment: params[:comment].presence)
+    begin
       files.each do |f|
         ScanStorage.upload(name, File.basename(f.original_filename), f.tempfile, content_type: f.content_type)
       end
+      ScanFolder.create!(name: name, comment: params[:comment].presence)
+    rescue StandardError
+      # The folder didn't exist before this attempt, so everything under it is ours: don't leave a
+      # partial upload for scheduled discovery to register.
+      ScanStorage.delete_folder(name)
+      raise
     end
     flash[:notice] = I18n.t('scans.folder_created')
     redirect_to scan_folders_path
@@ -75,6 +82,11 @@ class ScanFoldersController < ApplicationController
     redirect_back fallback_location: scan_folders_path
   end
 
+  # Browser-displayable JPEG of a (TIFF) scan, same pixel dimensions as the original.
+  def preview
+    send_data ScanStorage.preview(@scan_folder.name, file_name), type: 'image/jpeg', disposition: :inline
+  end
+
   def delete_file
     ScanStorage.delete_file(@scan_folder.name, file_name)
     head :no_content
@@ -82,16 +94,26 @@ class ScanFoldersController < ApplicationController
 
   def rotate_file
     ScanStorage.rotate(@scan_folder.name, file_name)
-    render json: { url: ScanStorage.presigned_url(@scan_folder.name, file_name)  }
+    render json: { url: display_url(@scan_folder, file_name) }
   end
 
   def crop_file
     ScanStorage.crop(@scan_folder.name, file_name, x: params[:x], y: params[:y], width: params[:width],
                                                     height: params[:height])
-    render json: { url: ScanStorage.presigned_url(@scan_folder.name, file_name)  }
+    render json: { url: display_url(@scan_folder, file_name) }
   end
 
   private
+
+  # URL for an <img>/Cropper: TIFFs go through the JPEG preview, as browsers can't display them.
+  # Signed S3 URLs are returned untouched (altering the query string would invalidate the signature).
+  def display_url(scan_folder, filename)
+    if ScanStorage.tiff_file?(filename)
+      preview_scan_folder_path(scan_folder, filename: filename, t: (Time.now.to_f * 1000).to_i)
+    else
+      ScanStorage.presigned_url(scan_folder.name, filename)
+    end
+  end
 
   def load_scan_folder
     @scan_folder = ScanFolder.find(params[:id])
