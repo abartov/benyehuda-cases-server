@@ -10,9 +10,9 @@
   display: inline-block;
   padding: 6px 14px;
   margin: 0 2px;
-  border: 1px solid #2b7bb9;
+  border: 1px solid #6f45a3;
   border-radius: 4px;
-  background: #3a8fd0;
+  background: #8e5fc4;
   color: #fff;
   font-size: 100%;
   font-weight: bold;
@@ -28,7 +28,7 @@
 #crop-apply:hover,
 #postpone-modal input[type=submit]:hover,
 #task-modal input[type=submit]:hover {
-  background: #2b7bb9;
+  background: #6f45a3;
 }
 .scans-btn:focus,
 .scans-page input[type=submit]:focus,
@@ -51,19 +51,19 @@
 .scans-actions form { display: inline; }
 
 /* ---- Nav (tab-like links) ---- */
-.scans-nav { margin: 0 0 1em; padding: 0; border-bottom: 2px solid #3a8fd0; }
+.scans-nav { margin: 0 0 1em; padding: 0; border-bottom: 2px solid #8e5fc4; }
 .scans-nav a {
   display: inline-block;
   padding: 6px 16px;
   margin-left: 4px;
   border-radius: 4px 4px 0 0;
-  background: #e5ecf9;
-  color: #1d5f94;
+  background: #ece3f7;
+  color: #5b3a8a;
   font-weight: bold;
   text-decoration: none;
 }
-.scans-nav a:hover { background: #cfdcf3; }
-.scans-nav a.active { background: #3a8fd0; color: #fff; }
+.scans-nav a:hover { background: #dccaf0; }
+.scans-nav a.active { background: #8e5fc4; color: #fff; }
 
 /* ---- Filter bar ---- */
 #scan-filter {
@@ -73,14 +73,14 @@
   gap: 8px;
   margin: 0 0 1em;
   padding: 10px 12px;
-  background: #e5ecf9;
-  border: 1px solid #c9d6ee;
+  background: #ece3f7;
+  border: 1px solid #d3c0ea;
   border-radius: 6px;
 }
 #scan-filter input[type=text],
 #scan-filter select {
   padding: 5px 8px;
-  border: 1px solid #b5c3de;
+  border: 1px solid #bfa8dc;
   border-radius: 4px;
   background: #fff;
 }
@@ -90,14 +90,14 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  border: 1px solid #d5dbe6;
+  border: 1px solid #ddd2ec;
   border-radius: 6px;
   background: #fff;
   overflow: hidden;
 }
 #scan-folders th {
   padding: 10px 12px;
-  background: #2f6f9f;
+  background: #5e3d91;
   color: #fff;
   text-align: right;
   font-weight: bold;
@@ -105,11 +105,11 @@
 }
 #scan-folders td {
   padding: 9px 12px;
-  border-top: 1px solid #e6eaf1;
+  border-top: 1px solid #e8dff3;
   vertical-align: middle;
 }
-#scan-folders tr:nth-child(even) td { background: #f6f9fd; }
-#scan-folders tr:hover td { background: #e8f1fb; }
+#scan-folders tr:nth-child(even) td { background: #f8f4fd; }
+#scan-folders tr:hover td { background: #ede2f9; }
 #scan-folders td a.scan-folder-link { font-weight: bold; }
 #scan-folders td.scans-actions { white-space: nowrap; }
 .scans-status {
@@ -130,8 +130,8 @@
   margin: 1px 2px;
   padding: 1px 8px;
   border-radius: 3px;
-  background: #e5ecf9;
-  color: #1d5f94;
+  background: #ece3f7;
+  color: #5b3a8a;
   font-size: 90%;
 }
 .scans-empty { padding: 2em; text-align: center; background: #fff; border: 1px dashed #bbb; border-radius: 6px; }
@@ -141,7 +141,7 @@
   max-width: 640px;
   padding: 16px 20px;
   background: #fff;
-  border: 1px solid #d5dbe6;
+  border: 1px solid #ddd2ec;
   border-radius: 6px;
 }
 .scans-form label { font-weight: bold; }
@@ -149,7 +149,7 @@
 .scans-form textarea {
   width: 100%;
   padding: 6px 8px;
-  border: 1px solid #b5c3de;
+  border: 1px solid #bfa8dc;
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -158,10 +158,10 @@
 #postpone-modal input[type=text], #postpone-modal input[type=number],
 #task-modal input[type=text], #scan-meta-form input[type=text] {
   padding: 5px 8px;
-  border: 1px solid #b5c3de;
+  border: 1px solid #bfa8dc;
   border-radius: 4px;
 }
 #postpone-modal label, #task-modal label { display: block; font-weight: bold; margin-bottom: 2px; }
-#scan-meta-form { padding: 10px; margin-bottom: 1em; background: #e5ecf9; border-radius: 6px; }
+#scan-meta-form { padding: 10px; margin-bottom: 1em; background: #ece3f7; border-radius: 6px; }
 #scan-meta-msg { margin: 0 8px; color: #1f6b2b; font-weight: bold; }
-.bigthumb { margin-bottom: 1.5em; padding: 10px; background: #fff; border: 1px solid #d5dbe6; border-radius: 6px; }
+.bigthumb { margin-bottom: 1.5em; padding: 10px; background: #fff; border: 1px solid #ddd2ec; border-radius: 6px; }
