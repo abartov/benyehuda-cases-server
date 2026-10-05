@@ -1,37 +1,41 @@
 = set_tab :scans, t('scans.manage')
 = render 'scan_folders/nav'
-= form_tag scan_folders_path, method: :get, id: 'scan-filter' do
-  = select_tag :status, options_for_select([[t('scans.all_statuses'), '']] + @statuses.map { |s| [t("scans.statuses.#{s}"), s] }, params[:status]), onchange: 'this.form.submit()'
-  = text_field_tag :q, params[:q], placeholder: t('scans.filter_name')
-  = select_tag 'tag_ids[]', options_from_collection_for_select(@all_tags, :id, :name, @tag_ids.map(&:to_i)), multiple: true, title: t('scans.filter_tags')
-  = submit_tag t('scans.filter'), name: nil
-- if @scan_folders.empty?
-  %p= t('scans.no_folders')
-- else
-  %table#scan-folders{ width: '100%' }
-    %tr
-      %th= t('scans.folder_name')
-      %th= t('scans.file_count')
-      %th= t('scans.total_size')
-      %th= t('scans.uploaded_at')
-      %th= t('scans.status')
-      %th= t('scans.tags')
-      %th= t('scans.comment')
-      %th
-    - @scan_folders.each do |sf|
-      - raw = sf.status == 'archived' ? nil : sf
-      %tr{ id: "scan-folder-#{sf.id}" }
-        %td= link_to sf.name, scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
-        - if raw
-          %td= sf.file_count
-          %td= scan_size(sf.total_size)
-        - else
-          %td —
-          %td —
-        %td= l(sf.created_at.to_date)
-        %td= t("scans.statuses.#{sf.status}")
-        %td= sf.folder_tags.map(&:name).join(', ')
-        %td= sf.comment
-        %td= render 'scan_folders/actions', sf: sf
-  = will_paginate @scan_folders
+.scans-page
+  = form_tag scan_folders_path, method: :get, id: 'scan-filter' do
+    = select_tag :status, options_for_select([[t('scans.all_statuses'), '']] + @statuses.map { |s| [t("scans.statuses.#{s}"), s] }, params[:status]), onchange: 'this.form.submit()'
+    = text_field_tag :q, params[:q], placeholder: t('scans.filter_name')
+    = select_tag 'tag_ids[]', options_from_collection_for_select(@all_tags, :id, :name, @tag_ids.map(&:to_i)), multiple: true, title: t('scans.filter_tags')
+    = submit_tag t('scans.filter'), name: nil
+  - if @scan_folders.empty?
+    %p.scans-empty= t('scans.no_folders')
+  - else
+    %table#scan-folders{ width: '100%' }
+      %tr
+        %th= t('scans.folder_name')
+        %th= t('scans.file_count')
+        %th= t('scans.total_size')
+        %th= t('scans.uploaded_at')
+        %th= t('scans.status')
+        %th= t('scans.tags')
+        %th= t('scans.comment')
+        %th
+      - @scan_folders.each do |sf|
+        - raw = sf.status == 'archived' ? nil : sf
+        %tr{ id: "scan-folder-#{sf.id}" }
+          %td= link_to sf.name, scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
+          - if raw
+            %td= sf.file_count
+            %td= scan_size(sf.total_size)
+          - else
+            %td —
+            %td —
+          %td= l(sf.created_at.to_date)
+          %td
+            %span{ class: "scans-status scans-status-#{sf.status}" }= t("scans.statuses.#{sf.status}")
+          %td
+            - sf.folder_tags.each do |tag|
+              %span.scans-tag= tag.name
+          %td= sf.comment
+          %td.scans-actions= render 'scan_folders/actions', sf: sf
+    = will_paginate @scan_folders
 = render 'scan_folders/dialogs'
