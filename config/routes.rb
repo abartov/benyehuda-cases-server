@@ -81,6 +81,7 @@ Rails.application.routes.draw do
 
   resources :scan_folders, only: %i[index show new create update] do
     get :file, on: :collection # serves disk-backed scans in dev/test
+    post :sync, on: :collection
     member do
       post :approve
       post :postpone
@@ -91,6 +92,8 @@ Rails.application.routes.draw do
       get :preview
     end
   end
+
+  resources :folder_tags, only: %i[index new create edit update destroy]
 
   resources :task_requests
   resources :site_notices
