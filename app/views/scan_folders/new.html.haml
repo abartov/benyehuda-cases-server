@@ -1,0 +1,16 @@
+= set_tab :scans, t('scans.upload_title')
+= render 'scan_folders/nav'
+= form_tag scan_folders_path, multipart: true do
+  %p
+    = label_tag :name, t('scans.folder_name')
+    %br
+    = text_field_tag :name, params[:name]
+  %p
+    = label_tag :files, t('scans.files')
+    %br
+    = file_field_tag 'files[]', multiple: true, id: 'files', accept: '.jpg,.jpeg,.png,.tif,.tiff,.pdf'
+  %p
+    = label_tag :comment, t('scans.comment')
+    %br
+    = text_area_tag :comment, params[:comment], rows: 4, cols: 60
+  %p= submit_tag t('scans.upload')

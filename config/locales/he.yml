@@ -97,6 +97,7 @@ he:
     teams: צוותים
     users: משתמשים
     tasks_admin: ניהול משימות
+    scans: סריקות
     volunteer_requests: בקשות התנדבות
     dashboard: המשימות שלי
     profile: דף מתנדב
@@ -203,3 +204,71 @@ he:
     footer_registered: "לשינוי תדירות הודעות הדואל: %{url}"
     footer_anonymous: "להרשמה לאתר ולבחירת תדירות הודעות הדואל: %{url}"
     signature: "צוות פרויקט בן־יהודה\n%{domain}"
+  scans:
+    manage: ניהול סריקות
+    upload: העלאת סריקות
+    upload_title: העלאת תיקיית סריקות
+    folder_name: שם התיקייה
+    files: קבצים
+    comment: הערות
+    file_count: מספר קבצים
+    total_size: גודל כולל
+    size_units:
+      byte:
+        one: בייט
+        other: בתים
+      kb: 'ק"ב'
+      mb: 'מ"ב'
+      gb: 'ג"ב'
+      tb: 'ט"ב'
+    uploaded_at: תאריך העלאה
+    status: סטטוס
+    all_statuses: כל הסטטוסים
+    filter_name: חיפוש בשם תיקייה
+    filter_tags: תגיות (ניתן לבחור כמה)
+    filter: סינון
+    no_folders: לא נמצאו תיקיות סריקות
+    title: כותרת
+    author: מחבר
+    tags: תגיות
+    close: סגירה
+    save: שמירה
+    saved: נשמר
+    delete_file: מחיקת הקובץ
+    confirm_delete_file: למחוק את הקובץ לצמיתות מהאחסון?
+    rotate: סיבוב 90°
+    crop: חיתוך
+    crop_apply: החלת החיתוך
+    cancel: ביטול
+    no_files: אין קבצים בתיקייה
+    approve: אישור ליצירת משימה
+    postpone: דחייה
+    postpone_title: דחיית תיקיית סריקות
+    expiration_year: שנת פקיעת זכויות יוצרים
+    year_of_death: שנת פטירה (תחשב את שנת הפקיעה אוטומטית)
+    choose_tags: בחירת תגיות קיימות
+    new_tag: תגית חדשה (ניתן להפריד בפסיקים)
+    create_task: צור משימה מסריקות אלה
+    create_task_anyway: בכל זאת צור משימה מסריקות אלה
+    create_task_submit: צור משימה!
+    create_task_title: יצירת משימה מסריקות
+    title_author_required: חובה למלא כותרת ומחבר
+    task_created: המשימה נוצרה
+    folder_created: התיקייה הועלתה
+    name_taken: שם התיקייה כבר קיים
+    name_required: יש לציין שם תיקייה
+    duplicate_filenames: לא ניתן להעלות כמה קבצים עם אותו שם
+    files_required: יש לבחור קבצים להעלאה
+    files_too_large: 'קובץ אחד או יותר גדולים מדי (הגבלה: 50 מ"ב לקובץ)'
+    task_files_too_large: "הקבצים הבאים גדולים מדי לצירוף למשימה (הגבלה: %{max} מ\"ב): %{files}"
+    invalid_state: הפעולה אינה אפשרית במצב הנוכחי של התיקייה (ייתכן שהיא שונתה בינתיים)
+    already_converted: כבר נוצרה משימה מתיקייה זו
+    not_convertible: ניתן ליצור משימה רק מתיקייה מאושרת או דחויה
+    not_a_scan: סוג קובץ לא נתמך
+    statuses:
+      uploading: בהעלאה
+      raw: גולמי
+      approved: מאושר
+      postponed: נדחה
+      complete: הושלם
+      archived: בארכיון

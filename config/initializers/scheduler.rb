@@ -27,3 +27,18 @@ end
 scheduler.cron '30 9 * * 1 Asia/Jerusalem' do
   system('bin/rake', 'notifications:purge_stale_buffered')
 end
+
+# Incoming scans subsystem
+scheduler.every '10m' do
+  system('bin/rake', 'scans:sync')
+end
+
+# First of every month
+scheduler.cron '0 3 1 * * Asia/Jerusalem' do
+  system('bin/rake', 'scans:archive_old')
+end
+
+# Every January 1st
+scheduler.cron '0 4 1 1 * Asia/Jerusalem' do
+  system('bin/rake', 'scans:approve_expiring')
+end
