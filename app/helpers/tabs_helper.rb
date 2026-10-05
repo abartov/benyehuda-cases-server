@@ -12,6 +12,7 @@ module TabsHelper
     {:name => :volunteer_requests, :title => N_("Volunteer Requests"), :path => "/volunteer_requests", :if => :admin_or_editor?},
     {name: :teams, title: I18n.t(:teams), path: "/teams", if: :is_admin?},
     {:name => :users, :title => N_("Users"), :path => "/users", :if => :is_admin?}, 
+    {name: :scans, title: N_("Scans"), path: "/scan_folders", if: :is_admin?},
     {:name => :tasks_admin, :title => N_("Tasks Admin"), :path => "/admin/tasks", :if => :admin_or_editor?},
     {:name => :dashboard, :title => N_("Dashboard"), :path => "/dashboard"},
   ].freeze

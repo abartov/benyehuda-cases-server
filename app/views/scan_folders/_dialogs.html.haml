@@ -1,0 +1,118 @@
+#scan-modal{ style: 'display:none;' }
+#postpone-modal{ title: t('scans.postpone_title'), style: 'display:none;' }
+  = form_tag '', method: :post, id: 'postpone-form' do
+    %p
+      = label_tag :expiration_year, t('scans.expiration_year')
+      = number_field_tag :expiration_year, nil, id: 'expiration_year'
+    %p
+      = label_tag :year_of_death, t('scans.year_of_death')
+      = number_field_tag :year_of_death, nil, id: 'year_of_death'
+    %p
+      = label_tag 'tag_ids_', t('scans.choose_tags')
+      %br
+      = select_tag 'tag_ids[]', options_from_collection_for_select(FolderTag.order(:name), :id, :name), multiple: true, id: 'postpone_tag_ids'
+    %p
+      = label_tag :new_tags, t('scans.new_tag')
+      = text_field_tag :new_tags
+    %p= submit_tag t('scans.postpone')
+#task-modal{ title: t('scans.create_task_title'), style: 'display:none;' }
+  = form_tag '', method: :post, id: 'task-form' do
+    %p
+      = label_tag :task_title, t('scans.title')
+      = text_field_tag :title, nil, id: 'task_title', required: true
+    %p
+      = label_tag :task_author, t('scans.author')
+      = text_field_tag :author, nil, id: 'task_author', required: true
+    %p= submit_tag t('scans.create_task_submit')
+%link{ href: 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css', rel: 'stylesheet' }
+%script{ src: 'https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js' }
+:javascript
+  jQuery(function($) {
+    var i18n = #{{ confirm_delete: t('scans.confirm_delete_file'), close: t('scans.close'), crop_apply: t('scans.crop_apply'), cancel: t('scans.cancel') }.to_json};
+    var token = $('meta[name=csrf-token]').attr('content');
+    var cropper = null, cropCtx = null;
+
+    function bust(u) { return u + (u.indexOf('?') < 0 ? '?' : '&') + '_=' + Date.now(); }
+
+    function api(method, url, data) {
+      return $.ajax({ url: url, type: method, data: data, headers: { 'X-CSRF-Token': token } });
+    }
+
+    $('#postpone-modal, #task-modal').dialog({ autoOpen: false, modal: true, width: 420 });
+    $('.postpone-btn').click(function() {
+      $('#postpone-form').attr('action', $(this).data('url'));
+      $('#postpone-modal').dialog('open');
+    });
+    $('#year_of_death').on('input', function() {
+      var n = parseInt(this.value, 10);
+      $('#expiration_year').val(isNaN(n) ? '' : n + #{ScanFolder::YEARS_AFTER_DEATH});
+    });
+    $('.create-task-btn').click(function() {
+      $('#task-form').attr('action', $(this).data('url'));
+      $('#task_title').val($(this).data('title') || '');
+      $('#task_author').val($(this).data('author') || '');
+      $('#task-modal').dialog('open');
+    });
+
+    // Thumbnails modal. jQuery UI dialogs close on Esc and have an X; we add a close button too.
+    $(document).on('click', '.scan-folder-link', function(e) {
+      e.preventDefault();
+      var url = $(this).attr('href');
+      $.get(url, function(html) {
+        $('#scan-modal').html(html).dialog({
+          modal: true, width: Math.floor(window.innerWidth * 0.95), height: Math.floor(window.innerHeight * 0.9),
+          closeOnEscape: true,
+          open: function() {
+            // Center in the viewport (not the page), whatever the scroll position or content size.
+            $(this).parent('.ui-dialog').css({ position: 'fixed', top: '50%', left: '50%',
+                                               transform: 'translate(-50%, -50%)', margin: 0, maxHeight: '95vh' });
+          },
+          close: function() { destroyCropper(); $(this).dialog('destroy'); }
+        });
+      });
+    });
+    $(document).on('click', '#scan-modal .close-modal', function() { $('#scan-modal').dialog('close'); });
+    $(document).on('submit', '#scan-meta-form', function(e) {
+      e.preventDefault();
+      api('PATCH', this.action, $(this).serialize()).done(function(r) { $('#scan-meta-msg').text(r.message); });
+    });
+    $(document).on('click', '#scan-modal .delete-file', function() {
+      var $t = $(this).closest('.bigthumb');
+      if (!window.confirm(i18n.confirm_delete)) return;
+      api('DELETE', $(this).data('url'), { filename: $(this).data('filename') }).done(function() { $t.remove(); });
+    });
+    $(document).on('click', '#scan-modal .rotate-file', function() {
+      var $t = $(this).closest('.bigthumb');
+      api('POST', $(this).data('url'), { filename: $(this).data('filename') }).done(function(r) { $t.find('img').attr('src', bust(r.url)); });
+    });
+
+    function destroyCropper() {
+      if (cropper) { cropper.destroy(); cropper = null; }
+      $('#crop-pane').remove();
+      $(document).off('keydown.cropper');
+    }
+    function applyCrop() {
+      if (!cropper) return;
+      var d = cropper.getData(true), ctx = cropCtx;
+      api('POST', ctx.url, { filename: ctx.filename, x: d.x, y: d.y, width: d.width, height: d.height }).done(function(r) {
+        ctx.img.attr('src', bust(r.url)); destroyCropper();
+      });
+    }
+    $(document).on('click', '#scan-modal .crop-file', function() {
+      // Drop focus from the button: otherwise Enter would "click" it again and restart the crop.
+      this.blur();
+      destroyCropper();
+      var $t = $(this).closest('.bigthumb'), $img = $t.find('img');
+      cropCtx = { url: $(this).data('url'), filename: $(this).data('filename'), img: $img };
+      var $pane = $('<div id="crop-pane"></div>').append($('<img>').attr('src', $img.attr('src')).css('max-width', '100%'))
+        .append($('<button type="button" id="crop-apply"></button>').text(i18n.crop_apply))
+        .append($('<button type="button" id="crop-cancel"></button>').text(i18n.cancel));
+      $t.append($pane);
+      cropper = new Cropper($pane.find('img')[0], { viewMode: 1 });
+      $(document).on('keydown.cropper', function(e) {
+        if (e.which === 13) { e.preventDefault(); e.stopPropagation(); applyCrop(); }
+      });
+    });
+    $(document).on('click', '#crop-cancel', destroyCropper);
+    $(document).on('click', '#crop-apply', applyCrop);
+  });

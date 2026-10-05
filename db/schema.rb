@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_08_27_000003) do
+ActiveRecord::Schema.define(version: 2026_10_05_000001) do
 
   create_table "api_users", charset: "latin1", force: :cascade do |t|
     t.string "api_key", collation: "utf8mb3_bin"
@@ -117,6 +117,22 @@ ActiveRecord::Schema.define(version: 2026_08_27_000003) do
     t.index ["user_id", "created_at"], name: "index_documents_on_user_id_and_created_at"
   end
 
+  create_table "folder_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.bigint "scan_folder_id", null: false
+    t.bigint "folder_tag_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["folder_tag_id"], name: "index_folder_taggings_on_folder_tag_id"
+    t.index ["scan_folder_id", "folder_tag_id"], name: "index_folder_taggings_on_scan_folder_id_and_folder_tag_id", unique: true
+  end
+
+  create_table "folder_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_folder_tags_on_name", unique: true
+  end
+
   create_table "pending_notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "recipient_email", limit: 100, null: false
     t.string "notification_type", limit: 128, null: false
@@ -142,6 +158,22 @@ ActiveRecord::Schema.define(version: 2026_08_27_000003) do
     t.datetime "updated_at"
     t.boolean "is_public", default: true
     t.string "comment", collation: "utf8mb3_bin"
+  end
+
+  create_table "scan_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "status", default: "raw", null: false
+    t.string "title"
+    t.string "author"
+    t.text "comment"
+    t.integer "copyright_expiration_year"
+    t.integer "task_id"
+    t.datetime "completed_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["name"], name: "index_scan_folders_on_name", unique: true
+    t.index ["status"], name: "index_scan_folders_on_status"
+    t.index ["task_id"], name: "index_scan_folders_on_task_id"
   end
 
   create_table "search_settings", id: :integer, charset: "utf8mb3", force: :cascade do |t|

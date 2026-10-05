@@ -1,0 +1,27 @@
+.scan-modal-content
+  %h2= scan_folder.name
+  = form_tag scan_folder_path(scan_folder), method: :patch, id: 'scan-meta-form' do
+    = label_tag :meta_title, t('scans.title')
+    = text_field_tag :title, scan_folder.title, id: 'meta_title'
+    = label_tag :meta_author, t('scans.author')
+    = text_field_tag :author, scan_folder.author, id: 'meta_author'
+    = submit_tag t('scans.save')
+    %button.close-modal{ type: 'button' }= t('scans.close')
+    %span#scan-meta-msg
+  - if files.empty?
+    %p= t('scans.no_files')
+  .thumbs_container
+    - files.each do |f|
+      .bigthumb
+        - url = ScanStorage.presigned_url(scan_folder.name, f[:name])
+        %a{ href: url, target: '_blank' }= f[:name]
+        %br
+        - if ScanStorage.image_file?(f[:name])
+          %img{ src: url, style: 'width:500px; height:500px; object-fit:contain;' }
+        - else
+          %em PDF
+        %br
+        %button.delete-file{ type: 'button', data: { url: delete_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.delete_file')
+        - if ScanStorage.image_file?(f[:name])
+          %button.rotate-file{ type: 'button', data: { url: rotate_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.rotate')
+          %button.crop-file{ type: 'button', data: { url: crop_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.crop')

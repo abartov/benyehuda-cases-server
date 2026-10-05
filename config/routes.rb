@@ -79,6 +79,18 @@ Rails.application.routes.draw do
     resources :comments
   end
 
+  resources :scan_folders, only: %i[index show new create update] do
+    get :file, on: :collection # serves disk-backed scans in dev/test
+    member do
+      post :approve
+      post :postpone
+      post :create_task
+      delete :delete_file
+      post :rotate_file
+      post :crop_file
+    end
+  end
+
   resources :task_requests
   resources :site_notices
   match '/restart', controller: 'restart', action: 'restart', via: :post
