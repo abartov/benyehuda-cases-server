@@ -3,6 +3,7 @@
 != render(:partial => "search")
 
 != link_to _("New"), new_admin_task_path
+= link_to t('tasks.csv.download'), admin_tasks_path(request.query_parameters.except('page', 'per_page').symbolize_keys.merge(:format => :csv)), :class => 'download-csv'
 
 - begin
   - unless @tasks.blank?

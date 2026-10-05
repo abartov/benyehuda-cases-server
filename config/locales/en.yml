@@ -75,6 +75,8 @@ en:
     csv:
       task_url: Task URL
       download: Download as CSV
+      id: ID
+      genre: Genre
     complete_also_updated_parents: "Task marked ready to publish. The following parent task(s) were also marked ready to publish: %{parent_names}"
   documents:
     crop_and_download: Crop & Download
