@@ -64,4 +64,24 @@ RSpec.describe 'scan folder scheduled jobs' do
       expect([due, later, raw].map { |f| f.reload.status }).to eq %w[approved postponed raw]
     end
   end
+
+  describe PurgeDeletedScanFolders do
+    it 'physically deletes only folders deleted over two years ago, with their files' do
+      old = create(:scan_folder, status: 'deleted', deleted_at: 25.months.ago)
+      recent = create(:scan_folder, status: 'deleted', deleted_at: 23.months.ago)
+      live = create(:scan_folder, status: 'raw')
+      expect(ScanStorage).to receive(:delete_direct_files).with(old.name)
+      expect(described_class.call).to eq 1
+      expect(ScanFolder.exists?(old.id)).to be false
+      expect(ScanFolder.exists?(recent.id)).to be true
+      expect(ScanFolder.exists?(live.id)).to be true
+    end
+
+    it 'keeps the record if removing files fails' do
+      old = create(:scan_folder, status: 'deleted', deleted_at: 3.years.ago)
+      allow(ScanStorage).to receive(:delete_direct_files).and_raise('boom')
+      expect { described_class.call }.to raise_error('boom')
+      expect(ScanFolder.exists?(old.id)).to be true
+    end
+  end
 end

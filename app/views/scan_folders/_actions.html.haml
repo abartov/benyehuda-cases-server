@@ -6,3 +6,5 @@
   %button.create-task-btn.scans-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task')
 - when 'postponed'
   %button.create-task-btn.scans-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task_anyway')
+- unless %w[uploading deleted].include?(sf.status)
+  = button_to t('scans.delete'), scan_folder_path(sf), method: :delete, class: 'scans-btn scans-btn-delete', form: { style: 'display:inline', onsubmit: "return confirm(#{t('scans.confirm_delete_folder').to_json});" }

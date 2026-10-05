@@ -27,7 +27,7 @@ class CreateTaskFromScanFolder
   end
 
   def self.build_task(scan_folder, user, title, author)
-    task = Task.new(name: "#{title.strip} / #{author.strip}", kind_id: :הקלדה, creator_id: user.id,
+    task = Task.new(name: ScanFolder.task_name(title, author), kind_id: :הקלדה, creator_id: user.id,
                     editor_id: user.id)
     task.save!
     begin

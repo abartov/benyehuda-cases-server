@@ -1,8 +1,9 @@
 class ScanFolder < ApplicationRecord
   # 'uploading' reserves the name while a web upload is still writing files; it has no actions.
-  STATUSES = %w[uploading raw approved postponed complete archived].freeze
+  STATUSES = %w[uploading raw approved postponed complete archived deleted].freeze
   YEARS_AFTER_DEATH = 71
   MAX_FILE_SIZE = 50.megabytes # Document's attachment limit
+  PURGE_AFTER = 2.years
   CONVERTIBLE_STATUSES = %w[approved postponed].freeze
 
   belongs_to :task, optional: true
@@ -12,7 +13,10 @@ class ScanFolder < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :status, inclusion: { in: STATUSES }
 
-  scope :with_status, ->(status) { status.present? ? where(status: status) : all }
+  # Soft-deleted folders show only when explicitly asked for.
+  scope :with_status, ->(status) { status.present? ? where(status: status) : where.not(status: 'deleted') }
+  scope :expiring_in, ->(year) { year.present? ? where(copyright_expiration_year: year.to_i) : all }
+  scope :purgeable, ->(older_than = PURGE_AFTER) { where(status: 'deleted').where('deleted_at < ?', older_than.ago) }
   scope :name_like, lambda { |q|
     q.present? ? where('scan_folders.name LIKE ?', "%#{sanitize_sql_like(q)}%") : all
   }
@@ -27,6 +31,16 @@ class ScanFolder < ApplicationRecord
 
   def self.expiration_from_death_year(year)
     year.to_i + YEARS_AFTER_DEATH if year.present?
+  end
+
+  # Same composition as the name of the Task created from the folder.
+  def self.task_name(title, author)
+    "#{title.to_s.strip} / #{author.to_s.strip}"
+  end
+
+  # Title and author when the folder has a title, else the raw folder name.
+  def display_name
+    title.present? ? self.class.task_name(title, author) : name
   end
 
   def prefix
@@ -79,6 +93,21 @@ class ScanFolder < ApplicationRecord
 
   def mark_complete!(task)
     update!(status: 'complete', task_id: task.id, completed_at: Time.zone.now)
+  end
+
+  # Soft delete: files stay in storage until PurgeDeletedScanFolders removes them.
+  def soft_delete!
+    with_lock do
+      raise InvalidState, I18n.t('scans.invalid_state') if %w[uploading deleted].include?(status)
+
+      update!(status: 'deleted', deleted_at: Time.zone.now)
+    end
+  end
+
+  # Physically removes the record and its direct files (nested folders are separate ScanFolders).
+  def purge!
+    ScanStorage.delete_direct_files(name)
+    destroy!
   end
 
   def archive!

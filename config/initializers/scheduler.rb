@@ -38,6 +38,11 @@ scheduler.cron '0 3 1 * * Asia/Jerusalem' do
   system('bin/rake', 'scans:archive_old')
 end
 
+# First of every month
+scheduler.cron '0 5 1 * * Asia/Jerusalem' do
+  system('bin/rake', 'scans:purge_deleted')
+end
+
 # Every January 1st
 scheduler.cron '0 4 1 1 * Asia/Jerusalem' do
   system('bin/rake', 'scans:approve_expiring')
