@@ -29,17 +29,27 @@ class ScanFoldersController < ApplicationController
     return upload_error(:files_required) if files.empty?
     return upload_error(:not_a_scan) unless files.all? { |f| ScanStorage.scan_file?(f.original_filename) }
     return upload_error(:files_too_large) if files.any? { |f| f.size >= ScanFolder::MAX_FILE_SIZE }
-    return upload_error(:name_taken) if ScanFolder.exists?(name: name) || ScanStorage.folder_exists?(name)
+    return upload_error(:name_taken) if ScanStorage.folder_exists?(name)
 
+    # The unique row reserves the name atomically before anything is written: a concurrent upload or
+    # scheduled discovery of the same name finds it (or makes us fail here) instead of racing us.
+    begin
+      @scan_folder = ScanFolder.create!(name: name, comment: params[:comment].presence)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
+      return upload_error(:name_taken)
+    end
+
+    uploaded = []
     begin
       files.each do |f|
-        ScanStorage.upload(name, File.basename(f.original_filename), f.tempfile, content_type: f.content_type)
+        filename = File.basename(f.original_filename)
+        ScanStorage.upload(name, filename, f.tempfile, content_type: f.content_type)
+        uploaded << filename
       end
-      ScanFolder.create!(name: name, comment: params[:comment].presence)
     rescue StandardError
-      # The folder didn't exist before this attempt, so everything under it is ours: don't leave a
-      # partial upload for scheduled discovery to register.
-      ScanStorage.delete_folder(name)
+      # Remove only what this attempt wrote, then release the name.
+      uploaded.each { |filename| ScanStorage.delete_file(name, filename) }
+      @scan_folder.destroy
       raise
     end
     flash[:notice] = I18n.t('scans.folder_created')
@@ -59,7 +69,7 @@ class ScanFoldersController < ApplicationController
   end
 
   def approve
-    @scan_folder.approve! if @scan_folder.status == 'raw'
+    @scan_folder.approve!
     redirect_back fallback_location: scan_folders_path
   end
 

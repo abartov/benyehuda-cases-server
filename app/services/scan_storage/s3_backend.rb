@@ -1,5 +1,7 @@
 class ScanStorage
   class S3Backend
+    class DeleteError < StandardError; end
+
     def initialize(client = nil)
       @client = client
     end
@@ -41,7 +43,11 @@ class ScanStorage
 
     def delete_prefix(prefix)
       list(prefix).each_slice(1000) do |batch|
-        client.delete_objects(bucket: bucket, delete: { objects: batch.map { |o| { key: o[:key] } } })
+        resp = client.delete_objects(bucket: bucket, delete: { objects: batch.map { |o| { key: o[:key] } } })
+        # DeleteObjects succeeds as a request even when individual keys fail.
+        next if resp.errors.blank?
+
+        raise DeleteError, resp.errors.map { |e| "#{e.key}: #{e.code} #{e.message}" }.join('; ')
       end
     end
 

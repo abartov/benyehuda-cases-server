@@ -55,12 +55,22 @@ class ScanFolder < ApplicationRecord
     end
   end
 
+  class InvalidState < StandardError; end
+
+  # Both transitions are only valid from 'raw'. Re-checked under a row lock, so a stale form (or a
+  # concurrent conversion/archive) can't drag a completed folder back to an earlier status.
   def approve!
-    update!(status: 'approved')
+    with_lock do
+      raise InvalidState, I18n.t('scans.invalid_state') unless status == 'raw'
+
+      update!(status: 'approved')
+    end
   end
 
   def postpone!(expiration_year:, tag_names: [])
-    transaction do
+    with_lock do
+      raise InvalidState, I18n.t('scans.invalid_state') unless status == 'raw'
+
       self.tag_names = folder_tags.map(&:name) + Array(tag_names) if tag_names.present?
       update!(status: 'postponed', copyright_expiration_year: expiration_year.presence)
     end

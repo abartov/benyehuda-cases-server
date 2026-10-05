@@ -58,6 +58,27 @@ RSpec.describe 'ScanFolders', type: :request do
   describe 'POST /scan_folders' do
     let(:file) { fixture_file_upload('spec/fixtures/files/scan.jpg', 'image/jpeg') }
 
+    after { FileUtils.rm_rf(ScanStorage::DiskBackend.root) }
+
+    it 'does not touch an existing folder of the same name when a second upload is rejected' do
+      ScanStorage.upload('dup', 'orig.jpg', StringIO.new('keep'))
+      create(:scan_folder, name: 'dup')
+      post scan_folders_path, params: { name: 'dup', files: [file, file] }
+      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('dup')).map { |o| File.basename(o[:key]) }).to eq ['orig.jpg']
+      expect(ScanFolder.where(name: 'dup').count).to eq 1
+    end
+
+    it 'does not lose files or duplicate the row when discovery runs mid-upload' do
+      calls = 0
+      allow(ScanStorage).to receive(:upload).and_wrap_original do |m, *args, **kw|
+        m.call(*args, **kw)
+        SyncScanFolders.call if (calls += 1) == 1
+      end
+      post scan_folders_path, params: { name: 'racing', files: [file, fixture_file_upload('spec/fixtures/files/scan.jpg', 'image/jpeg')] }
+      expect(ScanFolder.where(name: 'racing').count).to eq 1
+      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('racing')).size).to eq 1 # same file name twice; the row survived
+    end
+
     it 'cleans up partial uploads when a later file fails' do
       calls = 0
       allow(ScanStorage).to receive(:upload).and_wrap_original do |m, *args, **kw|
@@ -67,7 +88,7 @@ RSpec.describe 'ScanFolders', type: :request do
         m.call(*args, **kw)
       end
       expect { post scan_folders_path, params: { name: 'partial', files: [file, file] } }.to raise_error(RuntimeError, 'boom')
-      expect(ScanStorage.folder_exists?('partial')).to be false
+      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('partial'))).to be_empty
       expect(ScanFolder.where(name: 'partial')).to be_empty
     end
 
@@ -81,7 +102,6 @@ RSpec.describe 'ScanFolders', type: :request do
     before do
       FileUtils.mkdir_p(Rails.root.join('spec/fixtures/files'))
       File.binwrite(Rails.root.join('spec/fixtures/files/scan.jpg'), 'x') unless File.exist?(Rails.root.join('spec/fixtures/files/scan.jpg'))
-      allow(ScanStorage).to receive(:folder_exists?).and_return(false)
     end
 
     it 'creates a raw folder and uploads files' do

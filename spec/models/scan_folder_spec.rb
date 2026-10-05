@@ -59,6 +59,16 @@ RSpec.describe ScanFolder, type: :model do
     expect([sf.status, sf.copyright_expiration_year, sf.folder_tags.map(&:name)]).to eq ['postponed', 2030, ['t1']]
   end
 
+  it 'only approves or postpones raw folders, even from a stale form' do
+    sf = create(:scan_folder)
+    stale = ScanFolder.find(sf.id)
+    sf.mark_complete!(create(:task)) rescue sf.update!(status: 'complete', task_id: 1, completed_at: Time.zone.now)
+    expect { stale.postpone!(expiration_year: 2030) }.to raise_error(ScanFolder::InvalidState)
+    expect { stale.approve! }.to raise_error(ScanFolder::InvalidState)
+    expect(sf.reload.status).to eq 'complete'
+    expect(sf.task_id).to be_present
+  end
+
   it 'archives by deleting stored files' do
     sf = create(:scan_folder, status: 'complete')
     expect(ScanStorage).to receive(:delete_direct_files).with(sf.name)

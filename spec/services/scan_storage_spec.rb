@@ -28,6 +28,12 @@ RSpec.describe ScanStorage do
     described_class.delete_folder('f')
   end
 
+  it 'raises when S3 reports per-object delete failures' do
+    stub_keys('f/1.jpg')
+    client.stub_responses(:delete_objects, errors: [{ key: 'raw_scans/f/1.jpg', code: 'AccessDenied', message: 'no' }])
+    expect { described_class.delete_folder('f') }.to raise_error(ScanStorage::S3Backend::DeleteError, /1\.jpg.*AccessDenied/)
+  end
+
   it 'refuses to rotate non-images' do
     expect { described_class.rotate('f', 'a.pdf') }.to raise_error(ArgumentError)
   end
