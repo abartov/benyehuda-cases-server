@@ -12,7 +12,7 @@ RSpec.describe 'Admin tasks CSV download', type: :request do
   end
 
   def parsed_csv
-    CSV.parse(response.body.delete_prefix("﻿"))
+    CSV.parse(response.body.delete_prefix("\uFEFF"))
   end
 
   describe 'GET /admin/tasks.csv' do
@@ -44,7 +44,30 @@ RSpec.describe 'Admin tasks CSV download', type: :request do
 
       row = parsed_csv.find { |r| r[3] == 'NobodyTask' }
       expect(row[0]).to eq(unassigned.id.to_s)
-      expect(row.values_at(7, 8)).to eq([nil, nil])
+      expect(row.values_at(7, 8)).to eq(['', ''])
+    end
+
+    it 'quotes fields containing semicolons, which would otherwise break the structure in some spreadsheets' do
+      create(:task, name: 'Part one; part two', creator: create(:user, :admin, name: 'Cohen; Levi'))
+
+      get admin_tasks_path(format: :csv)
+
+      body = response.body.delete_prefix("\uFEFF")
+      expect(body).to include('"Part one; part two"')
+      expect(body).to include('"Cohen; Levi"')
+      row = CSV.parse(body).find { |r| r[3].to_s.start_with?('Part one') }
+      expect(row.size).to eq(11)
+      expect(row.values_at(1, 3)).to eq(['Cohen; Levi', 'Part one; part two'])
+    end
+
+    it 'escapes quotes and commas in titles' do
+      create(:task, name: 'Say "hi", then leave')
+
+      get admin_tasks_path(format: :csv)
+
+      row = parsed_csv.find { |r| r[3].to_s.start_with?('Say') }
+      expect(row.size).to eq(11)
+      expect(row[3]).to eq('Say "hi", then leave')
     end
 
     it 'includes all matching tasks regardless of pagination' do
