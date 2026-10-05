@@ -1,2 +1,2 @@
-no-git-ops: true
+no-git-ops: false
 sync-branch: beads-sync

@@ -1,6 +1,6 @@
 = set_tab :scans, t('scans.upload_title')
 = render 'scan_folders/nav'
-= form_tag scan_folders_path, multipart: true do
+= form_tag scan_folders_path, multipart: true, class: 'scans-form scans-page' do
   %p
     = label_tag :name, t('scans.folder_name')
     %br

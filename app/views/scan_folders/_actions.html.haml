@@ -1,8 +1,8 @@
 - case sf.status
 - when 'raw'
-  = button_to t('scans.approve'), approve_scan_folder_path(sf), method: :post, form: { style: 'display:inline' }
-  %button.postpone-btn{ type: 'button', data: { id: sf.id, url: postpone_scan_folder_path(sf) } }= t('scans.postpone')
+  = button_to t('scans.approve'), approve_scan_folder_path(sf), method: :post, class: 'scans-btn scans-btn-approve', form: { style: 'display:inline' }
+  %button.postpone-btn.scans-btn.scans-btn-warn{ type: 'button', data: { id: sf.id, url: postpone_scan_folder_path(sf) } }= t('scans.postpone')
 - when 'approved'
-  %button.create-task-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task')
+  %button.create-task-btn.scans-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task')
 - when 'postponed'
-  %button.create-task-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task_anyway')
+  %button.create-task-btn.scans-btn{ type: 'button', data: { url: create_task_scan_folder_path(sf), title: sf.title, author: sf.author } }= t('scans.create_task_anyway')

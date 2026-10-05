@@ -44,6 +44,16 @@ RSpec.describe 'ScanFolders', type: :request do
     end
   end
 
+  describe 'GET /scan_folders styling hooks' do
+    it 'renders status badges, tag chips, styled action buttons and an active nav tab' do
+      create(:scan_folder, name: 'styled-raw', status: 'raw', folder_tags: [create(:folder_tag, name: 'chip')])
+      get scan_folders_path
+      expect(response.body).to include('scans-status-raw', 'scans-tag', 'scans-btn-approve', 'postpone-btn')
+      expect(response.body).to match(%r{/assets/scans-\h+\.css})
+      expect(response.body).to match(/class=['"]active['"]/)
+    end
+  end
+
   describe 'GET /scan_folders size column' do
     it 'abbreviates megabytes with a double quote even if the global unit translation differs' do
       folder = create(:scan_folder, name: 'sized')

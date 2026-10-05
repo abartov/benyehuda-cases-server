@@ -1,4 +1,3 @@
-%p
-  = link_to t('scans.manage'), scan_folders_path
-  |
-  = link_to t('scans.upload'), new_scan_folder_path
+%p.scans-nav
+  = link_to t('scans.manage'), scan_folders_path, class: ('active' if action_name == 'index')
+  = link_to t('scans.upload'), new_scan_folder_path, class: ('active' if action_name == 'new')
