@@ -2,6 +2,19 @@ require 'rails_helper'
 
 RSpec.describe 'scan folder scheduled jobs' do
   describe SyncScanFolders do
+    it 'keeps going when a folder is created concurrently' do
+      allow(ScanStorage).to receive(:discover_folders).and_return([['a', []], ['b', []]])
+      allow(ScanFolder).to receive(:exists?).and_return(false)
+      create(:scan_folder, name: 'a')
+      expect(described_class.call).to eq 1
+      expect(ScanFolder.find_by(name: 'b')).to be_present
+    end
+
+    it 'treats folder names as case-sensitive, like storage keys' do
+      allow(ScanStorage).to receive(:discover_folders).and_return([['Folder', []], ['folder', []]])
+      expect(described_class.call).to eq 2
+    end
+
     it 'creates missing folders with parent tags and is idempotent' do
       existing = create(:scan_folder, name: 'solo')
       allow(ScanStorage).to receive(:discover_folders)

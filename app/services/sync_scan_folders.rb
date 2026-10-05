@@ -23,6 +23,10 @@ class SyncScanFolders
       created += 1
     rescue ActiveRecord::RecordNotUnique
       next # created concurrently (e.g. by a web upload)
+    rescue ActiveRecord::RecordInvalid => e
+      raise unless e.record.errors.of_kind?(:name, :taken) && e.record.errors.size == 1
+
+      next # same, caught by the uniqueness validation
     end
     Rails.logger.info("SyncScanFolders: created #{created} scan folders")
     created

@@ -40,6 +40,12 @@ RSpec.describe ScanStorage::DiskBackend do
     expect([img.type, img.width, img.height]).to eq ['JPEG', 40, 20]
   end
 
+  it 'rejects an unsupported SCAN_STORAGE value rather than falling back to disk' do
+    ScanStorage.backend = nil
+    stub_const('ENV', ENV.to_hash.merge('SCAN_STORAGE' => 's33'))
+    expect { ScanStorage.backend }.to raise_error(ArgumentError, /s33/)
+  end
+
   it 'refuses keys escaping the root' do
     expect { described_class.new.path_for('../../etc/passwd') }.to raise_error(ArgumentError)
   end

@@ -2,6 +2,7 @@ class ScanFoldersController < ApplicationController
   before_action :require_admin
   before_action :load_scan_folder, except: %i[index new create file]
   helper_method :display_url
+  rescue_from ScanFolder::InvalidState, with: :invalid_state
 
   PER_PAGE = 25
 
@@ -29,12 +30,13 @@ class ScanFoldersController < ApplicationController
     return upload_error(:files_required) if files.empty?
     return upload_error(:not_a_scan) unless files.all? { |f| ScanStorage.scan_file?(f.original_filename) }
     return upload_error(:files_too_large) if files.any? { |f| f.size >= ScanFolder::MAX_FILE_SIZE }
+    return upload_error(:duplicate_filenames) if files.map { |f| File.basename(f.original_filename) }.uniq.size < files.size
     return upload_error(:name_taken) if ScanStorage.folder_exists?(name)
 
     # The unique row reserves the name atomically before anything is written: a concurrent upload or
     # scheduled discovery of the same name finds it (or makes us fail here) instead of racing us.
     begin
-      @scan_folder = ScanFolder.create!(name: name, comment: params[:comment].presence)
+      @scan_folder = ScanFolder.create!(name: name, status: 'uploading', comment: params[:comment].presence)
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
       return upload_error(:name_taken)
     end
@@ -52,6 +54,7 @@ class ScanFoldersController < ApplicationController
       @scan_folder.destroy
       raise
     end
+    @scan_folder.update!(status: 'raw') # only now can it be approved or converted
     flash[:notice] = I18n.t('scans.folder_created')
     redirect_to scan_folders_path
   end
@@ -132,6 +135,11 @@ class ScanFoldersController < ApplicationController
   # Only ever a bare file name: never lets a request escape the folder.
   def file_name
     File.basename(params.require(:filename).to_s)
+  end
+
+  def invalid_state(error)
+    flash[:error] = error.message
+    redirect_back fallback_location: scan_folders_path
   end
 
   def upload_error(key)

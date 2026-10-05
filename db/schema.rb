@@ -161,7 +161,7 @@ ActiveRecord::Schema.define(version: 2026_10_05_000001) do
   end
 
   create_table "scan_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
-    t.string "name", null: false
+    t.string "name", null: false, collation: "utf8mb4_bin"
     t.string "status", default: "raw", null: false
     t.string "title"
     t.string "author"

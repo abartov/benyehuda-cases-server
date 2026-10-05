@@ -1,7 +1,8 @@
 class CreateScanFolders < ActiveRecord::Migration[6.1]
   def change
     create_table :scan_folders do |t|
-      t.string :name, null: false # S3 path relative to the raw ingestion root
+      # S3 path relative to the raw ingestion root. Keys are case- and accent-sensitive, so is the column.
+      t.string :name, null: false, collation: 'utf8mb4_bin'
       t.string :status, null: false, default: 'raw'
       t.string :title
       t.string :author

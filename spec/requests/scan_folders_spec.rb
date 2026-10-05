@@ -63,20 +63,37 @@ RSpec.describe 'ScanFolders', type: :request do
     it 'does not touch an existing folder of the same name when a second upload is rejected' do
       ScanStorage.upload('dup', 'orig.jpg', StringIO.new('keep'))
       create(:scan_folder, name: 'dup')
-      post scan_folders_path, params: { name: 'dup', files: [file, file] }
+      post scan_folders_path, params: { name: 'dup', files: [file] }
       expect(ScanStorage.list_objects(ScanStorage.folder_prefix('dup')).map { |o| File.basename(o[:key]) }).to eq ['orig.jpg']
       expect(ScanFolder.where(name: 'dup').count).to eq 1
     end
 
-    it 'does not lose files or duplicate the row when discovery runs mid-upload' do
+    def upload_named(name)
+      Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/scan.jpg'), 'image/jpeg', original_filename: name)
+    end
+
+    it 'does not lose files or duplicate the row when discovery runs mid-upload, and is not actionable until done' do
+      statuses = []
       calls = 0
       allow(ScanStorage).to receive(:upload).and_wrap_original do |m, *args, **kw|
         m.call(*args, **kw)
-        SyncScanFolders.call if (calls += 1) == 1
+        if (calls += 1) == 1
+          SyncScanFolders.call
+          statuses << ScanFolder.find_by(name: 'racing').status
+        end
       end
-      post scan_folders_path, params: { name: 'racing', files: [file, fixture_file_upload('spec/fixtures/files/scan.jpg', 'image/jpeg')] }
+      post scan_folders_path, params: { name: 'racing', files: [upload_named('1.jpg'), upload_named('2.jpg')] }
+      expect(statuses).to eq ['uploading']
       expect(ScanFolder.where(name: 'racing').count).to eq 1
-      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('racing')).size).to eq 1 # same file name twice; the row survived
+      expect(ScanFolder.find_by(name: 'racing').status).to eq 'raw'
+      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('racing')).size).to eq 2
+    end
+
+    it 'rejects duplicate file names instead of silently overwriting one' do
+      post scan_folders_path, params: { name: 'dupnames', files: [upload_named('x.jpg'), upload_named('x.jpg')] }
+      expect(ScanFolder.where(name: 'dupnames')).to be_empty
+      expect(ScanStorage.list_objects(ScanStorage.folder_prefix('dupnames'))).to be_empty
+      expect(CGI.unescapeHTML(response.body)).to include(I18n.t('scans.duplicate_filenames'))
     end
 
     it 'cleans up partial uploads when a later file fails' do
@@ -87,7 +104,7 @@ RSpec.describe 'ScanFolders', type: :request do
 
         m.call(*args, **kw)
       end
-      expect { post scan_folders_path, params: { name: 'partial', files: [file, file] } }.to raise_error(RuntimeError, 'boom')
+      expect { post scan_folders_path, params: { name: 'partial', files: [upload_named('1.jpg'), upload_named('2.jpg')] } }.to raise_error(RuntimeError, 'boom')
       expect(ScanStorage.list_objects(ScanStorage.folder_prefix('partial'))).to be_empty
       expect(ScanFolder.where(name: 'partial')).to be_empty
     end
@@ -119,6 +136,16 @@ RSpec.describe 'ScanFolders', type: :request do
   end
 
   describe 'workflow actions' do
+    it 'flashes instead of failing when approving or postponing a folder that already moved on' do
+      sf = create(:scan_folder, status: 'approved')
+      post approve_scan_folder_path(sf)
+      expect(response).to redirect_to(scan_folders_path)
+      expect(flash[:error]).to eq I18n.t('scans.invalid_state')
+      post postpone_scan_folder_path(sf), params: { expiration_year: 2030 }
+      expect(flash[:error]).to eq I18n.t('scans.invalid_state')
+      expect(sf.reload.status).to eq 'approved'
+    end
+
     it 'approves a raw folder' do
       sf = create(:scan_folder)
       post approve_scan_folder_path(sf)

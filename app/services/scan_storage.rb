@@ -11,7 +11,11 @@ class ScanStorage
     def backend
       @backend ||= begin
         kind = ENV['SCAN_STORAGE'].presence || (Rails.env.production? ? 's3' : 'disk')
-        kind == 's3' ? ScanStorage::S3Backend.new : ScanStorage::DiskBackend.new
+        case kind
+        when 's3' then ScanStorage::S3Backend.new
+        when 'disk' then ScanStorage::DiskBackend.new
+        else raise ArgumentError, "Unsupported SCAN_STORAGE #{kind.inspect} (expected 's3' or 'disk')"
+        end
       end
     end
 

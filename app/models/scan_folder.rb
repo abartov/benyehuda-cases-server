@@ -1,5 +1,6 @@
 class ScanFolder < ApplicationRecord
-  STATUSES = %w[raw approved postponed complete archived].freeze
+  # 'uploading' reserves the name while a web upload is still writing files; it has no actions.
+  STATUSES = %w[uploading raw approved postponed complete archived].freeze
   YEARS_AFTER_DEATH = 71
   MAX_FILE_SIZE = 50.megabytes # Document's attachment limit
   CONVERTIBLE_STATUSES = %w[approved postponed].freeze
