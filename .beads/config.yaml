@@ -1,2 +1,4 @@
 no-git-ops: false
 sync-branch: beads-sync
+sync:
+    remote: "git+ssh://git@github.com/abartov/benyehuda-cases-server.git"
