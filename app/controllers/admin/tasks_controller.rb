@@ -222,7 +222,8 @@ class Admin::TasksController < InheritedResources::Base
   # Same columns as the listing (minus the action links), with the task URL after the name
   def send_tasks_csv
     tasks = all_filtered_tasks
-    csv = CSV.generate do |rows|
+    # quote every field, so that separators in the data (e.g. ";", which Excel uses in some locales) cannot split a cell
+    csv = CSV.generate(force_quotes: true) do |rows|
       rows << [I18n.t('tasks.csv.id'), _('Creater'), _('Last Updated'), _('Name'), I18n.t('tasks.csv.task_url'),
                I18n.t('tasks.csv.genre'), _('Kind'), _('Editor'), _('Assignee'), _('State'), _('Files')]
       tasks.each do |task|
