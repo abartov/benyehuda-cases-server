@@ -16,6 +16,20 @@ RSpec.describe 'scan folder scheduled jobs' do
     end
   end
 
+  describe SyncScanFolders, 'year parent folders' do
+    it 'tags and sets copyright expiration from a four-digit parent folder' do
+      allow(ScanStorage).to receive(:discover_folders)
+        .and_return([['2029/A', ['2029']], ['x/2029/B', ['x', '2029']], ['x/C', ['x']], ['20290/D', ['20290']]])
+      described_class.call
+      a = ScanFolder.find_by(name: '2029/A')
+      expect(a.folder_tags.map(&:name)).to eq ['2029']
+      expect(a.copyright_expiration_year).to eq 2029
+      expect(ScanFolder.find_by(name: 'x/2029/B').copyright_expiration_year).to eq 2029
+      expect(ScanFolder.find_by(name: 'x/C').copyright_expiration_year).to be_nil
+      expect(ScanFolder.find_by(name: '20290/D').copyright_expiration_year).to be_nil
+    end
+  end
+
   describe ArchiveOldScanFolders do
     it 'archives only folders completed over a year ago' do
       old = create(:scan_folder, status: 'complete', completed_at: 13.months.ago)
