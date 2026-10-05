@@ -31,6 +31,19 @@ RSpec.describe 'Scan folder thumbnails modal', type: :system, js: true do
     expect((top + bottom) / 2.0).to be_within(5).of(h / 2.0)
   end
 
+  it 'scrolls with PageDown after clicking on a tile' do
+    %w(b c d).each { |n| ScanStorage.upload('modal-folder', "#{n}.png", StringIO.new(`convert -size 400x200 xc:red png:-`)) }
+    visit scan_folders_path
+    click_link 'modal-folder'
+    expect(page).to have_css('.bigthumb', minimum: 4)
+    find(".bigthumb img", match: :first).click
+    expect(page.evaluate_script("document.activeElement.id")).to eq "scan-modal"
+    page.send_keys(:page_down)
+    expect(page).to have_css('#scan-modal') # let scroll settle
+    sleep 0.5
+    expect(page.evaluate_script("document.querySelector('#scan-modal').scrollTop")).to be > 0
+  end
+
   it 'performs the crop when Enter is pressed' do
     visit scan_folders_path
     click_link 'modal-folder'
