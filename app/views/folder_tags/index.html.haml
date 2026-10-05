@@ -1,0 +1,19 @@
+= set_tab :scans, t('folder_tags.title')
+= render 'scan_folders/nav'
+.scans-page
+  %p= link_to t('folder_tags.new'), new_folder_tag_path, class: 'scans-btn'
+  - if @folder_tags.empty?
+    %p.scans-empty= t('folder_tags.none')
+  - else
+    %table#folder-tags{ width: '100%' }
+      %tr
+        %th= t('folder_tags.name')
+        %th= t('folder_tags.folders_count')
+        %th
+      - @folder_tags.each do |tag|
+        %tr{ id: "folder-tag-#{tag.id}" }
+          %td= tag.name
+          %td= tag.folders_count
+          %td.scans-actions
+            = link_to t('folder_tags.edit_action'), edit_folder_tag_path(tag), class: 'scans-btn'
+            = button_to t('folder_tags.delete'), folder_tag_path(tag), method: :delete, class: 'scans-btn', form: { style: 'display:inline' }, data: { confirm: t('folder_tags.confirm_delete') }

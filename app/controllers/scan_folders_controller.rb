@@ -1,6 +1,6 @@
 class ScanFoldersController < ApplicationController
   before_action :require_admin
-  before_action :load_scan_folder, except: %i[index new create file]
+  before_action :load_scan_folder, except: %i[index new create file sync]
   helper_method :display_url
   rescue_from ScanFolder::InvalidState, with: :invalid_state
 
@@ -56,6 +56,13 @@ class ScanFoldersController < ApplicationController
     end
     @scan_folder.update!(status: 'raw') # only now can it be approved or converted
     flash[:notice] = I18n.t('scans.folder_created')
+    redirect_to scan_folders_path
+  end
+
+  # Same logic as the scheduled `scans:sync` job.
+  def sync
+    created = SyncScanFolders.call
+    flash[:notice] = I18n.t('scans.sync_done', count: created)
     redirect_to scan_folders_path
   end
 

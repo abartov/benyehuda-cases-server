@@ -204,8 +204,28 @@ he:
     footer_registered: "לשינוי תדירות הודעות הדואל: %{url}"
     footer_anonymous: "להרשמה לאתר ולבחירת תדירות הודעות הדואל: %{url}"
     signature: "צוות פרויקט בן־יהודה\n%{domain}"
+  folder_tags:
+    title: ניהול תגיות תיקיות
+    name: שם התגית
+    folders_count: מספר תיקיות
+    new: תגית חדשה
+    edit: עריכת תגית
+    save: שמירה
+    cancel: ביטול
+    edit_action: עריכה
+    delete: מחיקה
+    confirm_delete: למחוק את התגית? היא תוסר מכל התיקיות המתויגות בה.
+    created: התגית נוצרה
+    updated: התגית עודכנה
+    deleted: התגית נמחקה
+    none: אין תגיות
   scans:
     manage: ניהול סריקות
+    sync_now: סרוק את תיקיית הקליטה עכשיו
+    sync_done:
+      one: נסרקה תיקיית הקליטה; נוספה תיקייה אחת
+      other: נסרקה תיקיית הקליטה; נוספו %{count} תיקיות
+    tags_manage: ניהול תגיות
     upload: העלאת סריקות
     upload_title: העלאת תיקיית סריקות
     folder_name: שם התיקייה

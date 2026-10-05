@@ -1,3 +1,5 @@
 %p.scans-nav
-  = link_to t('scans.manage'), scan_folders_path, class: ('active' if action_name == 'index')
-  = link_to t('scans.upload'), new_scan_folder_path, class: ('active' if action_name == 'new')
+  = link_to t('scans.manage'), scan_folders_path, class: ('active' if controller_name == 'scan_folders' && action_name == 'index')
+  = link_to t('scans.upload'), new_scan_folder_path, class: ('active' if controller_name == 'scan_folders' && action_name == 'new')
+  = link_to t('scans.tags_manage'), folder_tags_path, class: ('active' if controller_name == 'folder_tags')
+  = button_to t('scans.sync_now'), sync_scan_folders_path, method: :post, class: 'scans-btn', form: { style: 'display:inline' }

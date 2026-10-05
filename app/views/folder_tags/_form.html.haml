@@ -1,0 +1,12 @@
+.scans-page
+  = form_for folder_tag do |f|
+    - if folder_tag.errors.any?
+      %ul.errors
+        - folder_tag.errors.full_messages.each do |msg|
+          %li= msg
+    %p
+      = f.label :name, t('folder_tags.name')
+      = f.text_field :name
+    %p
+      = f.submit t('folder_tags.save')
+      = link_to t('folder_tags.cancel'), folder_tags_path

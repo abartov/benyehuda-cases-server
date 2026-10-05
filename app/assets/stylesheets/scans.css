@@ -165,3 +165,17 @@
 #scan-meta-form { padding: 10px; margin-bottom: 1em; background: #ece3f7; border-radius: 6px; }
 #scan-meta-msg { margin: 0 8px; color: #1f6b2b; font-weight: bold; }
 .bigthumb { margin-bottom: 1.5em; padding: 10px; background: #fff; border: 1px solid #ddd2ec; border-radius: 6px; }
+
+/* ---- Right-to-left layout ---- */
+.scans-page, #scan-modal, #postpone-modal, #task-modal, .scans-dialog {
+  direction: rtl;
+  text-align: right;
+}
+.scans-dialog .ui-dialog-titlebar { text-align: right; padding: .5em 1em .3em .3em; }
+.scans-dialog .ui-dialog-titlebar-close { right: auto; left: .3em; }
+.scans-dialog .ui-dialog-buttonpane { text-align: right; }
+.scans-form input[type=text], .scans-form textarea, .scans-form input[type=file],
+#postpone-modal input, #postpone-modal select, #task-modal input, #scan-meta-form input[type=text] {
+  direction: rtl;
+  text-align: right;
+}

@@ -36,7 +36,7 @@
       return $.ajax({ url: url, type: method, data: data, headers: { 'X-CSRF-Token': token } });
     }
 
-    $('#postpone-modal, #task-modal').dialog({ autoOpen: false, modal: true, width: 420 });
+    $('#postpone-modal, #task-modal').dialog({ dialogClass: 'scans-dialog', autoOpen: false, modal: true, width: 420 });
     $('.postpone-btn').click(function() {
       $('#postpone-form').attr('action', $(this).data('url'));
       $('#postpone-modal').dialog('open');
@@ -58,7 +58,7 @@
       var url = $(this).attr('href');
       $.get(url, function(html) {
         $('#scan-modal').html(html).dialog({
-          modal: true, width: Math.floor(window.innerWidth * 0.95), height: Math.floor(window.innerHeight * 0.9),
+          dialogClass: 'scans-dialog', modal: true, width: Math.floor(window.innerWidth * 0.95), height: Math.floor(window.innerHeight * 0.9),
           closeOnEscape: true,
           open: function() {
             // Center in the viewport (not the page), whatever the scroll position or content size.
