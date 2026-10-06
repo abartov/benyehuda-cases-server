@@ -114,6 +114,19 @@ RSpec.describe 'ScanFolders', type: :request do
       expect(ScanFolder.where(name: 'dup').count).to eq 1
     end
 
+    it 'stores the title and author given in the upload form' do
+      post scan_folders_path, params: { name: 'titled', title: ' My Book ', author: 'Some Author', files: [file] }
+      folder = ScanFolder.find_by!(name: 'titled')
+      expect(folder.title).to eq 'My Book'
+      expect(folder.author).to eq 'Some Author'
+    end
+
+    it 'leaves title and author empty when omitted' do
+      post scan_folders_path, params: { name: 'untitled', files: [file] }
+      folder = ScanFolder.find_by!(name: 'untitled')
+      expect([folder.title, folder.author]).to eq [nil, nil]
+    end
+
     def upload_named(name)
       Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/scan.jpg'), 'image/jpeg', original_filename: name)
     end

@@ -36,7 +36,8 @@ class ScanFoldersController < ApplicationController
     # The unique row reserves the name atomically before anything is written: a concurrent upload or
     # scheduled discovery of the same name finds it (or makes us fail here) instead of racing us.
     begin
-      @scan_folder = ScanFolder.create!(name: name, status: 'uploading', comment: params[:comment].presence)
+      @scan_folder = ScanFolder.create!(name: name, status: 'uploading', comment: params[:comment].presence,
+                                     title: params[:title].to_s.strip.presence, author: params[:author].to_s.strip.presence)
     rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotUnique
       return upload_error(:name_taken)
     end
