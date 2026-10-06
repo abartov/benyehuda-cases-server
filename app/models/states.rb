@@ -108,6 +108,7 @@ module States
         after_create :post_process_parent_task
 
         scope :visible_in_my_tasks, ->{where("tasks.state NOT IN ('unassigned', 'ready_to_publish', 'other_task_creat')")}
+        scope :needing_editor_attention, ->{visible_in_my_tasks.where.not(state: 'approved')}
 
         has_reason_comment :_reject, :rejection, :editor, N_("Task rejected")
         has_reason_comment(:_abandon, :abandoning, :assignee, N_("Task abandoned")) do |task, opts|
