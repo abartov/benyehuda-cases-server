@@ -24,7 +24,7 @@
       - @scan_folders.each do |sf|
         - raw = %w[archived deleted].include?(sf.status) ? nil : sf
         %tr{ id: "scan-folder-#{sf.id}" }
-          %td= link_to sf.display_name, scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
+          %td= link_to sf.display_name.gsub(%r{\s*/\s*}, ' - '), scan_folder_path(sf), class: 'scan-folder-link', data: { id: sf.id }
           - if raw
             %td= sf.file_count
             %td= scan_size(sf.total_size)
@@ -33,10 +33,10 @@
             %td —
           %td= l(sf.created_at.to_date)
           %td
-            %span{ class: "scans-status scans-status-#{sf.status}" }= t("scans.statuses.#{sf.status}")
+            = link_to t("scans.statuses.#{sf.status}"), scan_folders_path(status: sf.status), class: "scans-status scans-status-#{sf.status}"
           %td
             - sf.folder_tags.each do |tag|
-              %span.scans-tag= tag.name
+              = link_to tag.name, scan_folders_path(tag_ids: [tag.id]), class: 'scans-tag'
           %td= sf.comment
           %td.scans-actions= render 'scan_folders/actions', sf: sf
     = will_paginate @scan_folders

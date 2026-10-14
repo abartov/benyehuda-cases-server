@@ -22,6 +22,19 @@ RSpec.describe 'ScanFolders', type: :request do
     end
   end
 
+  describe 'GET /scan_folders pills and names' do
+    it 'shows slashes as dashes and links status and tag pills to filtered views' do
+      tag = FolderTag.create!(name: 'pilltag')
+      sf = create(:scan_folder, name: 'pill-folder', title: 'Some Title', author: 'Some Author')
+      sf.folder_tags << tag
+      get scan_folders_path
+      expect(response.body).to include('Some Title - Some Author')
+      expect(response.body).not_to include('Some Title / Some Author')
+      expect(response.body).to include(%(href="#{scan_folders_path(status: sf.status)}"))
+      expect(response.body).to include(%(href="#{scan_folders_path(tag_ids: [tag.id])}"))
+    end
+  end
+
   describe 'GET /scan_folders' do
     it 'shows the total count and paginates' do
       create_list(:scan_folder, ScanFoldersController::PER_PAGE + 2)
@@ -44,7 +57,7 @@ RSpec.describe 'ScanFolders', type: :request do
       create(:scan_folder, name: 'raw-name-1', title: ' שיר ', author: 'ביאליק ')
       create(:scan_folder, name: 'raw-name-2')
       get scan_folders_path
-      expect(response.body).to include('שיר / ביאליק', 'raw-name-2')
+      expect(response.body).to include('שיר - ביאליק', 'raw-name-2')
       expect(response.body).not_to include('raw-name-1')
     end
 
