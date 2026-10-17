@@ -44,56 +44,45 @@ class TasksController < InheritedResources::Base
           return
         end
 
-        has_images = docs.any? { |x| x.file_file_name =~ /\.(jpg|jpeg|tif|png)/i }
-
         tmpfilename = tmpfile.path
 
-        if has_images
-          # Current behavior: convert images (and any PDFs) to a single PDF via img2pdf
-          tmpjpegs = []
-          docs.each do |doc|
-            docext = doc.file_file_name[doc.file_file_name.rindex('.')..-1]
-            tmpjpeg = Tempfile.new(['dl_task_jpg__', docext], binmode: true)
-            tmpjpegs << tmpjpeg
-            http_response = HTTParty.get(doc.file.url)
-            tmpjpeg.write(http_response.body)
-            tmpjpeg.flush
-          end
-          inputfiles = tmpfilename + '_input.txt'
-          # img2pdf needs NUL-separated list
-          File.open(inputfiles, 'w') do |f|
-            f.write(tmpjpegs.map(&:path).join("\0"))
-          end
-          # for this to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion
-          # ImageMagick was producing low-quality PDFs, so switched to img2pdf:
-          run_img2pdf(inputfiles, tmpfilename)
-          pdf = File.read(tmpfilename)
-          send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
-          File.delete(tmpfilename)
-          File.delete(inputfiles)
-        elsif docs.length == 1
+        if docs.length == 1 && !image_doc?(docs.first)
           # Single PDF: stream it directly without merging
           http_response = HTTParty.get(docs.first.file.url)
           send_data http_response.body, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         else
-          # PDF-only, multiple files: concatenate with pdfunite
-          tmppdfs = []
-          docs.each do |pdf_doc|
-            tmppdf = Tempfile.new(['dl_task_src_', '.pdf'], binmode: true)
-            tmppdfs << tmppdf
-            http_response = HTTParty.get(pdf_doc.file.url)
-            tmppdf.write(http_response.body)
-            tmppdf.flush
+          # Images are converted with img2pdf (it cannot read PDFs); PDFs are kept as-is, and
+          # everything is joined with pdfunite, preserving document order.
+          sources = []
+          docs.each do |doc|
+            docext = doc.file_file_name[doc.file_file_name.rindex('.')..-1]
+            src = Tempfile.new(['dl_task_src__', docext], binmode: true)
+            sources << src
+            src.write(HTTParty.get(doc.file.url).body)
+            src.flush
           end
-          run_pdfunite(tmppdfs.map(&:path), tmpfilename)
-          pdf = File.read(tmpfilename)
-          send_data pdf, type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
-          File.delete(tmpfilename)
+          pdf_paths = []
+          docs.zip(sources).chunk_while { |(a, _), (b, _)| image_doc?(a) && image_doc?(b) }.each do |chunk|
+            if image_doc?(chunk.first.first)
+              pdf_paths << images_to_pdf(chunk.map { |_, src| src.path }, tmpfilename, pdf_paths.length)
+            else
+              pdf_paths << chunk.first.last.path
+            end
+          end
+          if pdf_paths.length == 1
+            FileUtils.cp(pdf_paths.first, tmpfilename) unless pdf_paths.first == tmpfilename
+          else
+            run_pdfunite(pdf_paths, tmpfilename)
+          end
+          send_data File.binread(tmpfilename), type: 'application/pdf', filename: "Task_#{@task.id}.pdf"
         end
-      rescue StandardError
-        redirect_to '/'
+      rescue StandardError => e
+        Rails.logger.error("download_pdf failed for task #{@task.id}: #{e.class}: #{e.message}")
+        flash[:error] = I18n.t(:download_pdf_failed)
+        redirect_to task_path(@task)
       ensure
-        tmpfile.close
+        tmpfile.close!
+        (@pdf_work_files || []).each { |f| File.delete(f) if File.exist?(f) }
       end
     else
       redirect_to '/'
@@ -265,6 +254,21 @@ class TasksController < InheritedResources::Base
 
   def task_params
     params.permit!
+  end
+
+  def image_doc?(doc)
+    doc.file_file_name =~ /\.(jpg|jpeg|tif|tiff|png)$/i
+  end
+
+  # Converts a run of image files into one intermediate PDF (path returned).
+  def images_to_pdf(image_paths, base_path, index)
+    list = "#{base_path}_input_#{index}.txt"
+    out = "#{base_path}_part_#{index}.pdf"
+    (@pdf_work_files ||= []).push(list, out)
+    # img2pdf needs NUL-separated list
+    File.write(list, image_paths.join("\0"))
+    run_img2pdf(list, out)
+    out
   end
 
   def run_img2pdf(input_list_file, output_path)
