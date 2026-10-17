@@ -105,19 +105,46 @@ RSpec.describe 'Tasks download_pdf', type: :request do
     end
   end
 
-  context 'when documents include PNG images alongside a PDF' do
-    before { add_doc(task, 'scan.png') && add_doc(task, 'appendix.pdf') }
+  context 'when documents mix images and PDFs' do
+    before do
+      add_doc(task, 'a.jpg')
+      add_doc(task, 'b.jpg')
+      add_doc(task, 'appendix.pdf')
+      add_doc(task, 'c.png')
+    end
 
-    it 'uses img2pdf (image path) rather than pdfunite' do
-      img2pdf_called = false
-      allow_any_instance_of(TasksController).to receive(:run_img2pdf) do |_ctrl, _input, output|
-        img2pdf_called = true
-        File.write(output, '%PDF-1.4 generated')
+    it 'converts only image runs with img2pdf and merges everything with pdfunite in order' do
+      img2pdf_inputs = []
+      allow_any_instance_of(TasksController).to receive(:run_img2pdf) do |_ctrl, input, output|
+        img2pdf_inputs << File.read(input).split("\0")
+        File.write(output, '%PDF-1.4 images')
+      end
+      merged = nil
+      allow_any_instance_of(TasksController).to receive(:run_pdfunite) do |_ctrl, paths, output|
+        merged = paths.dup
+        File.write(output, '%PDF-1.4 merged')
       end
 
       get task_download_pdf_path(task), params: { dtype: 'maintext' }
 
-      expect(img2pdf_called).to be true
+      expect(response.content_type).to eq('application/pdf')
+      expect(img2pdf_inputs.map { |l| l.map { |f| File.extname(f) } }).to eq([%w[.jpg .jpg], %w[.png]])
+      expect(img2pdf_inputs.flatten).not_to include(a_string_ending_with('.pdf'))
+      expect(merged.length).to eq(3)
+      expect(merged[1]).to end_with('.pdf')
+    end
+  end
+
+  context 'when conversion fails' do
+    before { add_doc(task, 'a.jpg') }
+
+    it 'redirects to the task with an error rather than the dashboard' do
+      allow_any_instance_of(TasksController).to receive(:run_img2pdf).and_raise('img2pdf failed')
+
+      get task_download_pdf_path(task), params: { dtype: 'maintext' }
+
+      expect(response).to redirect_to(task_path(task))
+      expect(flash[:error]).to be_present
     end
   end
 
