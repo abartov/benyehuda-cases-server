@@ -39,7 +39,7 @@ gem 'mysql2', '~> 0.4'
 gem 'rails_autolink'
 gem 'RubyInline'
 gem 'ruby_parser', require: false
-gem 'scrypt', '2.1.1'
+gem 'scrypt', '~> 3.1.0'
 gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
