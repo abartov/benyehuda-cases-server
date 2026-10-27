@@ -11,7 +11,7 @@ class InitSchema < ActiveRecord::Migration[6.1]
     create_table "assignment_histories", id: :integer, charset: "utf8mb3" do |t|
       t.integer "user_id"
       t.integer "task_id"
-      t.string "role", limit: 16
+      t.string "role", limit: 16, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.index ["task_id"], name: "index_assignment_histories_on_task_id"
@@ -27,7 +27,7 @@ class InitSchema < ActiveRecord::Migration[6.1]
     end
     create_table "audits", id: :integer, charset: "utf8mb3" do |t|
       t.integer "auditable_id"
-      t.string "auditable_type"
+      t.string "auditable_type", collation: "utf8mb3_bin"
       t.integer "user_id"
       t.integer "action"
       t.text "note"
@@ -43,7 +43,7 @@ class InitSchema < ActiveRecord::Migration[6.1]
     create_table "comments", id: :integer, charset: "utf8mb3" do |t|
       t.integer "user_id"
       t.integer "task_id"
-      t.string "message", limit: 4096
+      t.string "message", limit: 4096, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.boolean "editor_eyes_only", default: false
@@ -57,8 +57,8 @@ class InitSchema < ActiveRecord::Migration[6.1]
     create_table "custom_properties", id: :integer, charset: "utf8mb3" do |t|
       t.integer "property_id"
       t.integer "proprietary_id"
-      t.string "proprietary_type", limit: 32
-      t.string "custom_value", limit: 8192
+      t.string "proprietary_type", limit: 32, collation: "utf8mb3_bin"
+      t.string "custom_value", limit: 8192, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.index ["proprietary_id", "proprietary_type"], name: "proprietary"
@@ -71,18 +71,18 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.datetime "run_at"
       t.datetime "locked_at"
       t.datetime "failed_at"
-      t.string "locked_by"
+      t.string "locked_by", collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
     end
-    create_table "digest_deliveries", charset: "utf8mb3" do |t|
+    create_table "digest_deliveries", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
       t.string "recipient_email", limit: 100, null: false
       t.datetime "last_digest_sent_at", null: false
       t.index ["recipient_email"], name: "index_digest_deliveries_on_recipient_email", unique: true
     end
     create_table "documents", id: :integer, charset: "utf8mb3" do |t|
-      t.string "file_file_name"
-      t.string "file_content_type"
+      t.string "file_file_name", collation: "utf8mb3_bin"
+      t.string "file_content_type", collation: "utf8mb3_bin"
       t.integer "file_file_size"
       t.datetime "file_updated_at"
       t.integer "user_id"
@@ -96,7 +96,7 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.index ["task_id"], name: "index_documents_on_task_id"
       t.index ["user_id", "created_at"], name: "index_documents_on_user_id_and_created_at"
     end
-    create_table "folder_taggings", charset: "utf8mb3" do |t|
+    create_table "folder_taggings", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
       t.bigint "scan_folder_id", null: false
       t.bigint "folder_tag_id", null: false
       t.datetime "created_at", precision: 6, null: false
@@ -104,13 +104,13 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.index ["folder_tag_id"], name: "index_folder_taggings_on_folder_tag_id"
       t.index ["scan_folder_id", "folder_tag_id"], name: "index_folder_taggings_on_scan_folder_id_and_folder_tag_id", unique: true
     end
-    create_table "folder_tags", charset: "utf8mb3" do |t|
+    create_table "folder_tags", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
       t.string "name", null: false
       t.datetime "created_at", precision: 6, null: false
       t.datetime "updated_at", precision: 6, null: false
       t.index ["name"], name: "index_folder_tags_on_name", unique: true
     end
-    create_table "pending_notifications", charset: "utf8mb3" do |t|
+    create_table "pending_notifications", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
       t.string "recipient_email", limit: 100, null: false
       t.string "notification_type", limit: 128, null: false
       t.text "notification_data", null: false
@@ -118,23 +118,23 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.index ["created_at"], name: "index_pending_notifications_on_created_at"
       t.index ["recipient_email", "created_at"], name: "index_pending_notifications_on_recipient_email_and_created_at"
     end
-    create_table "projects", id: :integer, charset: "utf8mb4", collation: "utf8mb4_general_ci" do |t|
-      t.string "name"
+    create_table "projects", id: :integer, charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
+      t.string "name", collation: "utf8mb3_bin"
       t.text "description"
       t.integer "status"
       t.datetime "created_at", null: false
       t.datetime "updated_at", null: false
     end
     create_table "properties", id: :integer, charset: "utf8mb3" do |t|
-      t.string "title"
-      t.string "parent_type", limit: 32
-      t.string "property_type", limit: 32
+      t.string "title", collation: "utf8mb3_bin"
+      t.string "parent_type", limit: 32, collation: "utf8mb3_bin"
+      t.string "property_type", limit: 32, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.boolean "is_public", default: true
-      t.string "comment"
+      t.string "comment", collation: "utf8mb3_bin"
     end
-    create_table "scan_folders", charset: "utf8mb3" do |t|
+    create_table "scan_folders", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci" do |t|
       t.string "name", null: false, collation: "utf8mb4_bin"
       t.string "status", default: "raw", null: false
       t.string "title"
@@ -153,14 +153,14 @@ class InitSchema < ActiveRecord::Migration[6.1]
     end
     create_table "search_settings", id: :integer, charset: "utf8mb3" do |t|
       t.integer "user_id"
-      t.string "search_key"
-      t.string "search_value"
+      t.string "search_key", collation: "utf8mb3_bin"
+      t.string "search_value", collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.index ["user_id", "search_key"], name: "index_search_settings_on_user_id_and_search_key"
     end
     create_table "sessions", id: :integer, charset: "utf8mb3" do |t|
-      t.string "session_id", null: false
+      t.string "session_id", null: false, collation: "utf8mb3_bin"
       t.text "data", size: :medium
       t.datetime "created_at"
       t.datetime "updated_at"
@@ -170,7 +170,7 @@ class InitSchema < ActiveRecord::Migration[6.1]
     create_table "site_notices", id: :integer, charset: "utf8mb3" do |t|
       t.datetime "start_displaying_at"
       t.datetime "end_displaying_at"
-      t.string "html", limit: 8192
+      t.string "html", limit: 8192, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.index ["start_displaying_at", "end_displaying_at"], name: "index_site_notices_on_start_displaying_at_and_end_displaying_at"
@@ -187,8 +187,8 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.index ["user_id"], name: "index_task_idle_reminders_on_user_id"
     end
     create_table "task_states", id: :integer, charset: "utf8mb3" do |t|
-      t.string "name"
-      t.string "value"
+      t.string "name", collation: "utf8mb3_bin"
+      t.string "value", collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
     end
@@ -204,21 +204,21 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.integer "creator_id"
       t.integer "editor_id"
       t.integer "assignee_id"
-      t.string "name"
-      t.string "state", limit: 16
-      t.string "difficulty", limit: 16
+      t.string "name", collation: "utf8mb3_bin"
+      t.string "state", limit: 16, collation: "utf8mb3_bin"
+      t.string "difficulty", limit: 16, collation: "utf8mb3_bin"
       t.boolean "full_nikkud", default: false
       t.integer "parent_id"
       t.datetime "created_at"
       t.datetime "updated_at"
       t.integer "documents_count", default: 0
       t.integer "kind_id"
-      t.string "priority"
+      t.string "priority", collation: "utf8mb3_bin"
       t.integer "hours"
       t.integer "genre"
       t.boolean "independent"
       t.boolean "include_images"
-      t.string "source", limit: 2048
+      t.string "source", limit: 2048, collation: "utf8mb3_bin"
       t.integer "project_id"
       t.boolean "do_not_assign", default: false, null: false
       t.boolean "do_not_publish", default: false, null: false
@@ -255,30 +255,30 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.string "key", limit: 1024, null: false, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
-      t.index ["key"], name: "index_translation_keys_on_key"
+      t.index ["key"], name: "index_translation_keys_on_key", length: 255
     end
     create_table "translation_texts", id: :integer, charset: "utf8mb3" do |t|
       t.text "text"
-      t.string "locale", limit: 16
+      t.string "locale", limit: 16, collation: "utf8mb3_bin"
       t.integer "translation_key_id", null: false
       t.datetime "created_at"
       t.datetime "updated_at"
       t.index ["translation_key_id", "locale"], name: "index_translation_texts_on_translation_key_id_and_locale", unique: true
     end
     create_table "users", id: :integer, charset: "utf8mb3" do |t|
-      t.string "name", limit: 48
-      t.string "email", limit: 100, null: false
-      t.string "crypted_password", limit: 128
-      t.string "password_salt", limit: 20
-      t.string "persistence_token", limit: 128
-      t.string "single_access_token", limit: 20
-      t.string "perishable_token", limit: 20
+      t.string "name", limit: 48, collation: "utf8mb3_bin"
+      t.string "email", limit: 100, null: false, collation: "utf8mb3_bin"
+      t.string "crypted_password", limit: 128, collation: "utf8mb3_bin"
+      t.string "password_salt", limit: 20, collation: "utf8mb3_bin"
+      t.string "persistence_token", limit: 128, collation: "utf8mb3_bin"
+      t.string "single_access_token", limit: 20, collation: "utf8mb3_bin"
+      t.string "perishable_token", limit: 20, collation: "utf8mb3_bin"
       t.integer "login_count"
       t.datetime "current_login_at"
       t.datetime "last_login_at"
       t.datetime "activated_at"
-      t.string "current_login_ip", limit: 15
-      t.string "last_login_ip", limit: 15
+      t.string "current_login_ip", limit: 15, collation: "utf8mb3_bin"
+      t.string "last_login_ip", limit: 15, collation: "utf8mb3_bin"
       t.boolean "is_admin"
       t.boolean "pending"
       t.datetime "created_at"
@@ -290,14 +290,14 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.boolean "notify_on_comments", default: true
       t.boolean "notify_on_status", default: true
       t.datetime "task_requested_at"
-      t.string "avatar_file_name"
-      t.string "avatar_content_type"
+      t.string "avatar_file_name", collation: "utf8mb3_bin"
+      t.string "avatar_content_type", collation: "utf8mb3_bin"
       t.integer "avatar_file_size"
       t.datetime "avatar_updated_at"
       t.integer "volunteer_kind_id"
       t.boolean "on_break"
       t.date "last_reminder"
-      t.string "zehut"
+      t.string "zehut", collation: "utf8mb3_bin"
       t.datetime "congratulated_at"
       t.boolean "suppress_anniversary_greeting", default: false, null: false
       t.string "email_frequency", limit: 16, default: "unlimited", null: false
@@ -308,13 +308,13 @@ class InitSchema < ActiveRecord::Migration[6.1]
       t.index ["single_access_token"], name: "index_users_on_single_access_token"
     end
     create_table "volunteer_kinds", id: :integer, charset: "utf8mb3" do |t|
-      t.string "name", limit: 64
+      t.string "name", limit: 64, collation: "utf8mb3_bin"
       t.datetime "created_at"
       t.datetime "updated_at"
     end
     create_table "volunteer_requests", id: :integer, charset: "utf8mb3" do |t|
       t.integer "user_id"
-      t.string "preferences", limit: 4096
+      t.string "preferences", limit: 4096, collation: "utf8mb3_bin"
       t.datetime "approved_at"
       t.integer "approver_id"
       t.datetime "created_at"
