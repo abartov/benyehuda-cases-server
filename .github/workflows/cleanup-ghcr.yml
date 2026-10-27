@@ -17,3 +17,9 @@ jobs:
           package-type: 'container'
           ignore-versions: '-latest$'
           min-versions-to-keep: 10 # Keep 10 versions
+      - name: Delete old docker images
+        uses: actions/delete-package-versions@v5
+        with:
+          package-name: 'benyehuda-cases-server-test'
+          package-type: 'container'
+          min-versions-to-keep: 10 # Keep 10 versions

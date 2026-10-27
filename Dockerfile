@@ -1,4 +1,4 @@
-FROM ruby:3.2.11-trixie AS base
+FROM ruby:3.4.11-trixie AS base
 
 RUN apt-get update -qq \
   && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf libjemalloc2 \
@@ -19,7 +19,7 @@ COPY vendor ./vendor
 
 ENV RAILS_ENV=production \
     RACK_ENV=production \
-    LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+    LD_PRELOAD=libjemalloc.so.2
 
 FROM base AS builder
 
