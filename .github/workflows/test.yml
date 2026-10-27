@@ -84,9 +84,11 @@ jobs:
         run: |
           bin/rails db:create RAILS_ENV=test
           bin/rails db:schema:load RAILS_ENV=test
-      - name: Install js dependencies
-        run: yarn install
-      - name: Run tests
+      - name: Compiling Assets
+        run: |
+          yarn install
+          rake assets:precompile
+      - name: Run Tests
         env:
           DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
         run: |
