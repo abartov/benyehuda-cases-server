@@ -87,5 +87,7 @@ jobs:
       - name: Install js dependencies
         run: yarn install
       - name: Run tests
+        env:
+          DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
         run: |
           bundle exec rspec --exclude-pattern "spec/system/**/*_spec.rb"
