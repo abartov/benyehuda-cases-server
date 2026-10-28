@@ -9,6 +9,9 @@ jobs:
   build-image:
     name: Build test docker image if needed
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     outputs:
       image_tag: ${{ steps.calc-hash.outputs.hash }}
     steps:
@@ -57,8 +60,14 @@ jobs:
     name: Run Specs
     needs: build-image
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
     container:
       image: ghcr.io/${{ github.repository }}/benyehuda-cases-server-test:${{ needs.build-image.outputs.image_tag }}
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
     services:
       mysql:
         image: mysql:8.0.36
