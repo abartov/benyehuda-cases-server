@@ -1,4 +1,4 @@
-FROM ruby:3.4.11-trixie AS base
+FROM ruby:3.4.12-trixie AS base
 
 RUN apt-get update -qq \
   && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf libjemalloc2 \
