@@ -6,7 +6,7 @@ WORKDIR /app
 RUN apt-get update -qq \
     && apt-get install -y --no-install-recommends curl npm\
        default-mysql-client default-libmysqlclient-dev sphinxsearch poppler-utils img2pdf \
-       imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-heb \
+       imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-heb fonts-dejavu \
        libvips-dev libjemalloc2 \
     && apt-get clean \
     && rm -rf /tmp/* /var/tmp/*
