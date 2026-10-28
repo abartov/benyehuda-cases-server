@@ -128,7 +128,7 @@ RSpec.describe 'validate_scans rake task', type: :task do
   def create_test_image(filepath, page_number)
     # Create a simple image with text using ImageMagick
     # This will contain the page number that tesseract can read
-    system("convert -size 200x100 xc:white -pointsize 24 -gravity center -draw \"text 0,0 '#{page_number}'\" '#{filepath}' 2>/dev/null")
+    system("convert -size 200x100 xc:white -font DejaVu-Sans -pointsize 24 -gravity center -draw \"text 0,0 '#{page_number}'\" '#{filepath}' 2>/dev/null")
   end
 
   def create_blank_image(filepath)
