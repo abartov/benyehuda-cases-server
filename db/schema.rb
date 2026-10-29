@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2026_10_05_000002) do
+ActiveRecord::Schema.define(version: 2026_10_27_175530) do
 
-  create_table "api_users", charset: "latin1", force: :cascade do |t|
-    t.string "api_key", collation: "utf8mb3_bin"
-    t.string "email", collation: "utf8mb3_bin"
+  create_table "api_users", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+    t.string "api_key"
+    t.string "email"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["api_key"], name: "index_api_users_on_api_key", unique: true
@@ -31,9 +31,9 @@ ActiveRecord::Schema.define(version: 2026_10_05_000002) do
     t.index ["user_id"], name: "index_assignment_histories_on_user_id"
   end
 
-  create_table "audit_logs", charset: "latin1", force: :cascade do |t|
-    t.string "backtrace", collation: "utf8mb3_bin"
-    t.string "data", collation: "utf8mb3_bin"
+  create_table "audit_logs", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+    t.string "backtrace"
+    t.string "data"
     t.bigint "api_user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
@@ -205,7 +205,7 @@ ActiveRecord::Schema.define(version: 2026_10_05_000002) do
     t.index ["start_displaying_at", "end_displaying_at"], name: "index_site_notices_on_start_displaying_at_and_end_displaying_at"
   end
 
-  create_table "task_idle_reminders", charset: "latin1", force: :cascade do |t|
+  create_table "task_idle_reminders", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.integer "task_id", null: false
     t.integer "user_id", null: false
     t.datetime "sent_at", null: false
@@ -224,7 +224,7 @@ ActiveRecord::Schema.define(version: 2026_10_05_000002) do
     t.datetime "updated_at"
   end
 
-  create_table "task_teams", charset: "latin1", force: :cascade do |t|
+  create_table "task_teams", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "task_id"
     t.datetime "created_at", precision: 6, null: false
@@ -265,7 +265,7 @@ ActiveRecord::Schema.define(version: 2026_10_05_000002) do
     t.index ["updated_at"], name: "index_tasks_on_updated_at"
   end
 
-  create_table "team_memberships", charset: "latin1", force: :cascade do |t|
+  create_table "team_memberships", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
     t.bigint "team_id", null: false
     t.integer "user_id"
     t.datetime "joined"
@@ -277,10 +277,10 @@ ActiveRecord::Schema.define(version: 2026_10_05_000002) do
     t.index ["user_id"], name: "index_team_memberships_on_user_id"
   end
 
-  create_table "teams", charset: "latin1", force: :cascade do |t|
-    t.string "name", collation: "utf8mb3_bin"
+  create_table "teams", charset: "utf8mb3", collation: "utf8mb3_bin", force: :cascade do |t|
+    t.string "name"
     t.boolean "open"
-    t.text "description", size: :medium
+    t.text "description", size: :long
     t.integer "status"
     t.date "targetdate"
     t.datetime "created_at", precision: 6, null: false

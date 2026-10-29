@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+# Those three gems were part of ruby, but was removed in 3.4.0. Perhaps we can remove them after upgrading rails version
+gem 'mutex_m'
+gem 'ostruct'
+gem 'benchmark'
+
 gem 'activerecord-session_store'
 gem 'builder'
 gem 'json', '~>2'
@@ -34,7 +39,7 @@ gem 'mysql2', '~> 0.4'
 gem 'rails_autolink'
 gem 'RubyInline'
 gem 'ruby_parser', require: false
-gem 'scrypt', '2.1.1'
+gem 'scrypt', '~> 3.1.0'
 gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
