@@ -1,7 +1,7 @@
 FROM ruby:3.4.12-trixie AS base
 
 RUN apt-get update -qq \
-  && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf libjemalloc2 \
+  && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf mupdf-tools libjemalloc2 \
   && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 WORKDIR /app

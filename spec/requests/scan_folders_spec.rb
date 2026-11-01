@@ -304,6 +304,28 @@ RSpec.describe 'ScanFolders', type: :request do
       expect(response).to have_http_status(:success)
     end
 
+    it 'offers splitting only for PDFs' do
+      allow(ScanStorage).to receive(:list_files).and_return([{ name: 'a.jpg', size: 1 }, { name: 'b.pdf', size: 1 }])
+      get scan_folder_path(sf)
+      expect(response.body.scan('class="split-pdf"').size + response.body.scan("class='split-pdf'").size).to eq 1
+      expect(response.body).to include(split_pdf_scan_folder_path(sf))
+    end
+
+    it 'splits a PDF by base filename and reports the new files' do
+      expect(ScanStorage).to receive(:split_pdf).with(sf.name, 'b.pdf').and_return(%w[b-1.png b-2.png])
+      post split_pdf_scan_folder_path(sf), params: { filename: '../b.pdf' }
+      expect(response).to have_http_status(:success)
+      expect(response.parsed_body['files']).to eq %w[b-1.png b-2.png]
+      expect(response.parsed_body['message']).to eq I18n.t('scans.split_pdf_done', count: 2)
+    end
+
+    it 'reports split failures' do
+      allow(ScanStorage).to receive(:split_pdf).and_raise(ScanStorage::SplitError, 'boom')
+      post split_pdf_scan_folder_path(sf), params: { filename: 'b.pdf' }
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.parsed_body['error']).to include('boom')
+    end
+
     it 'saves title and author' do
       patch scan_folder_path(sf), params: { title: 'Tt', author: 'Au' }
       expect([sf.reload.title, sf.author]).to eq %w[Tt Au]

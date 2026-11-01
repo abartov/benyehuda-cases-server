@@ -20,9 +20,11 @@
         - if ScanStorage.image_file?(f[:name])
           %img{ src: img_url, style: 'width:500px; height:500px; object-fit:contain;' }
         - else
-          %em PDF
+          %em= t('scans.pdf')
         %br
         %button.delete-file{ type: 'button', data: { url: delete_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.delete_file')
         - if ScanStorage.image_file?(f[:name])
           %button.rotate-file{ type: 'button', data: { url: rotate_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.rotate')
           %button.crop-file{ type: 'button', data: { url: crop_file_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.crop')
+        - if ScanStorage.pdf_file?(f[:name])
+          %button.split-pdf{ type: 'button', data: { url: split_pdf_scan_folder_path(scan_folder), filename: f[:name] } }= t('scans.split_pdf')
