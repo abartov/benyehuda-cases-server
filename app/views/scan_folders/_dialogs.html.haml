@@ -86,17 +86,21 @@
       var $t = $(this).closest('.bigthumb');
       api('POST', $(this).data('url'), { filename: $(this).data('filename') }).done(function(r) { $t.find('img').attr('src', r.url); });
     });
-    // Renders each PDF page into a new image in the folder, then reloads the modal to show them.
+    // Renders each PDF page into a new image in the folder, then refreshes the thumbnails (only them,
+    // keeping unsaved title/author edits) if the same folder's modal is still the one displayed.
     $(document).on('click', '#scan-modal .split-pdf', function() {
-      var $b = $(this), label = $b.text();
+      var $b = $(this), label = $b.text(), $form = $('#scan-meta-form'), folderUrl = $form.attr('action');
+      function stillShown() { return $.contains(document, $form[0]) && $('#scan-modal').is(':visible'); }
       $b.prop('disabled', true).text(i18n.splitting_pdf);
       api('POST', $b.data('url'), { filename: $b.data('filename') }).done(function(r) {
-        $.get($('#scan-meta-form').attr('action'), function(html) {
+        $.get(folderUrl, function(html) {
+          if (!stillShown()) return;
           destroyCropper();
-          $('#scan-modal').html(html).focus();
+          $('#scan-modal .thumbs_container').replaceWith($('<div>').html(html).find('.thumbs_container'));
           $('#scan-meta-msg').text(r.message);
         });
       }).fail(function(xhr) {
+        if (!stillShown()) return;
         $b.prop('disabled', false).text(label);
         window.alert((xhr.responseJSON && xhr.responseJSON.error) || xhr.statusText);
       });

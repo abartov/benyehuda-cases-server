@@ -8,6 +8,7 @@ class ScanStorage
   SCAN_EXTS = %w[jpg jpeg png tif tiff pdf].freeze
   IMAGE_EXTS = %w[jpg jpeg png tif tiff].freeze
   SPLIT_RESOLUTION = 200 # DPI of the page images rendered from a PDF
+  SPLIT_LOCK_TIMEOUT = 30 # seconds to wait for another split into the same folder
 
   class SplitError < StandardError; end
 
@@ -165,11 +166,23 @@ class ScanStorage
         raise SplitError, 'no pages rendered' if pages.empty?
 
         names = pages.map { |n| "#{base}-#{n}.png" }
-        existing = names & list_files(folder).map { |f| f[:name] }
-        raise SplitError, I18n.t('scans.split_pdf_exists', files: existing.join(', ')) if existing.any?
+        # The check and the uploads must not interleave with another split into this folder
+        # (e.g. of "book.pdf" and "book.PDF", which yield the same names).
+        with_folder_lock(folder) do
+          existing = names & list_files(folder).map { |f| f[:name] }
+          raise SplitError, I18n.t('scans.split_pdf_exists', files: existing.join(', ')) if existing.any?
 
-        pages.zip(names).each do |n, name|
-          File.open(File.join(out, "page-#{n}.png"), 'rb') { |io| upload(folder, name, io, content_type: 'image/png') }
+          uploaded = []
+          begin
+            pages.zip(names).each do |n, name|
+              File.open(File.join(out, "page-#{n}.png"), 'rb') { |io| upload(folder, name, io, content_type: 'image/png') }
+              uploaded << name
+            end
+          rescue StandardError => e
+            # Remove this attempt's pages, so a retry isn't blocked by them.
+            uploaded.each { |name| delete_file(folder, name) }
+            raise SplitError, e.message
+          end
         end
         names
       end
@@ -183,6 +196,19 @@ class ScanStorage
     end
 
     private
+
+    # Cross-process mutex (a MySQL named lock) per folder.
+    def with_folder_lock(folder)
+      conn = ActiveRecord::Base.connection
+      name = conn.quote("scan_split:#{Digest::SHA1.hexdigest(folder)}")
+      raise SplitError, I18n.t('scans.split_pdf_busy') unless conn.select_value("SELECT GET_LOCK(#{name}, #{SPLIT_LOCK_TIMEOUT})").to_i == 1
+
+      begin
+        yield
+      ensure
+        conn.select_value("SELECT RELEASE_LOCK(#{name})")
+      end
+    end
 
     def transform(folder, filename)
       raise ArgumentError, 'not an image' unless image_file?(filename)

@@ -272,6 +272,7 @@ he:
       one: נוצרה תמונה אחת
       other: "נוצרו %{count} תמונות"
     split_pdf_failed: "פיצול ה-PDF נכשל: %{error}"
+    split_pdf_busy: פיצול אחר לתיקייה זו עדיין מתבצע, נסו שוב בעוד מספר רגעים
     split_pdf_exists: "הקבצים הבאים כבר קיימים בתיקייה: %{files}"
     cancel: ביטול
     no_files: אין קבצים בתיקייה
