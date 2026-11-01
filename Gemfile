@@ -1,5 +1,10 @@
 source 'https://rubygems.org'
 
+# Those three gems were part of ruby, but was removed in 3.4.0. Perhaps we can remove them after upgrading rails version
+gem 'mutex_m'
+gem 'ostruct'
+gem 'benchmark'
+
 gem 'activerecord-session_store'
 gem 'builder'
 gem 'json', '~>2'

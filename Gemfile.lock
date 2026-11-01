@@ -105,6 +105,7 @@ GEM
       aws-eventstream (~> 1, >= 1.0.2)
     base64 (0.3.0)
     bcrypt_pbkdf (1.1.1)
+    benchmark (0.5.0)
     bigdecimal (3.3.1)
     bindex (0.8.1)
     bootsnap (1.18.4)
@@ -255,7 +256,7 @@ GEM
       rb-fsevent (~> 0.10, >= 0.10.3)
       rb-inotify (~> 0.9, >= 0.9.10)
     locale (2.1.4)
-    logger (1.5.3)
+    logger (1.7.0)
     lograge (0.14.0)
       actionpack (>= 4)
       activesupport (>= 4)
@@ -281,7 +282,6 @@ GEM
     mime-types-data (3.2024.1105)
     mini_magick (5.0.1)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.9)
     minitest (6.0.6)
       drb (~> 2.0)
       prism (~> 1.5)
@@ -295,6 +295,7 @@ GEM
       ruby2_keywords (~> 0.0.1)
     mustermann-grape (1.1.0)
       mustermann (>= 1.0.0)
+    mutex_m (0.3.0)
     mysql2 (0.5.6)
     net-imap (0.6.6)
       date
@@ -306,11 +307,9 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     nio4r (2.7.5)
-    nokogiri (1.19.4)
-      mini_portile2 (~> 2.8.2)
-      racc (~> 1.4)
     nokogiri (1.19.4-x86_64-linux-gnu)
       racc (~> 1.4)
+    ostruct (0.6.3)
     overcommit (0.68.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
@@ -509,7 +508,6 @@ GEM
     zeitwerk (2.8.2)
 
 PLATFORMS
-  ruby
   x86_64-linux
 
 DEPENDENCIES
@@ -520,6 +518,7 @@ DEPENDENCIES
   authlogic
   aws-sdk-s3 (~> 1)
   bcrypt_pbkdf
+  benchmark
   bootsnap
   builder
   capybara
@@ -554,8 +553,10 @@ DEPENDENCIES
   mime-types
   mini_magick
   mocha
+  mutex_m
   mysql2 (~> 0.4)
   nokogiri
+  ostruct
   overcommit
   puma
   rack (>= 2.1.4)
@@ -583,4 +584,4 @@ DEPENDENCIES
   will_paginate
 
 BUNDLED WITH
-   2.2.32
+   2.6.9

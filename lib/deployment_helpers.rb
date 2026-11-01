@@ -12,4 +12,12 @@ module DeploymentHelpers
       end
     end
   end
+
+  def self.db_rake_task?
+    if defined?(Rake.application)
+      Rake.application.top_level_tasks.any? do |task|
+        task.to_s.start_with?('db:')
+      end
+    end
+  end
 end

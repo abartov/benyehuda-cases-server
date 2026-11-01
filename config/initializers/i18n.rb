@@ -17,7 +17,7 @@ begin
   require 'deployment_helpers'
   # The code below requires DB connection, which can be unavailable during assets precompilation
   # so we do it only when it is not an assets compilation rake task
-  unless DeploymentHelpers.assets_compilation?
+  unless DeploymentHelpers.assets_compilation? || DeploymentHelpers.db_rake_task?
     WillPaginate::ViewHelpers.pagination_options[:previous_label] = s_('paginator - previous page|&laquo; Previous')
     WillPaginate::ViewHelpers.pagination_options[:next_label] = s_('paginator - previous page|Next &raquo;')
   end
