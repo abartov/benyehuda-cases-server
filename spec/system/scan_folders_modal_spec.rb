@@ -54,4 +54,16 @@ RSpec.describe 'Scan folder thumbnails modal', type: :system, js: true do
     img = MiniMagick::Image.read(ScanStorage.read('modal-folder', 'a.png'))
     expect([img.width, img.height]).not_to eq [400, 200] # full-image auto-crop box is smaller than original
   end
+
+  it 'splits a PDF into page images and shows them in the modal' do
+    ScanStorage.upload('modal-folder', 'doc.pdf', StringIO.new(blank_pdf(pages: 2)))
+    visit scan_folders_path
+    click_link 'modal-folder'
+    find('.split-pdf').click
+    expect(page).to have_css('.bigthumb img', count: 3)
+    expect(page).to have_link('doc-1.png')
+    expect(page).to have_link('doc-2.png')
+    expect(page).to have_content(I18n.t('scans.split_pdf_done', count: 2))
+    expect(ScanStorage.list_files('modal-folder').map { |f| f[:name] }).to eq %w[a.png doc-1.png doc-2.png doc.pdf]
+  end
 end

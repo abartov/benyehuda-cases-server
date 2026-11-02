@@ -14,4 +14,6 @@ To set up an environment, install RVM (http://get.rvm.io), and, on Ubuntu, I nee
 
 You also need the (https://github.com/josch/img2pdf)[img2pdf] utility to allow batch download of scans as PDFs. 
 
+To split PDFs in the raw scans area into per-page images, you need mutool(1) (Debian/Ubuntu package: mupdf-tools).
+
 For the download-as-PDF feature to work, ImageMagick must not restrict PDFs! See here: https://stackoverflow.com/questions/52998331/imagemagick-security-policy-pdf-blocking-conversion

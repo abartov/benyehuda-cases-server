@@ -130,6 +130,14 @@ class ScanFoldersController < ApplicationController
     render json: { url: display_url(@scan_folder, file_name) }
   end
 
+  # Renders each page of a PDF into a PNG in the same folder.
+  def split_pdf
+    names = ScanStorage.split_pdf(@scan_folder.name, file_name)
+    render json: { files: names, message: I18n.t('scans.split_pdf_done', count: names.size) }
+  rescue ScanStorage::SplitError, ArgumentError => e
+    render json: { error: I18n.t('scans.split_pdf_failed', error: e.message) }, status: :unprocessable_entity
+  end
+
   private
 
   # URL for an <img>/Cropper: TIFFs go through the JPEG preview, as browsers can't display them.

@@ -55,4 +55,73 @@ RSpec.describe ScanStorage::DiskBackend do
     expect(ScanStorage.presigned_url('a b', 'p.jpg')).to start_with('/scan_folders/file?')
     expect(ScanStorage.disk_path('a b', 'p.jpg')).to be_file
   end
+
+  describe '.split_pdf' do
+    before { ScanStorage.upload('s', 'book.pdf', StringIO.new(blank_pdf(pages: 3, width: 72, height: 144))) }
+
+    it 'adds one PNG per page at 200 DPI to the same folder, keeping the PDF' do
+      expect(ScanStorage.split_pdf('s', 'book.pdf')).to eq %w[book-1.png book-2.png book-3.png]
+      expect(ScanStorage.list_files('s').map { |f| f[:name] }).to eq %w[book-1.png book-2.png book-3.png book.pdf]
+      img = MiniMagick::Image.read(ScanStorage.read('s', 'book-2.png'))
+      expect([img.type, img.width, img.height]).to eq ['PNG', 200, 400] # 1"x2" page at 200 DPI
+    end
+
+    it 'runs mutool convert with the configured resolution' do
+      expect(Open3).to receive(:capture3)
+        .with('mutool', 'convert', '-O', 'resolution=200', '-o', end_with('/page-%d.png'), end_with('.pdf'))
+        .and_call_original
+      ScanStorage.split_pdf('s', 'book.pdf')
+    end
+
+    it 'refuses to overwrite existing files, writing nothing' do
+      ScanStorage.upload('s', 'book-2.png', StringIO.new('mine'))
+      expect { ScanStorage.split_pdf('s', 'book.pdf') }.to raise_error(ScanStorage::SplitError, /book-2\.png/)
+      expect(ScanStorage.list_files('s').map { |f| f[:name] }).to eq %w[book-2.png book.pdf]
+      expect(ScanStorage.read('s', 'book-2.png')).to eq 'mine'
+    end
+
+    it 'removes the pages it uploaded when a later upload fails, so a retry succeeds' do
+      calls = 0
+      allow(ScanStorage.backend).to receive(:put).and_wrap_original do |m, *args|
+        calls += 1
+        raise 'S3 hiccup' if calls == 2
+
+        m.call(*args)
+      end
+      expect { ScanStorage.split_pdf('s', 'book.pdf') }.to raise_error(ScanStorage::SplitError, /S3 hiccup/)
+      expect(ScanStorage.list_files('s').map { |f| f[:name] }).to eq %w[book.pdf]
+
+      calls = 10
+      expect(ScanStorage.split_pdf('s', 'book.pdf')).to eq %w[book-1.png book-2.png book-3.png]
+    end
+
+    it 'waits for (and gives up on) another split holding the folder lock, writing nothing' do
+      stub_const('ScanStorage::SPLIT_LOCK_TIMEOUT', 0)
+      other = Mysql2::Client.new(**ActiveRecord::Base.connection_db_config.configuration_hash.symbolize_keys)
+      lock = other.escape("scan_split:#{Digest::SHA1.hexdigest('s')}")
+      other.query("SELECT GET_LOCK('#{lock}', 0)")
+      expect { ScanStorage.split_pdf('s', 'book.pdf') }
+        .to raise_error(ScanStorage::SplitError, I18n.t('scans.split_pdf_busy'))
+      expect(ScanStorage.list_files('s').map { |f| f[:name] }).to eq %w[book.pdf]
+      other.query("SELECT RELEASE_LOCK('#{lock}')")
+      expect(ScanStorage.split_pdf('s', 'book.pdf').size).to eq 3
+    ensure
+      other&.close
+    end
+
+    it 'reports a broken PDF' do
+      ScanStorage.upload('s', 'bad.pdf', StringIO.new('not a pdf'))
+      expect { ScanStorage.split_pdf('s', 'bad.pdf') }.to raise_error(ScanStorage::SplitError)
+      expect(ScanStorage.list_files('s').map { |f| f[:name] }).to eq %w[bad.pdf book.pdf]
+    end
+
+    it 'reports a missing mutool binary' do
+      allow(Open3).to receive(:capture3).and_raise(Errno::ENOENT, 'mutool')
+      expect { ScanStorage.split_pdf('s', 'book.pdf') }.to raise_error(ScanStorage::SplitError, /mutool/)
+    end
+
+    it 'rejects non-PDF files' do
+      expect { ScanStorage.split_pdf('s', 'a.jpg') }.to raise_error(ArgumentError)
+    end
+  end
 end
