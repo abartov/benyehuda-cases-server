@@ -2,6 +2,7 @@ FROM ruby:3.4.12-trixie AS base
 
 RUN apt-get update -qq \
   && apt-get install -y libmariadb3 sphinxsearch poppler-utils img2pdf mupdf-tools libjemalloc2 \
+    imagemagick tesseract-ocr tesseract-ocr-eng tesseract-ocr-heb \
   && apt-get clean && rm -rf /tmp/* /var/tmp/*
 
 WORKDIR /app
