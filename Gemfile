@@ -44,6 +44,7 @@ gem 'thinking-sphinx'
 gem 'tzinfo'
 gem 'uglifier'
 gem 'rufus-scheduler'
+gem 'sentry-rails'
 
 group :development do
   gem 'ed25519'

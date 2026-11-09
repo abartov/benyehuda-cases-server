@@ -458,6 +458,13 @@ GEM
       rexml (~> 3.2, >= 3.2.5)
       rubyzip (>= 1.2.2, < 4.0)
       websocket (~> 1.0)
+    sentry-rails (7.2.0)
+      railties (>= 5.2.0)
+      sentry-ruby (~> 7.2.0)
+    sentry-ruby (7.2.0)
+      bigdecimal
+      concurrent-ruby (~> 1.0, >= 1.0.2)
+      logger
     sexp_processor (4.17.2)
     singleton (0.3.0)
     sprockets (4.2.1)
@@ -576,6 +583,7 @@ DEPENDENCIES
   scanf
   scrypt (= 2.1.1)
   selenium-webdriver
+  sentry-rails
   test-unit
   thinking-sphinx
   tzinfo
