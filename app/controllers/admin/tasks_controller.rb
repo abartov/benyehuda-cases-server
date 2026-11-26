@@ -3,8 +3,8 @@ require 'csv'
 class Admin::TasksController < InheritedResources::Base
   include ActionController::Cookies # include ActionController
   before_action :load_authlogic
-  before_action :require_admin, only: %i[create update changes split_task start_ingestion]
-  before_action :require_editor_or_admin, only: %i[index new create split_task]
+  before_action :require_admin, only: %i[new create edit update changes split_task start_ingestion]
+  before_action :require_editor_or_admin, only: %i[index]
   actions :index, :new, :create, :edit, :update, :destroy, :changes, :split_task, :start_ingestion
   has_scope :order_by, only: :index, using: %i[includes property dir], allow_blank: true
   has_scope :order_by_state, only: :index, using: [:dir]
